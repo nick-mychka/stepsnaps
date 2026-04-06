@@ -4,7 +4,7 @@ import { Label as LabelPrimitive } from "radix-ui";
 
 import { cn } from "@stepsnaps/ui";
 
-export function Label({
+function Label({
   className,
   ...props
 }: React.ComponentProps<typeof LabelPrimitive.Root>) {
@@ -19,3 +19,5 @@ export function Label({
     />
   );
 }
+
+export { Label };

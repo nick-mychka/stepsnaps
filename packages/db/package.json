@@ -29,7 +29,7 @@
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
-    "drizzle-orm": "^0.44.7",
+    "drizzle-orm": "^0.45.2",
     "drizzle-zod": "^0.8.3",
     "postgres": "^3.4.7",
     "zod": "catalog:"
@@ -39,7 +39,7 @@
     "@stepsnaps/prettier-config": "workspace:*",
     "@stepsnaps/tsconfig": "workspace:*",
     "@types/node": "catalog:",
-    "drizzle-kit": "^0.31.5",
+    "drizzle-kit": "^0.31.10",
     "eslint": "catalog:",
     "prettier": "catalog:",
     "typescript": "catalog:"

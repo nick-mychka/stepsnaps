@@ -4,7 +4,7 @@ import { Separator as SeparatorPrimitive } from "radix-ui";
 
 import { cn } from "@stepsnaps/ui";
 
-export function Separator({
+function Separator({
   className,
   orientation = "horizontal",
   decorative = true,
@@ -23,3 +23,5 @@ export function Separator({
     />
   );
 }
+
+export { Separator };
