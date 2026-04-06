@@ -60,6 +60,13 @@ function AuthedLayout() {
             <Button
               variant="ghost"
               size="sm"
+              onClick={() => navigate({ to: "/progress" })}
+            >
+              Progress
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => navigate({ to: "/settings/steps" })}
             >
               Steps

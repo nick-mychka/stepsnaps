@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthedRouteImport } from './routes/_authed'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthedProgressRouteImport } from './routes/_authed/progress'
 import { Route as AuthedDashboardRouteImport } from './routes/_authed/dashboard'
 import { Route as ApiTrpcSplatRouteImport } from './routes/api/trpc.$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth.$'
@@ -26,6 +27,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthedProgressRoute = AuthedProgressRouteImport.update({
+  id: '/progress',
+  path: '/progress',
+  getParentRoute: () => AuthedRoute,
 } as any)
 const AuthedDashboardRoute = AuthedDashboardRouteImport.update({
   id: '/dashboard',
@@ -61,6 +67,7 @@ const AuthedJourneyHistoryRoute = AuthedJourneyHistoryRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof AuthedDashboardRoute
+  '/progress': typeof AuthedProgressRoute
   '/journey/history': typeof AuthedJourneyHistoryRoute
   '/settings/steps': typeof AuthedSettingsStepsRoute
   '/snap/new': typeof AuthedSnapNewRoute
@@ -70,6 +77,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dashboard': typeof AuthedDashboardRoute
+  '/progress': typeof AuthedProgressRoute
   '/journey/history': typeof AuthedJourneyHistoryRoute
   '/settings/steps': typeof AuthedSettingsStepsRoute
   '/snap/new': typeof AuthedSnapNewRoute
@@ -81,6 +89,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authed': typeof AuthedRouteWithChildren
   '/_authed/dashboard': typeof AuthedDashboardRoute
+  '/_authed/progress': typeof AuthedProgressRoute
   '/_authed/journey/history': typeof AuthedJourneyHistoryRoute
   '/_authed/settings/steps': typeof AuthedSettingsStepsRoute
   '/_authed/snap/new': typeof AuthedSnapNewRoute
@@ -92,6 +101,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/dashboard'
+    | '/progress'
     | '/journey/history'
     | '/settings/steps'
     | '/snap/new'
@@ -101,6 +111,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/dashboard'
+    | '/progress'
     | '/journey/history'
     | '/settings/steps'
     | '/snap/new'
@@ -111,6 +122,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authed'
     | '/_authed/dashboard'
+    | '/_authed/progress'
     | '/_authed/journey/history'
     | '/_authed/settings/steps'
     | '/_authed/snap/new'
@@ -140,6 +152,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authed/progress': {
+      id: '/_authed/progress'
+      path: '/progress'
+      fullPath: '/progress'
+      preLoaderRoute: typeof AuthedProgressRouteImport
+      parentRoute: typeof AuthedRoute
     }
     '/_authed/dashboard': {
       id: '/_authed/dashboard'
@@ -188,6 +207,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthedRouteChildren {
   AuthedDashboardRoute: typeof AuthedDashboardRoute
+  AuthedProgressRoute: typeof AuthedProgressRoute
   AuthedJourneyHistoryRoute: typeof AuthedJourneyHistoryRoute
   AuthedSettingsStepsRoute: typeof AuthedSettingsStepsRoute
   AuthedSnapNewRoute: typeof AuthedSnapNewRoute
@@ -195,6 +215,7 @@ interface AuthedRouteChildren {
 
 const AuthedRouteChildren: AuthedRouteChildren = {
   AuthedDashboardRoute: AuthedDashboardRoute,
+  AuthedProgressRoute: AuthedProgressRoute,
   AuthedJourneyHistoryRoute: AuthedJourneyHistoryRoute,
   AuthedSettingsStepsRoute: AuthedSettingsStepsRoute,
   AuthedSnapNewRoute: AuthedSnapNewRoute,
@@ -212,12 +233,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}
