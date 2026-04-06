@@ -11,6 +11,10 @@
     "./label": "./src/label.tsx",
     "./separator": "./src/separator.tsx",
     "./theme": "./src/theme.tsx",
+    "./badge": "./src/badge.tsx",
+    "./card": "./src/card.tsx",
+    "./dialog": "./src/dialog.tsx",
+    "./textarea": "./src/textarea.tsx",
     "./toast": "./src/toast.tsx"
   },
   "license": "MIT",
