@@ -1,6 +1,5 @@
+import { Button } from "@stepsnaps/ui/button";
 import { useNavigate } from "@tanstack/react-router";
-
-import { Button } from "@acme/ui/button";
 
 import { authClient } from "~/auth/client";
 
@@ -10,21 +9,38 @@ export function AuthShowcase() {
 
   if (!session) {
     return (
-      <Button
-        size="lg"
-        onClick={async () => {
-          const res = await authClient.signIn.social({
-            provider: "discord",
-            callbackURL: "/",
-          });
-          if (!res.data?.url) {
-            throw new Error("No URL returned from signInSocial");
-          }
-          await navigate({ href: res.data.url, replace: true });
-        }}
-      >
-        Sign in with Discord
-      </Button>
+      <div className="flex flex-col gap-2">
+        <Button
+          size="lg"
+          onClick={async () => {
+            const res = await authClient.signIn.social({
+              provider: "google",
+              callbackURL: "/",
+            });
+            if (!res.data?.url) {
+              throw new Error("No URL returned from signInSocial");
+            }
+            await navigate({ href: res.data.url, replace: true });
+          }}
+        >
+          Sign in with Google
+        </Button>
+        <Button
+          size="lg"
+          onClick={async () => {
+            const res = await authClient.signIn.social({
+              provider: "apple",
+              callbackURL: "/",
+            });
+            if (!res.data?.url) {
+              throw new Error("No URL returned from signInSocial");
+            }
+            await navigate({ href: res.data.url, replace: true });
+          }}
+        >
+          Sign in with Apple
+        </Button>
+      </div>
     );
   }
 

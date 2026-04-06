@@ -106,19 +106,39 @@ function MobileAuth() {
       <Text className="text-foreground pb-2 text-center text-xl font-semibold">
         {session?.user.name ? `Hello, ${session.user.name}` : "Not logged in"}
       </Text>
-      <Pressable
-        onPress={() =>
-          session
-            ? authClient.signOut()
-            : authClient.signIn.social({
-                provider: "discord",
+      {session ? (
+        <Pressable
+          onPress={() => authClient.signOut()}
+          className="bg-primary flex items-center rounded-sm p-2"
+        >
+          <Text>Sign Out</Text>
+        </Pressable>
+      ) : (
+        <View className="flex gap-2">
+          <Pressable
+            onPress={() =>
+              authClient.signIn.social({
+                provider: "google",
                 callbackURL: "/",
               })
-        }
-        className="bg-primary flex items-center rounded-sm p-2"
-      >
-        <Text>{session ? "Sign Out" : "Sign In With Discord"}</Text>
-      </Pressable>
+            }
+            className="bg-primary flex items-center rounded-sm p-2"
+          >
+            <Text>Sign In With Google</Text>
+          </Pressable>
+          <Pressable
+            onPress={() =>
+              authClient.signIn.social({
+                provider: "apple",
+                callbackURL: "/",
+              })
+            }
+            className="bg-primary flex items-center rounded-sm p-2"
+          >
+            <Text>Sign In With Apple</Text>
+          </Pressable>
+        </View>
+      )}
     </>
   );
 }

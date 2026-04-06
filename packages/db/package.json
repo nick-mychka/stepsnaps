@@ -1,5 +1,5 @@
 {
-  "name": "@acme/db",
+  "name": "@stepsnaps/db",
   "private": true,
   "type": "module",
   "exports": {
@@ -29,19 +29,20 @@
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
-    "@vercel/postgres": "^0.10.0",
     "drizzle-orm": "^0.44.7",
+    "postgres": "^3.4.7",
     "drizzle-zod": "^0.8.3",
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@acme/eslint-config": "workspace:*",
-    "@acme/prettier-config": "workspace:*",
-    "@acme/tsconfig": "workspace:*",
+    "@types/node": "catalog:",
+    "@stepsnaps/eslint-config": "workspace:*",
+    "@stepsnaps/prettier-config": "workspace:*",
+    "@stepsnaps/tsconfig": "workspace:*",
     "drizzle-kit": "^0.31.5",
     "eslint": "catalog:",
     "prettier": "catalog:",
     "typescript": "catalog:"
   },
-  "prettier": "@acme/prettier-config"
+  "prettier": "@stepsnaps/prettier-config"
 }

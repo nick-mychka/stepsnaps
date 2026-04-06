@@ -1,5 +1,5 @@
 {
-  "name": "@acme/api",
+  "name": "@stepsnaps/api",
   "private": true,
   "type": "module",
   "exports": {
@@ -18,20 +18,20 @@
     "typecheck": "tsc --noEmit --emitDeclarationOnly false"
   },
   "dependencies": {
-    "@acme/auth": "workspace:*",
-    "@acme/db": "workspace:*",
-    "@acme/validators": "workspace:*",
+    "@stepsnaps/auth": "workspace:*",
+    "@stepsnaps/db": "workspace:*",
+    "@stepsnaps/validators": "workspace:*",
     "@trpc/server": "catalog:",
     "superjson": "2.2.3",
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@acme/eslint-config": "workspace:*",
-    "@acme/prettier-config": "workspace:*",
-    "@acme/tsconfig": "workspace:*",
+    "@stepsnaps/eslint-config": "workspace:*",
+    "@stepsnaps/prettier-config": "workspace:*",
+    "@stepsnaps/tsconfig": "workspace:*",
     "eslint": "catalog:",
     "prettier": "catalog:",
     "typescript": "catalog:"
   },
-  "prettier": "@acme/prettier-config"
+  "prettier": "@stepsnaps/prettier-config"
 }
