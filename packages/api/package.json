@@ -22,7 +22,7 @@
     "@stepsnaps/db": "workspace:*",
     "@stepsnaps/validators": "workspace:*",
     "@trpc/server": "catalog:",
-    "superjson": "2.2.3",
+    "superjson": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
