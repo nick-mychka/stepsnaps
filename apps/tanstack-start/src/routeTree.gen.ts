@@ -15,6 +15,7 @@ import { Route as AuthedDashboardRouteImport } from './routes/_authed/dashboard'
 import { Route as ApiTrpcSplatRouteImport } from './routes/api/trpc.$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth.$'
 import { Route as AuthedSnapNewRouteImport } from './routes/_authed/snap/new'
+import { Route as AuthedSettingsStepsRouteImport } from './routes/_authed/settings/steps'
 import { Route as AuthedJourneyHistoryRouteImport } from './routes/_authed/journey/history'
 
 const AuthedRoute = AuthedRouteImport.update({
@@ -46,6 +47,11 @@ const AuthedSnapNewRoute = AuthedSnapNewRouteImport.update({
   path: '/snap/new',
   getParentRoute: () => AuthedRoute,
 } as any)
+const AuthedSettingsStepsRoute = AuthedSettingsStepsRouteImport.update({
+  id: '/settings/steps',
+  path: '/settings/steps',
+  getParentRoute: () => AuthedRoute,
+} as any)
 const AuthedJourneyHistoryRoute = AuthedJourneyHistoryRouteImport.update({
   id: '/journey/history',
   path: '/journey/history',
@@ -56,6 +62,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof AuthedDashboardRoute
   '/journey/history': typeof AuthedJourneyHistoryRoute
+  '/settings/steps': typeof AuthedSettingsStepsRoute
   '/snap/new': typeof AuthedSnapNewRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
@@ -64,6 +71,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dashboard': typeof AuthedDashboardRoute
   '/journey/history': typeof AuthedJourneyHistoryRoute
+  '/settings/steps': typeof AuthedSettingsStepsRoute
   '/snap/new': typeof AuthedSnapNewRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
@@ -74,6 +82,7 @@ export interface FileRoutesById {
   '/_authed': typeof AuthedRouteWithChildren
   '/_authed/dashboard': typeof AuthedDashboardRoute
   '/_authed/journey/history': typeof AuthedJourneyHistoryRoute
+  '/_authed/settings/steps': typeof AuthedSettingsStepsRoute
   '/_authed/snap/new': typeof AuthedSnapNewRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
@@ -84,6 +93,7 @@ export interface FileRouteTypes {
     | '/'
     | '/dashboard'
     | '/journey/history'
+    | '/settings/steps'
     | '/snap/new'
     | '/api/auth/$'
     | '/api/trpc/$'
@@ -92,6 +102,7 @@ export interface FileRouteTypes {
     | '/'
     | '/dashboard'
     | '/journey/history'
+    | '/settings/steps'
     | '/snap/new'
     | '/api/auth/$'
     | '/api/trpc/$'
@@ -101,6 +112,7 @@ export interface FileRouteTypes {
     | '/_authed'
     | '/_authed/dashboard'
     | '/_authed/journey/history'
+    | '/_authed/settings/steps'
     | '/_authed/snap/new'
     | '/api/auth/$'
     | '/api/trpc/$'
@@ -157,6 +169,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedSnapNewRouteImport
       parentRoute: typeof AuthedRoute
     }
+    '/_authed/settings/steps': {
+      id: '/_authed/settings/steps'
+      path: '/settings/steps'
+      fullPath: '/settings/steps'
+      preLoaderRoute: typeof AuthedSettingsStepsRouteImport
+      parentRoute: typeof AuthedRoute
+    }
     '/_authed/journey/history': {
       id: '/_authed/journey/history'
       path: '/journey/history'
@@ -170,12 +189,14 @@ declare module '@tanstack/react-router' {
 interface AuthedRouteChildren {
   AuthedDashboardRoute: typeof AuthedDashboardRoute
   AuthedJourneyHistoryRoute: typeof AuthedJourneyHistoryRoute
+  AuthedSettingsStepsRoute: typeof AuthedSettingsStepsRoute
   AuthedSnapNewRoute: typeof AuthedSnapNewRoute
 }
 
 const AuthedRouteChildren: AuthedRouteChildren = {
   AuthedDashboardRoute: AuthedDashboardRoute,
   AuthedJourneyHistoryRoute: AuthedJourneyHistoryRoute,
+  AuthedSettingsStepsRoute: AuthedSettingsStepsRoute,
   AuthedSnapNewRoute: AuthedSnapNewRoute,
 }
 

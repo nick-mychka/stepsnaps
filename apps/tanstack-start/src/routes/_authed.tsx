@@ -57,6 +57,13 @@ function AuthedLayout() {
             >
               History
             </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate({ to: "/settings/steps" })}
+            >
+              Steps
+            </Button>
             <span className="text-muted-foreground text-sm">
               {session.user.name}
             </span>
