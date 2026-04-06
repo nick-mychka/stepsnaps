@@ -3,19 +3,20 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
 import { and, desc, eq } from "@stepsnaps/db";
-import { Journey } from "@stepsnaps/db/schema";
+import { Journey, StepDefinition } from "@stepsnaps/db/schema";
 
 import { protectedProcedure } from "../trpc";
 
 export const journeyRouter = {
   /** Get the user's active journey (if any). */
-  active: protectedProcedure.query(({ ctx }) => {
-    return ctx.db.query.Journey.findFirst({
+  active: protectedProcedure.query(async ({ ctx }) => {
+    const journey = await ctx.db.query.Journey.findFirst({
       where: and(
         eq(Journey.userId, ctx.session.user.id),
         eq(Journey.status, "active"),
       ),
     });
+    return journey ?? null;
   }),
 
   /** List all journeys for the user, most recent first. */
@@ -75,8 +76,43 @@ export const journeyRouter = {
         })
         .returning();
 
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      return journey!;
+      // Seed predefined step definitions on first journey creation
+      const existingSteps = await ctx.db.query.StepDefinition.findFirst({
+        where: eq(StepDefinition.userId, ctx.session.user.id),
+      });
+
+      if (!existingSteps) {
+        const predefinedSteps = [
+          { name: "Interviews", type: "numeric" as const, sortOrder: 0 },
+          { name: "HR Responses", type: "numeric" as const, sortOrder: 1 },
+          { name: "Vacancy Responses", type: "numeric" as const, sortOrder: 2 },
+          { name: "Code Commits", type: "numeric" as const, sortOrder: 3 },
+          {
+            name: "Coding Time (hours)",
+            type: "numeric" as const,
+            sortOrder: 4,
+          },
+          {
+            name: "English Study (minutes)",
+            type: "numeric" as const,
+            sortOrder: 5,
+          },
+          { name: "New Knowledge", type: "text" as const, sortOrder: 6 },
+        ];
+
+        await ctx.db.insert(StepDefinition).values(
+          predefinedSteps.map((step) => ({
+            userId: ctx.session.user.id,
+            name: step.name,
+            type: step.type,
+            isPredefined: true,
+            sortOrder: step.sortOrder,
+            isActive: true,
+          })),
+        );
+      }
+
+      return journey ?? null;
     }),
 
   /** Finish the active journey with optional offer details. */
@@ -113,8 +149,7 @@ export const journeyRouter = {
         .where(eq(Journey.id, active.id))
         .returning();
 
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      return journey!;
+      return journey ?? null;
     }),
 
   /** Update offer details on a completed journey. */
@@ -149,7 +184,6 @@ export const journeyRouter = {
         .where(eq(Journey.id, input.id))
         .returning();
 
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      return updated!;
+      return updated ?? null;
     }),
 } satisfies TRPCRouterRecord;

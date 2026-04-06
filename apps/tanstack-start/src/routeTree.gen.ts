@@ -14,6 +14,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthedDashboardRouteImport } from './routes/_authed/dashboard'
 import { Route as ApiTrpcSplatRouteImport } from './routes/api/trpc.$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth.$'
+import { Route as AuthedSnapNewRouteImport } from './routes/_authed/snap/new'
 import { Route as AuthedJourneyHistoryRouteImport } from './routes/_authed/journey/history'
 
 const AuthedRoute = AuthedRouteImport.update({
@@ -40,6 +41,11 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthedSnapNewRoute = AuthedSnapNewRouteImport.update({
+  id: '/snap/new',
+  path: '/snap/new',
+  getParentRoute: () => AuthedRoute,
+} as any)
 const AuthedJourneyHistoryRoute = AuthedJourneyHistoryRouteImport.update({
   id: '/journey/history',
   path: '/journey/history',
@@ -50,6 +56,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof AuthedDashboardRoute
   '/journey/history': typeof AuthedJourneyHistoryRoute
+  '/snap/new': typeof AuthedSnapNewRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
 }
@@ -57,6 +64,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dashboard': typeof AuthedDashboardRoute
   '/journey/history': typeof AuthedJourneyHistoryRoute
+  '/snap/new': typeof AuthedSnapNewRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
 }
@@ -66,6 +74,7 @@ export interface FileRoutesById {
   '/_authed': typeof AuthedRouteWithChildren
   '/_authed/dashboard': typeof AuthedDashboardRoute
   '/_authed/journey/history': typeof AuthedJourneyHistoryRoute
+  '/_authed/snap/new': typeof AuthedSnapNewRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
 }
@@ -75,16 +84,24 @@ export interface FileRouteTypes {
     | '/'
     | '/dashboard'
     | '/journey/history'
+    | '/snap/new'
     | '/api/auth/$'
     | '/api/trpc/$'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard' | '/journey/history' | '/api/auth/$' | '/api/trpc/$'
+  to:
+    | '/'
+    | '/dashboard'
+    | '/journey/history'
+    | '/snap/new'
+    | '/api/auth/$'
+    | '/api/trpc/$'
   id:
     | '__root__'
     | '/'
     | '/_authed'
     | '/_authed/dashboard'
     | '/_authed/journey/history'
+    | '/_authed/snap/new'
     | '/api/auth/$'
     | '/api/trpc/$'
   fileRoutesById: FileRoutesById
@@ -133,6 +150,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authed/snap/new': {
+      id: '/_authed/snap/new'
+      path: '/snap/new'
+      fullPath: '/snap/new'
+      preLoaderRoute: typeof AuthedSnapNewRouteImport
+      parentRoute: typeof AuthedRoute
+    }
     '/_authed/journey/history': {
       id: '/_authed/journey/history'
       path: '/journey/history'
@@ -146,11 +170,13 @@ declare module '@tanstack/react-router' {
 interface AuthedRouteChildren {
   AuthedDashboardRoute: typeof AuthedDashboardRoute
   AuthedJourneyHistoryRoute: typeof AuthedJourneyHistoryRoute
+  AuthedSnapNewRoute: typeof AuthedSnapNewRoute
 }
 
 const AuthedRouteChildren: AuthedRouteChildren = {
   AuthedDashboardRoute: AuthedDashboardRoute,
   AuthedJourneyHistoryRoute: AuthedJourneyHistoryRoute,
+  AuthedSnapNewRoute: AuthedSnapNewRoute,
 }
 
 const AuthedRouteWithChildren =

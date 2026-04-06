@@ -46,6 +46,13 @@ function AuthedLayout() {
             <Button
               variant="ghost"
               size="sm"
+              onClick={() => navigate({ to: "/snap/new" })}
+            >
+              Snap
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => navigate({ to: "/journey/history" })}
             >
               History

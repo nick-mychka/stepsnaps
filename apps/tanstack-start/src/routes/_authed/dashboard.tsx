@@ -4,7 +4,7 @@ import {
   useQueryClient,
   useSuspenseQuery,
 } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 
 import { Badge } from "@stepsnaps/ui/badge";
 import { Button } from "@stepsnaps/ui/button";
@@ -124,7 +124,8 @@ function ActiveJourneyCard(props: {
           </div>
           <CardDescription>Started {journey.startDate}</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="flex gap-2">
+          <SnapButton />
           <Button
             variant="destructive"
             onClick={() => setShowFinishDialog(true)}
@@ -139,6 +140,15 @@ function ActiveJourneyCard(props: {
         onOpenChange={setShowFinishDialog}
       />
     </>
+  );
+}
+
+function SnapButton() {
+  const navigate = useNavigate();
+  return (
+    <Button onClick={() => navigate({ to: "/snap/new" })}>
+      Log Today's Snap
+    </Button>
   );
 }
 
