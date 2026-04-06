@@ -15,7 +15,8 @@
     "./card": "./src/card.tsx",
     "./dialog": "./src/dialog.tsx",
     "./textarea": "./src/textarea.tsx",
-    "./toast": "./src/toast.tsx"
+    "./toast": "./src/toast.tsx",
+    "./chart": "./src/chart.tsx"
   },
   "license": "MIT",
   "scripts": {
@@ -29,6 +30,7 @@
     "class-variance-authority": "^0.7.1",
     "lucide-react": "^1.7.0",
     "radix-ui": "^1.4.3",
+    "recharts": "3.8.0",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.5.0"
   },
