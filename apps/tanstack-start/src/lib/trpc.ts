@@ -23,9 +23,7 @@ export const makeTRPCClient = createIsomorphicFn()
           router: Api.appRouter,
           transformer: SuperJSON,
           createContext: () => {
-            const headers = new Headers(
-              getRequestHeaders() as HeadersInit,
-            );
+            const headers = new Headers(getRequestHeaders() as HeadersInit);
             headers.set("x-trpc-source", "tanstack-start-server");
             return Api.createTRPCContext({ auth, headers });
           },
