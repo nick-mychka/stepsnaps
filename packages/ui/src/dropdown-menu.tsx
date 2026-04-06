@@ -5,8 +5,9 @@ import {
   ChevronRightIcon,
   DotFilledIcon,
 } from "@radix-ui/react-icons";
-import { cn } from "@stepsnaps/ui";
 import { DropdownMenu as DropdownMenuPrimitive } from "radix-ui";
+
+import { cn } from "@stepsnaps/ui";
 
 export function DropdownMenu({
   ...props

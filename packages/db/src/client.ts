@@ -3,7 +3,10 @@ import postgres from "postgres";
 
 import * as schema from "./schema";
 
-const client = postgres(process.env.POSTGRES_URL!);
+if (!process.env.POSTGRES_URL) {
+  throw new Error("POSTGRES_URL is not set");
+}
+const client = postgres(process.env.POSTGRES_URL);
 
 export const db = drizzle({
   client,

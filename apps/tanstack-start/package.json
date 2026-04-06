@@ -13,19 +13,19 @@
     "with-env": "dotenv -e ../../.env --"
   },
   "dependencies": {
+    "@fontsource-variable/geist": "^5.2.8",
+    "@fontsource-variable/geist-mono": "^5.2.7",
     "@stepsnaps/api": "workspace:*",
     "@stepsnaps/auth": "workspace:*",
     "@stepsnaps/db": "workspace:*",
     "@stepsnaps/ui": "workspace:*",
-    "@fontsource-variable/geist": "^5.2.8",
-    "@fontsource-variable/geist-mono": "^5.2.7",
     "@t3-oss/env-core": "^0.13.8",
     "@tanstack/react-form": "catalog:",
     "@tanstack/react-query": "catalog:",
-    "@tanstack/react-router": "^1.135.2",
-    "@tanstack/react-router-devtools": "^1.135.2",
-    "@tanstack/react-router-ssr-query": "^1.135.2",
-    "@tanstack/react-start": "^1.135.2",
+    "@tanstack/react-router": "^1.168.10",
+    "@tanstack/react-router-devtools": "^1.166.11",
+    "@tanstack/react-router-ssr-query": "^1.166.10",
+    "@tanstack/react-start": "^1.167.16",
     "@trpc/client": "catalog:",
     "@trpc/server": "catalog:",
     "@trpc/tanstack-react-query": "catalog:",
@@ -50,8 +50,7 @@
     "prettier": "catalog:",
     "tailwindcss": "catalog:",
     "typescript": "catalog:",
-    "vite": "catalog:",
-    "vite-tsconfig-paths": "^5.1.4"
+    "vite": "catalog:"
   },
   "prettier": "@stepsnaps/prettier-config"
 }

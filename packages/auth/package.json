@@ -17,17 +17,17 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@stepsnaps/db": "workspace:*",
     "@better-auth/expo": "catalog:",
+    "@stepsnaps/db": "workspace:*",
     "@t3-oss/env-core": "^0.13.8",
     "better-auth": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@better-auth/cli": "catalog:",
     "@stepsnaps/eslint-config": "workspace:*",
     "@stepsnaps/prettier-config": "workspace:*",
     "@stepsnaps/tsconfig": "workspace:*",
-    "@better-auth/cli": "catalog:",
     "eslint": "catalog:",
     "prettier": "catalog:",
     "typescript": "catalog:"

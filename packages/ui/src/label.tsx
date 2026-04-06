@@ -1,7 +1,8 @@
 "use client";
 
-import { cn } from "@stepsnaps/ui";
 import { Label as LabelPrimitive } from "radix-ui";
+
+import { cn } from "@stepsnaps/ui";
 
 export function Label({
   className,

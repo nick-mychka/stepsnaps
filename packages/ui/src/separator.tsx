@@ -1,7 +1,8 @@
 "use client";
 
-import { cn } from "@stepsnaps/ui";
 import { Separator as SeparatorPrimitive } from "radix-ui";
+
+import { cn } from "@stepsnaps/ui";
 
 export function Separator({
   className,

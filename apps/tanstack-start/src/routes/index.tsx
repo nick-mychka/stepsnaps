@@ -1,5 +1,13 @@
-import type { RouterOutputs } from "@stepsnaps/api";
 import { Suspense } from "react";
+import { useForm } from "@tanstack/react-form";
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
+import { createFileRoute } from "@tanstack/react-router";
+
+import type { RouterOutputs } from "@stepsnaps/api";
 import { CreatePostSchema } from "@stepsnaps/db/schema";
 import { cn } from "@stepsnaps/ui";
 import { Button } from "@stepsnaps/ui/button";
@@ -12,13 +20,6 @@ import {
 } from "@stepsnaps/ui/field";
 import { Input } from "@stepsnaps/ui/input";
 import { toast } from "@stepsnaps/ui/toast";
-import { useForm } from "@tanstack/react-form";
-import {
-  useMutation,
-  useQueryClient,
-  useSuspenseQuery,
-} from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
 
 import { AuthShowcase } from "~/component/auth-showcase";
 import { useTRPC } from "~/lib/trpc";

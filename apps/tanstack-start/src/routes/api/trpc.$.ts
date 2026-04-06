@@ -1,6 +1,7 @@
-import { appRouter, createTRPCContext } from "@stepsnaps/api";
 import { createFileRoute } from "@tanstack/react-router";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
+
+import { appRouter, createTRPCContext } from "@stepsnaps/api";
 
 import { auth } from "~/auth/server";
 

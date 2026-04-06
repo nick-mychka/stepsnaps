@@ -1,5 +1,6 @@
-import { Button } from "@stepsnaps/ui/button";
 import { useNavigate } from "@tanstack/react-router";
+
+import { Button } from "@stepsnaps/ui/button";
 
 import { authClient } from "~/auth/client";
 

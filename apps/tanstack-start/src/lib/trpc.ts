@@ -1,4 +1,3 @@
-import * as Api from "@stepsnaps/api";
 import { createIsomorphicFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 import {
@@ -9,6 +8,8 @@ import {
 } from "@trpc/client";
 import { createTRPCContext } from "@trpc/tanstack-react-query";
 import SuperJSON from "superjson";
+
+import * as Api from "@stepsnaps/api";
 
 import { auth } from "~/auth/server";
 import { env } from "~/env";
@@ -22,7 +23,9 @@ export const makeTRPCClient = createIsomorphicFn()
           router: Api.appRouter,
           transformer: SuperJSON,
           createContext: () => {
-            const headers = new Headers(getRequestHeaders());
+            const headers = new Headers(
+              getRequestHeaders() as HeadersInit,
+            );
             headers.set("x-trpc-source", "tanstack-start-server");
             return Api.createTRPCContext({ auth, headers });
           },
