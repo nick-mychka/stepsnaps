@@ -5,7 +5,12 @@ import {
   useQueryClient,
   useSuspenseQuery,
 } from "@tanstack/react-query";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Outlet,
+  useMatch,
+  useNavigate,
+} from "@tanstack/react-router";
 
 import { Badge } from "@stepsnaps/ui/badge";
 import { Button } from "@stepsnaps/ui/button";
@@ -28,8 +33,21 @@ export const Route = createFileRoute("/_authed/teams/$teamId")({
       trpc.team.byId.queryOptions({ id: params.teamId }),
     );
   },
-  component: TeamDetailPage,
+  component: TeamDetailLayout,
 });
+
+function TeamDetailLayout() {
+  const memberMatch = useMatch({
+    from: "/_authed/teams/$teamId/member/$userId",
+    shouldThrow: false,
+  });
+
+  if (memberMatch) {
+    return <Outlet />;
+  }
+
+  return <TeamDetailPage />;
+}
 
 function TeamDetailPage() {
   const { teamId } = Route.useParams();
