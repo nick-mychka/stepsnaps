@@ -139,4 +139,96 @@ export const snapValueRelations = relations(SnapValue, ({ one }) => ({
   }),
 }));
 
+// --- Team ---
+
+export const Team = pgTable("team", (t) => ({
+  id: t.uuid().notNull().primaryKey().defaultRandom(),
+  name: t.varchar({ length: 256 }).notNull(),
+  creatorId: t
+    .text()
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
+  updatedAt: t
+    .timestamp({ mode: "date", withTimezone: true })
+    .$onUpdateFn(() => sql`now()`),
+}));
+
+export const teamRelations = relations(Team, ({ one, many }) => ({
+  creator: one(user, {
+    fields: [Team.creatorId],
+    references: [user.id],
+  }),
+  members: many(TeamMember),
+  invites: many(TeamInvite),
+}));
+
+// --- Team Member ---
+
+export const teamMemberStatusEnum = pgEnum("team_member_status", [
+  "pending",
+  "active",
+  "declined",
+]);
+
+export const TeamMember = pgTable(
+  "team_member",
+  (t) => ({
+    id: t.uuid().notNull().primaryKey().defaultRandom(),
+    teamId: t
+      .uuid()
+      .notNull()
+      .references(() => Team.id, { onDelete: "cascade" }),
+    userId: t
+      .text()
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    status: teamMemberStatusEnum().notNull().default("pending"),
+    createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
+    updatedAt: t
+      .timestamp({ mode: "date", withTimezone: true })
+      .$onUpdateFn(() => sql`now()`),
+  }),
+  (table) => [unique().on(table.teamId, table.userId)],
+);
+
+export const teamMemberRelations = relations(TeamMember, ({ one }) => ({
+  team: one(Team, {
+    fields: [TeamMember.teamId],
+    references: [Team.id],
+  }),
+  user: one(user, {
+    fields: [TeamMember.userId],
+    references: [user.id],
+  }),
+}));
+
+// --- Team Invite ---
+
+export const TeamInvite = pgTable("team_invite", (t) => ({
+  id: t.uuid().notNull().primaryKey().defaultRandom(),
+  token: t.uuid().notNull().unique().defaultRandom(),
+  teamId: t
+    .uuid()
+    .notNull()
+    .references(() => Team.id, { onDelete: "cascade" }),
+  createdBy: t
+    .text()
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  expiresAt: t.timestamp({ withTimezone: true }).notNull(),
+  createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
+}));
+
+export const teamInviteRelations = relations(TeamInvite, ({ one }) => ({
+  team: one(Team, {
+    fields: [TeamInvite.teamId],
+    references: [Team.id],
+  }),
+  createdByUser: one(user, {
+    fields: [TeamInvite.createdBy],
+    references: [user.id],
+  }),
+}));
+
 export * from "./auth-schema";

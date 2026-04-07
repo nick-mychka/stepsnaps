@@ -11,13 +11,17 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthedRouteImport } from './routes/_authed'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as InviteTokenRouteImport } from './routes/invite/$token'
 import { Route as AuthedProgressRouteImport } from './routes/_authed/progress'
 import { Route as AuthedDashboardRouteImport } from './routes/_authed/dashboard'
+import { Route as AuthedTeamsIndexRouteImport } from './routes/_authed/teams/index'
 import { Route as ApiTrpcSplatRouteImport } from './routes/api/trpc.$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth.$'
+import { Route as AuthedTeamsTeamIdRouteImport } from './routes/_authed/teams/$teamId'
 import { Route as AuthedSnapNewRouteImport } from './routes/_authed/snap/new'
 import { Route as AuthedSettingsStepsRouteImport } from './routes/_authed/settings/steps'
 import { Route as AuthedJourneyHistoryRouteImport } from './routes/_authed/journey/history'
+import { Route as AuthedTeamsTeamIdMemberUserIdRouteImport } from './routes/_authed/teams/$teamId.member.$userId'
 
 const AuthedRoute = AuthedRouteImport.update({
   id: '/_authed',
@@ -26,6 +30,11 @@ const AuthedRoute = AuthedRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InviteTokenRoute = InviteTokenRouteImport.update({
+  id: '/invite/$token',
+  path: '/invite/$token',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthedProgressRoute = AuthedProgressRouteImport.update({
@@ -38,6 +47,11 @@ const AuthedDashboardRoute = AuthedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthedRoute,
 } as any)
+const AuthedTeamsIndexRoute = AuthedTeamsIndexRouteImport.update({
+  id: '/teams/',
+  path: '/teams/',
+  getParentRoute: () => AuthedRoute,
+} as any)
 const ApiTrpcSplatRoute = ApiTrpcSplatRouteImport.update({
   id: '/api/trpc/$',
   path: '/api/trpc/$',
@@ -47,6 +61,11 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthedTeamsTeamIdRoute = AuthedTeamsTeamIdRouteImport.update({
+  id: '/teams/$teamId',
+  path: '/teams/$teamId',
+  getParentRoute: () => AuthedRoute,
 } as any)
 const AuthedSnapNewRoute = AuthedSnapNewRouteImport.update({
   id: '/snap/new',
@@ -63,26 +82,40 @@ const AuthedJourneyHistoryRoute = AuthedJourneyHistoryRouteImport.update({
   path: '/journey/history',
   getParentRoute: () => AuthedRoute,
 } as any)
+const AuthedTeamsTeamIdMemberUserIdRoute =
+  AuthedTeamsTeamIdMemberUserIdRouteImport.update({
+    id: '/member/$userId',
+    path: '/member/$userId',
+    getParentRoute: () => AuthedTeamsTeamIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof AuthedDashboardRoute
   '/progress': typeof AuthedProgressRoute
+  '/invite/$token': typeof InviteTokenRoute
   '/journey/history': typeof AuthedJourneyHistoryRoute
   '/settings/steps': typeof AuthedSettingsStepsRoute
   '/snap/new': typeof AuthedSnapNewRoute
+  '/teams/$teamId': typeof AuthedTeamsTeamIdRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
+  '/teams/': typeof AuthedTeamsIndexRoute
+  '/teams/$teamId/member/$userId': typeof AuthedTeamsTeamIdMemberUserIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dashboard': typeof AuthedDashboardRoute
   '/progress': typeof AuthedProgressRoute
+  '/invite/$token': typeof InviteTokenRoute
   '/journey/history': typeof AuthedJourneyHistoryRoute
   '/settings/steps': typeof AuthedSettingsStepsRoute
   '/snap/new': typeof AuthedSnapNewRoute
+  '/teams/$teamId': typeof AuthedTeamsTeamIdRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
+  '/teams': typeof AuthedTeamsIndexRoute
+  '/teams/$teamId/member/$userId': typeof AuthedTeamsTeamIdMemberUserIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -90,11 +123,15 @@ export interface FileRoutesById {
   '/_authed': typeof AuthedRouteWithChildren
   '/_authed/dashboard': typeof AuthedDashboardRoute
   '/_authed/progress': typeof AuthedProgressRoute
+  '/invite/$token': typeof InviteTokenRoute
   '/_authed/journey/history': typeof AuthedJourneyHistoryRoute
   '/_authed/settings/steps': typeof AuthedSettingsStepsRoute
   '/_authed/snap/new': typeof AuthedSnapNewRoute
+  '/_authed/teams/$teamId': typeof AuthedTeamsTeamIdRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
+  '/_authed/teams/': typeof AuthedTeamsIndexRoute
+  '/_authed/teams/$teamId/member/$userId': typeof AuthedTeamsTeamIdMemberUserIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -102,37 +139,50 @@ export interface FileRouteTypes {
     | '/'
     | '/dashboard'
     | '/progress'
+    | '/invite/$token'
     | '/journey/history'
     | '/settings/steps'
     | '/snap/new'
+    | '/teams/$teamId'
     | '/api/auth/$'
     | '/api/trpc/$'
+    | '/teams/'
+    | '/teams/$teamId/member/$userId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/dashboard'
     | '/progress'
+    | '/invite/$token'
     | '/journey/history'
     | '/settings/steps'
     | '/snap/new'
+    | '/teams/$teamId'
     | '/api/auth/$'
     | '/api/trpc/$'
+    | '/teams'
+    | '/teams/$teamId/member/$userId'
   id:
     | '__root__'
     | '/'
     | '/_authed'
     | '/_authed/dashboard'
     | '/_authed/progress'
+    | '/invite/$token'
     | '/_authed/journey/history'
     | '/_authed/settings/steps'
     | '/_authed/snap/new'
+    | '/_authed/teams/$teamId'
     | '/api/auth/$'
     | '/api/trpc/$'
+    | '/_authed/teams/'
+    | '/_authed/teams/$teamId/member/$userId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthedRoute: typeof AuthedRouteWithChildren
+  InviteTokenRoute: typeof InviteTokenRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiTrpcSplatRoute: typeof ApiTrpcSplatRoute
 }
@@ -153,6 +203,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/invite/$token': {
+      id: '/invite/$token'
+      path: '/invite/$token'
+      fullPath: '/invite/$token'
+      preLoaderRoute: typeof InviteTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authed/progress': {
       id: '/_authed/progress'
       path: '/progress'
@@ -165,6 +222,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof AuthedDashboardRouteImport
+      parentRoute: typeof AuthedRoute
+    }
+    '/_authed/teams/': {
+      id: '/_authed/teams/'
+      path: '/teams'
+      fullPath: '/teams/'
+      preLoaderRoute: typeof AuthedTeamsIndexRouteImport
       parentRoute: typeof AuthedRoute
     }
     '/api/trpc/$': {
@@ -180,6 +244,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/auth/$'
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authed/teams/$teamId': {
+      id: '/_authed/teams/$teamId'
+      path: '/teams/$teamId'
+      fullPath: '/teams/$teamId'
+      preLoaderRoute: typeof AuthedTeamsTeamIdRouteImport
+      parentRoute: typeof AuthedRoute
     }
     '/_authed/snap/new': {
       id: '/_authed/snap/new'
@@ -202,8 +273,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedJourneyHistoryRouteImport
       parentRoute: typeof AuthedRoute
     }
+    '/_authed/teams/$teamId/member/$userId': {
+      id: '/_authed/teams/$teamId/member/$userId'
+      path: '/member/$userId'
+      fullPath: '/teams/$teamId/member/$userId'
+      preLoaderRoute: typeof AuthedTeamsTeamIdMemberUserIdRouteImport
+      parentRoute: typeof AuthedTeamsTeamIdRoute
+    }
   }
 }
+
+interface AuthedTeamsTeamIdRouteChildren {
+  AuthedTeamsTeamIdMemberUserIdRoute: typeof AuthedTeamsTeamIdMemberUserIdRoute
+}
+
+const AuthedTeamsTeamIdRouteChildren: AuthedTeamsTeamIdRouteChildren = {
+  AuthedTeamsTeamIdMemberUserIdRoute: AuthedTeamsTeamIdMemberUserIdRoute,
+}
+
+const AuthedTeamsTeamIdRouteWithChildren =
+  AuthedTeamsTeamIdRoute._addFileChildren(AuthedTeamsTeamIdRouteChildren)
 
 interface AuthedRouteChildren {
   AuthedDashboardRoute: typeof AuthedDashboardRoute
@@ -211,6 +300,8 @@ interface AuthedRouteChildren {
   AuthedJourneyHistoryRoute: typeof AuthedJourneyHistoryRoute
   AuthedSettingsStepsRoute: typeof AuthedSettingsStepsRoute
   AuthedSnapNewRoute: typeof AuthedSnapNewRoute
+  AuthedTeamsTeamIdRoute: typeof AuthedTeamsTeamIdRouteWithChildren
+  AuthedTeamsIndexRoute: typeof AuthedTeamsIndexRoute
 }
 
 const AuthedRouteChildren: AuthedRouteChildren = {
@@ -219,6 +310,8 @@ const AuthedRouteChildren: AuthedRouteChildren = {
   AuthedJourneyHistoryRoute: AuthedJourneyHistoryRoute,
   AuthedSettingsStepsRoute: AuthedSettingsStepsRoute,
   AuthedSnapNewRoute: AuthedSnapNewRoute,
+  AuthedTeamsTeamIdRoute: AuthedTeamsTeamIdRouteWithChildren,
+  AuthedTeamsIndexRoute: AuthedTeamsIndexRoute,
 }
 
 const AuthedRouteWithChildren =
@@ -227,9 +320,19 @@ const AuthedRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthedRoute: AuthedRouteWithChildren,
+  InviteTokenRoute: InviteTokenRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiTrpcSplatRoute: ApiTrpcSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}

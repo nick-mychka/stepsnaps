@@ -71,6 +71,13 @@ function AuthedLayout() {
             >
               Steps
             </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate({ to: "/teams" })}
+            >
+              Teams
+            </Button>
             <span className="text-muted-foreground text-sm">
               {session.user.name}
             </span>
