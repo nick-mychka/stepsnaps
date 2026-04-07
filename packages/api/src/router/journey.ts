@@ -84,8 +84,16 @@ export const journeyRouter = {
       if (!existingSteps) {
         const predefinedSteps = [
           { name: "Interviews", type: "numeric" as const, sortOrder: 0 },
-          { name: "HR Responses", type: "numeric" as const, sortOrder: 1 },
-          { name: "Vacancy Responses", type: "numeric" as const, sortOrder: 2 },
+          {
+            name: "Recruiter Replies",
+            type: "numeric" as const,
+            sortOrder: 1,
+          },
+          {
+            name: "Applications Sent",
+            type: "numeric" as const,
+            sortOrder: 2,
+          },
           { name: "Code Commits", type: "numeric" as const, sortOrder: 3 },
           {
             name: "Coding Time (hours)",
