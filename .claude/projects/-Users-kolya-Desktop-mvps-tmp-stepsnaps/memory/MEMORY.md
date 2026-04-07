@@ -1,0 +1,1 @@
+- [StepSnaps V1 scope](project_stepsnaps_v1.md) — Key product decisions and constraints for V1 release
