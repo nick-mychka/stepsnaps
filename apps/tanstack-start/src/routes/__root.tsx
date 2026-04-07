@@ -12,9 +12,7 @@ import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 
 import type { AppRouter } from "@stepsnaps/api";
 import { ThemeProvider, ThemeToggle } from "@stepsnaps/ui/theme";
-
-// TODO: temporarily disabled for Railway deployment test
-// import { Toaster } from "@stepsnaps/ui/toast";
+import { Toaster } from "@stepsnaps/ui/toast";
 
 import appCss from "~/styles.css?url";
 
@@ -48,7 +46,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           <div className="absolute right-4 bottom-12">
             <ThemeToggle />
           </div>
-          {/* <Toaster /> */}
+          <Toaster />
           <TanStackRouterDevtools position="bottom-right" />
           <Scripts />
         </body>
