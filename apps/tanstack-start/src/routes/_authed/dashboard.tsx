@@ -127,7 +127,8 @@ function ActiveJourneyCard(props: {
         <CardContent className="flex gap-2">
           <SnapButton />
           <Button
-            variant="destructive"
+            variant="secondary"
+            size="sm"
             onClick={() => setShowFinishDialog(true)}
           >
             Finish Journey
