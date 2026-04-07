@@ -3,6 +3,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Button } from "@stepsnaps/ui/button";
 
 import { authClient } from "~/auth/client";
+import { Logo } from "~/component/logo";
 
 export const Route = createFileRoute("/")({
   component: RouteComponent,
@@ -26,10 +27,12 @@ function RouteComponent() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-8">
-      <div className="flex flex-col items-center gap-2">
-        <h1 className="text-5xl font-extrabold tracking-tight">StepSnaps</h1>
-        <p className="text-muted-foreground text-lg">
+    <main className="flex min-h-screen flex-col items-center justify-center gap-10">
+      <div className="flex flex-col items-center gap-4">
+        <h1 className="text-5xl font-extrabold tracking-tight">
+          <Logo />
+        </h1>
+        <p className="text-muted-foreground text">
           Track your daily hiring journey
         </p>
       </div>

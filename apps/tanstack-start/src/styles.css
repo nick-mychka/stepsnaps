@@ -1,8 +1,7 @@
 @import "tailwindcss";
 @import "@stepsnaps/tailwind-config/theme";
 
-@import "@fontsource-variable/geist";
-@import "@fontsource-variable/geist-mono";
+@import "@fontsource-variable/inter";
 
 @source "../../../packages/ui/src/*.{ts,tsx}";
 
@@ -10,26 +9,16 @@
 @custom-variant light (&:where(.light, .light *));
 @custom-variant auto (&:where(.auto, .auto *));
 
-@utility container {
-  margin-inline: auto;
-  padding-inline: 2rem;
-  @media (width >= --theme(--breakpoint-sm)) {
-    max-width: none;
-  }
-  @media (width >= 1400px) {
-    max-width: 1400px;
-  }
-}
-
 @layer base {
-  :root {
-    --font-geist-sans: "Geist Variable";
-    --font-geist-mono: "Geist Mono Variable";
-  }
   * {
-    @apply border-border;
+    @apply border-border outline-ring/50;
   }
   body {
-    letter-spacing: var(--tracking-normal);
+    @apply bg-background text-foreground;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
   }
 }

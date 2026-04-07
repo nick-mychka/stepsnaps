@@ -3,6 +3,7 @@ import { createFileRoute, Outlet, useNavigate } from "@tanstack/react-router";
 import { Button } from "@stepsnaps/ui/button";
 
 import { authClient } from "~/auth/client";
+import { Logo } from "~/component/logo";
 
 export const Route = createFileRoute("/_authed")({
   component: AuthedLayout,
@@ -33,7 +34,7 @@ function AuthedLayout() {
             className="text-lg font-bold tracking-tight"
             onClick={() => navigate({ to: "/dashboard" })}
           >
-            StepSnaps
+            <Logo />
           </button>
           <nav className="flex items-center gap-4">
             <Button
