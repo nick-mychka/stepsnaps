@@ -12,6 +12,7 @@ RUN pnpm turbo run build --filter=@stepsnaps/tanstack-start
 FROM base AS production
 WORKDIR /app
 COPY --from=build /app/apps/tanstack-start/.output .output
+COPY --from=build /app/node_modules ./node_modules
 ENV HOST=0.0.0.0
 EXPOSE 3000
 CMD ["node", ".output/server/index.mjs"]
