@@ -12,6 +12,7 @@ import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 
 import type { AppRouter } from "@stepsnaps/api";
 import { ThemeProvider, ThemeToggle } from "@stepsnaps/ui/theme";
+
 // TODO: temporarily disabled for Railway deployment test
 // import { Toaster } from "@stepsnaps/ui/toast";
 
