@@ -3,7 +3,7 @@ builder = "nixpacks"
 buildCommand = "corepack enable && pnpm install --frozen-lockfile && pnpm turbo run build --filter=@stepsnaps/tanstack-start"
 
 [deploy]
-startCommand = "node apps/tanstack-start/.output/server/index.mjs"
+startCommand = "HOST=0.0.0.0 node apps/tanstack-start/.output/server/index.mjs"
 healthcheckPath = "/"
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 10
