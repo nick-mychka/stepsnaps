@@ -29,7 +29,7 @@ function AuthedLayout() {
   return (
     <div className="min-h-screen">
       <header className="border-b">
-        <div className="container flex h-14 items-center justify-between mx-auto">
+        <div className="container flex h-16 items-center justify-between mx-auto">
           <button
             className="text-lg font-bold tracking-tight"
             onClick={() => navigate({ to: "/dashboard" })}
