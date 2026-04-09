@@ -43,7 +43,7 @@ function JourneyHistoryPage() {
   const { data: journeys } = useSuspenseQuery(trpc.journey.list.queryOptions());
 
   return (
-    <main className="container py-8">
+    <main className="container mx-auto py-8">
       <h1 className="mb-6 text-3xl font-bold">Journey History</h1>
       {journeys.length === 0 ? (
         <p className="text-muted-foreground">

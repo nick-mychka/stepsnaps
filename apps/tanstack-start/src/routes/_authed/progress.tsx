@@ -59,7 +59,7 @@ function ProgressPage() {
 
   if (!activeJourney) {
     return (
-      <main className="container py-8">
+      <main className="container mx-auto py-8">
         <Card className="max-w-lg">
           <CardHeader>
             <CardTitle>No Active Journey</CardTitle>
@@ -78,7 +78,7 @@ function ProgressPage() {
   }
 
   return (
-    <main className="container py-8">
+    <main className="container mx-auto py-8">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-3xl font-bold">Progress</h1>
         <div className="flex gap-1 rounded-lg border p-1">

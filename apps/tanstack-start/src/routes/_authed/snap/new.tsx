@@ -40,7 +40,7 @@ function SnapFormPage() {
 
   if (!activeJourney) {
     return (
-      <main className="container py-8">
+      <main className="container mx-auto py-8">
         <Card className="max-w-lg">
           <CardHeader>
             <CardTitle>No Active Journey</CardTitle>
@@ -137,14 +137,14 @@ function SnapForm(props: { journeyId: string }) {
 
   if (!initialized) {
     return (
-      <main className="container py-8">
+      <main className="container mx-auto py-8">
         <p className="text-muted-foreground">Loading...</p>
       </main>
     );
   }
 
   return (
-    <main className="container py-8">
+    <main className="container mx-auto py-8">
       <Card className="max-w-lg">
         <CardHeader>
           <CardTitle>

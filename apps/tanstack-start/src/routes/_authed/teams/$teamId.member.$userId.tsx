@@ -48,7 +48,7 @@ function MemberProgressPage() {
   );
 
   return (
-    <main className="container py-8">
+    <main className="container mx-auto py-8">
       <Button
         variant="ghost"
         size="sm"

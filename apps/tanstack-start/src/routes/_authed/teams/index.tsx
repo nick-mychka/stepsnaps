@@ -44,7 +44,7 @@ function TeamsPage() {
   const { data: teams } = useSuspenseQuery(trpc.team.list.queryOptions());
 
   return (
-    <main className="container py-8">
+    <main className="container mx-auto py-8">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-3xl font-bold">Teams</h1>
         <CreateTeamDialog />

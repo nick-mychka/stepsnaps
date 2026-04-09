@@ -82,12 +82,12 @@ function StepsSettingsPage() {
   };
 
   return (
-    <main className="container py-8">
+    <main className="container mx-auto py-8">
       <Card className="max-w-2xl">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>Step Definitions</CardTitle>
+              <CardTitle className="mb-4">Step Definitions</CardTitle>
               <CardDescription>
                 Customize the steps you track in your daily snaps. Changes only
                 affect future snaps.

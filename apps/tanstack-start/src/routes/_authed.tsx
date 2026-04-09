@@ -1,6 +1,15 @@
 import { createFileRoute, Outlet, useNavigate } from "@tanstack/react-router";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@stepsnaps/ui/avatar";
 import { Button } from "@stepsnaps/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@stepsnaps/ui/dropdown-menu";
 
 import { authClient } from "~/auth/client";
 import { Logo } from "~/component/logo";
@@ -31,7 +40,7 @@ function AuthedLayout() {
       <header className="border-b">
         <div className="container mx-auto flex h-16 items-center justify-between">
           <button
-            className="text-lg font-bold tracking-tight"
+            className="text-xl font-bold tracking-tight"
             onClick={() => navigate({ to: "/dashboard" })}
           >
             <Logo />
@@ -54,44 +63,55 @@ function AuthedLayout() {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => navigate({ to: "/journey/history" })}
-            >
-              History
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
               onClick={() => navigate({ to: "/progress" })}
             >
               Progress
             </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate({ to: "/settings/steps" })}
-            >
-              Steps
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate({ to: "/teams" })}
-            >
-              Teams
-            </Button>
             <span className="text-muted-foreground text-sm">
               {session.user.name}
             </span>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={async () => {
-                await authClient.signOut();
-                await navigate({ to: "/", replace: true });
-              }}
-            >
-              Sign out
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="rounded-full">
+                  <Avatar>
+                    <AvatarImage
+                      src={session.user.image ?? undefined}
+                      alt={session.user.name}
+                    />
+                    <AvatarFallback>{session.user.name[0]}</AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-32">
+                <DropdownMenuGroup>
+                  <DropdownMenuItem
+                    onClick={() => navigate({ to: "/settings/steps" })}
+                  >
+                    Steps
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => navigate({ to: "/journey/history" })}
+                  >
+                    History
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate({ to: "/teams" })}>
+                    Teams
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuItem
+                    variant="destructive"
+                    onClick={async () => {
+                      await authClient.signOut();
+                      await navigate({ to: "/", replace: true });
+                    }}
+                  >
+                    Log out
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </nav>
         </div>
       </header>
