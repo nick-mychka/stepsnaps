@@ -20,7 +20,9 @@
     "./chart": "./src/chart.tsx",
     "./table": "./src/table.tsx",
     "./tabs": "./src/tabs.tsx",
-    "./select": "./src/select.tsx"
+    "./select": "./src/select.tsx",
+    "./radio-group": "./src/radio-group.tsx",
+    "./tooltip": "./src/tooltip.tsx"
   },
   "license": "MIT",
   "scripts": {

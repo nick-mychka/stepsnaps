@@ -2,7 +2,7 @@ import type { TRPCRouterRecord } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
-import { and, count, desc, eq } from "@stepsnaps/db";
+import { and, count, desc, eq, ne } from "@stepsnaps/db";
 import { JobApplication, Journey } from "@stepsnaps/db/schema";
 
 import { protectedProcedure } from "../trpc";
@@ -36,7 +36,7 @@ export const jobApplicationRouter = {
         ctx.db.query.JobApplication.findMany({
           where: and(
             eq(JobApplication.journeyId, journey.id),
-            // Exclude closed — we only show active apps in this phase
+            ne(JobApplication.status, "closed"),
           ),
           orderBy: desc(JobApplication.appliedAt),
           limit: PER_PAGE,
@@ -48,7 +48,12 @@ export const jobApplicationRouter = {
         ctx.db
           .select({ count: count() })
           .from(JobApplication)
-          .where(eq(JobApplication.journeyId, journey.id)),
+          .where(
+            and(
+              eq(JobApplication.journeyId, journey.id),
+              ne(JobApplication.status, "closed"),
+            ),
+          ),
       ]);
 
       return {
@@ -103,5 +108,133 @@ export const jobApplicationRouter = {
         .returning();
 
       return application ?? null;
+    }),
+
+  /** Get a single application by ID, with ownership check. */
+  byId: protectedProcedure
+    .input(z.object({ id: z.string().uuid() }))
+    .query(async ({ ctx, input }) => {
+      const application = await ctx.db.query.JobApplication.findFirst({
+        where: eq(JobApplication.id, input.id),
+        with: {
+          journey: true,
+          source: true,
+          interviews: true,
+        },
+      });
+
+      if (application?.journey.userId !== ctx.session.user.id) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Application not found",
+        });
+      }
+
+      return application;
+    }),
+
+  /** Update application fields and optionally change status to on_hold. */
+  update: protectedProcedure
+    .input(
+      z.object({
+        id: z.string().uuid(),
+        companyName: z.string().min(1).max(256).optional(),
+        jobTitle: z.string().max(256).optional().nullable(),
+        salary: z.string().max(256).optional().nullable(),
+        workMode: z.enum(["remote", "onsite", "hybrid"]).optional(),
+        jobUrl: z.string().url().optional().nullable().or(z.literal("")),
+        status: z.enum(["on_hold", "interviewing"]).optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      // Verify ownership
+      const existing = await ctx.db.query.JobApplication.findFirst({
+        where: eq(JobApplication.id, input.id),
+        with: { journey: true },
+      });
+
+      if (existing?.journey.userId !== ctx.session.user.id) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Application not found",
+        });
+      }
+
+      // Validate status transition if changing status
+      if (input.status) {
+        const validTransitions: Record<string, string[]> = {
+          pending: ["on_hold"],
+          interviewing: ["on_hold"],
+          on_hold: ["interviewing"],
+          closed: [],
+        };
+
+        const allowed = validTransitions[existing.status] ?? [];
+        if (!allowed.includes(input.status)) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: `Cannot transition from "${existing.status}" to "${input.status}"`,
+          });
+        }
+      }
+
+      const { id, status, ...fields } = input;
+
+      const [updated] = await ctx.db
+        .update(JobApplication)
+        .set({
+          ...fields,
+          ...(status ? { status } : {}),
+        })
+        .where(eq(JobApplication.id, id))
+        .returning();
+
+      return updated ?? null;
+    }),
+
+  /** Close an application with a reason. */
+  close: protectedProcedure
+    .input(
+      z.object({
+        id: z.string().uuid(),
+        closedReason: z.enum([
+          "rejected",
+          "withdrawn",
+          "no_response",
+          "success",
+        ]),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const existing = await ctx.db.query.JobApplication.findFirst({
+        where: eq(JobApplication.id, input.id),
+        with: { journey: true },
+      });
+
+      if (existing?.journey.userId !== ctx.session.user.id) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Application not found",
+        });
+      }
+
+      // Only interviewing and on_hold can be closed
+      if (existing.status !== "interviewing" && existing.status !== "on_hold") {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: `Cannot close an application with status "${existing.status}"`,
+        });
+      }
+
+      const [closed] = await ctx.db
+        .update(JobApplication)
+        .set({
+          status: "closed",
+          closedReason: input.closedReason,
+        })
+        .where(eq(JobApplication.id, input.id))
+        .returning();
+
+      return closed ?? null;
     }),
 } satisfies TRPCRouterRecord;

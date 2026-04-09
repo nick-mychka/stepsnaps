@@ -9,7 +9,7 @@
 - **Key models**: JobApplication belongs to Journey. Interview belongs to JobApplication. Source belongs to User. One journey has many applications, one application has many interviews.
 - **API**: 3 new tRPC routers (jobApplication, interview, source) using `protectedProcedure` and `TRPCRouterRecord` pattern from existing routers. Ownership verified by joining through journeyId -> Journey.userId.
 - **Table**: TanStack Table with manual server-side pagination. All table state (page, filters, search) managed in React state.
-- **UI components**: shadcn Table, Tabs, Select, Pagination, RadioGroup, Tooltip, Popover, Command added to `packages/ui/`
+- **UI components**: shadcn Table, Tabs, Select, Pagination, RadioGroup, Tooltip, Popover, Command, Empty added to `packages/ui/`
 
 ---
 
@@ -25,17 +25,17 @@ The foundational slice: schema, API, and a working page where a user can add a j
 
 **API**: `jobApplication.create` mutation (accepts all fields except source for now, auto-sets status=pending and appliedAt=now, verifies journey is active and belongs to user). `jobApplication.list` query (paginated, returns `{ items, total, page, perPage }`, default sort appliedAt desc, filters non-closed only, verifies journey ownership).
 
-**UI**: Add shadcn Table, Tabs, Select, Pagination components to `packages/ui/`. Create `/applications` route with loader that prefetches the list. Add conditional "Applications" nav item in the authed layout (visible only when `journey.active` returns data). Build the ApplicationsTable using TanStack Table with columns: company name, job title, salary, work mode, applied at, status badge. Add pagination controls. Build AddApplicationDialog with form fields: companyName (required), jobTitle, salary, workMode (select, default remote), jobUrl. Show empty state with CTA when no applications exist.
+**UI**: Add shadcn Table, Tabs, Select, Pagination components to `packages/ui/`. Create `/applications` route with loader that prefetches the list. Add conditional "Applications" nav item in the authed layout (visible only when `journey.active` returns data). Build the ApplicationsTable using TanStack Table with columns: company name, job title, salary, work mode, applied at, status badge. Add pagination controls. Build AddApplicationDialog with form fields: companyName (required), jobTitle, salary, workMode (select, default remote), jobUrl. Show empty state (use shadcn Empty) with CTA when no applications exist.
 
 ### Acceptance criteria
 
-- [ ] All 3 tables and 4 enums exist in the database after migration
-- [ ] User can create a job application from the Add dialog
-- [ ] Applications appear in a paginated table (25 per page) sorted by applied_at desc
-- [ ] Status auto-set to "pending" and appliedAt auto-set to current date on create
-- [ ] "Applications" nav item only appears when user has an active journey
-- [ ] Empty state shows when no applications exist, with a CTA to add the first one
-- [ ] Journey ownership is enforced on all procedures
+- [x] All 3 tables and 4 enums exist in the database after migration
+- [x] User can create a job application from the Add dialog
+- [x] Applications appear in a paginated table (25 per page) sorted by applied_at desc
+- [x] Status auto-set to "pending" and appliedAt auto-set to current date on create
+- [x] "Applications" nav item only appears when user has an active journey
+- [x] Empty state shows when no applications exist, with a CTA to add the first one
+- [x] Journey ownership is enforced on all procedures
 
 ---
 
@@ -52,6 +52,7 @@ Add the ability to edit an application and close it with a reason, with server-s
 **UI**: Add shadcn RadioGroup and Tooltip components. Build EditApplicationDialog (pre-filled form, same fields as create, plus a button/option to set status to on_hold or trigger close). Clicking company name in the table opens the Edit dialog. Build CloseApplicationDialog (radio group with 4 closed reasons, no_response preselected, tooltips explaining each reason). On close submit, status changes to "closed" and table refetches.
 
 **Status transition rules enforced server-side**:
+
 - pending -> on_hold (manual)
 - interviewing -> on_hold (manual)
 - interviewing -> closed (manual)
@@ -61,13 +62,13 @@ Add the ability to edit an application and close it with a reason, with server-s
 
 ### Acceptance criteria
 
-- [ ] Clicking company name in table opens Edit dialog with pre-filled values
-- [ ] User can update application fields (company, title, salary, work mode, URL)
-- [ ] User can set application to "on_hold" from Edit dialog
-- [ ] User can close an application via Close dialog with a reason selection
-- [ ] Closed reason tooltips display correctly
-- [ ] Invalid status transitions are rejected server-side with clear error
-- [ ] Closed applications disappear from the active table
+- [x] Clicking company name in table opens Edit dialog with pre-filled values
+- [x] User can update application fields (company, title, salary, work mode, URL)
+- [x] User can set application to "on_hold" from Edit dialog
+- [x] User can close an application via Close dialog with a reason selection
+- [x] Closed reason tooltips display correctly
+- [x] Invalid status transitions are rejected server-side with clear error
+- [x] Closed applications disappear from the active table
 
 ---
 
