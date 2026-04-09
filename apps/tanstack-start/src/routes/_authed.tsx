@@ -67,28 +67,6 @@ function AuthedLayout() {
             >
               Progress
             </Button>
-
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate({ to: "/settings/steps" })}
-            >
-              Steps
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate({ to: "/journey/history" })}
-            >
-              History
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate({ to: "/teams" })}
-            >
-              Teams
-            </Button>
             <span className="text-muted-foreground text-sm">
               {session.user.name}
             </span>
@@ -102,9 +80,19 @@ function AuthedLayout() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-32">
                 <DropdownMenuGroup>
-                  <DropdownMenuItem>Profile</DropdownMenuItem>
-                  <DropdownMenuItem>Billing</DropdownMenuItem>
-                  <DropdownMenuItem>Settings</DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => navigate({ to: "/settings/steps" })}
+                  >
+                    Steps
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => navigate({ to: "/journey/history" })}
+                  >
+                    History
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate({ to: "/teams" })}>
+                    Teams
+                  </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
