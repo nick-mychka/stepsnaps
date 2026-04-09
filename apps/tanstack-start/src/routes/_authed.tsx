@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Outlet, useNavigate } from "@tanstack/react-router";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@stepsnaps/ui/avatar";
@@ -13,6 +14,7 @@ import {
 
 import { authClient } from "~/auth/client";
 import { Logo } from "~/component/logo";
+import { useTRPC } from "~/lib/trpc";
 
 export const Route = createFileRoute("/_authed")({
   component: AuthedLayout,
@@ -21,6 +23,8 @@ export const Route = createFileRoute("/_authed")({
 function AuthedLayout() {
   const { data: session, isPending } = authClient.useSession();
   const navigate = useNavigate();
+  const trpc = useTRPC();
+  const { data: activeJourney } = useQuery(trpc.journey.active.queryOptions());
 
   if (isPending) {
     return (
@@ -67,6 +71,15 @@ function AuthedLayout() {
             >
               Progress
             </Button>
+            {activeJourney && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate({ to: "/applications" })}
+              >
+                Applications
+              </Button>
+            )}
             <span className="text-muted-foreground text-sm">
               {session.user.name}
             </span>

@@ -14,6 +14,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as InviteTokenRouteImport } from './routes/invite/$token'
 import { Route as AuthedProgressRouteImport } from './routes/_authed/progress'
 import { Route as AuthedDashboardRouteImport } from './routes/_authed/dashboard'
+import { Route as AuthedApplicationsRouteImport } from './routes/_authed/applications'
 import { Route as AuthedTeamsIndexRouteImport } from './routes/_authed/teams/index'
 import { Route as ApiTrpcSplatRouteImport } from './routes/api/trpc.$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth.$'
@@ -45,6 +46,11 @@ const AuthedProgressRoute = AuthedProgressRouteImport.update({
 const AuthedDashboardRoute = AuthedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => AuthedRoute,
+} as any)
+const AuthedApplicationsRoute = AuthedApplicationsRouteImport.update({
+  id: '/applications',
+  path: '/applications',
   getParentRoute: () => AuthedRoute,
 } as any)
 const AuthedTeamsIndexRoute = AuthedTeamsIndexRouteImport.update({
@@ -91,6 +97,7 @@ const AuthedTeamsTeamIdMemberUserIdRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/applications': typeof AuthedApplicationsRoute
   '/dashboard': typeof AuthedDashboardRoute
   '/progress': typeof AuthedProgressRoute
   '/invite/$token': typeof InviteTokenRoute
@@ -105,6 +112,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/applications': typeof AuthedApplicationsRoute
   '/dashboard': typeof AuthedDashboardRoute
   '/progress': typeof AuthedProgressRoute
   '/invite/$token': typeof InviteTokenRoute
@@ -121,6 +129,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authed': typeof AuthedRouteWithChildren
+  '/_authed/applications': typeof AuthedApplicationsRoute
   '/_authed/dashboard': typeof AuthedDashboardRoute
   '/_authed/progress': typeof AuthedProgressRoute
   '/invite/$token': typeof InviteTokenRoute
@@ -137,6 +146,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/applications'
     | '/dashboard'
     | '/progress'
     | '/invite/$token'
@@ -151,6 +161,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/applications'
     | '/dashboard'
     | '/progress'
     | '/invite/$token'
@@ -166,6 +177,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authed'
+    | '/_authed/applications'
     | '/_authed/dashboard'
     | '/_authed/progress'
     | '/invite/$token'
@@ -222,6 +234,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof AuthedDashboardRouteImport
+      parentRoute: typeof AuthedRoute
+    }
+    '/_authed/applications': {
+      id: '/_authed/applications'
+      path: '/applications'
+      fullPath: '/applications'
+      preLoaderRoute: typeof AuthedApplicationsRouteImport
       parentRoute: typeof AuthedRoute
     }
     '/_authed/teams/': {
@@ -295,6 +314,7 @@ const AuthedTeamsTeamIdRouteWithChildren =
   AuthedTeamsTeamIdRoute._addFileChildren(AuthedTeamsTeamIdRouteChildren)
 
 interface AuthedRouteChildren {
+  AuthedApplicationsRoute: typeof AuthedApplicationsRoute
   AuthedDashboardRoute: typeof AuthedDashboardRoute
   AuthedProgressRoute: typeof AuthedProgressRoute
   AuthedJourneyHistoryRoute: typeof AuthedJourneyHistoryRoute
@@ -305,6 +325,7 @@ interface AuthedRouteChildren {
 }
 
 const AuthedRouteChildren: AuthedRouteChildren = {
+  AuthedApplicationsRoute: AuthedApplicationsRoute,
   AuthedDashboardRoute: AuthedDashboardRoute,
   AuthedProgressRoute: AuthedProgressRoute,
   AuthedJourneyHistoryRoute: AuthedJourneyHistoryRoute,
