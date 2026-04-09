@@ -1,6 +1,6 @@
 import { createFileRoute, Outlet, useNavigate } from "@tanstack/react-router";
 
-import { Avatar, AvatarFallback } from "@stepsnaps/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@stepsnaps/ui/avatar";
 import { Button } from "@stepsnaps/ui/button";
 import {
   DropdownMenu,
@@ -40,7 +40,7 @@ function AuthedLayout() {
       <header className="border-b">
         <div className="container mx-auto flex h-16 items-center justify-between">
           <button
-            className="text-lg font-bold tracking-tight"
+            className="text-xl font-bold tracking-tight"
             onClick={() => navigate({ to: "/dashboard" })}
           >
             <Logo />
@@ -74,6 +74,10 @@ function AuthedLayout() {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="rounded-full">
                   <Avatar>
+                    <AvatarImage
+                      src={session.user.image ?? undefined}
+                      alt={session.user.name}
+                    />
                     <AvatarFallback>{session.user.name[0]}</AvatarFallback>
                   </Avatar>
                 </Button>
