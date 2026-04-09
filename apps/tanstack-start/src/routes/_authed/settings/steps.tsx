@@ -87,7 +87,7 @@ function StepsSettingsPage() {
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>Step Definitions</CardTitle>
+              <CardTitle className="mb-4">Step Definitions</CardTitle>
               <CardDescription>
                 Customize the steps you track in your daily snaps. Changes only
                 affect future snaps.
