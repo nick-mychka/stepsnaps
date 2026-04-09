@@ -86,12 +86,12 @@ Add the Source entity and a typeahead combobox for selecting/creating sources wh
 
 ### Acceptance criteria
 
-- [ ] Source typeahead shows existing sources as user types
-- [ ] User can create a new source on-the-fly from the typeahead
-- [ ] Sources are unique per user (case-insensitive) — creating "linkedin" when "LinkedIn" exists reuses the existing one
-- [ ] "LinkedIn" is auto-seeded as a predefined source on first use
-- [ ] Source column appears in the applications table
-- [ ] Source is persisted with the application and shows correctly on edit
+- [x] Source typeahead shows existing sources as user types
+- [x] User can create a new source on-the-fly from the typeahead
+- [x] Sources are unique per user (case-insensitive) — creating "linkedin" when "LinkedIn" exists reuses the existing one
+- [x] "LinkedIn" is auto-seeded as a predefined source on first use
+- [x] Source column appears in the applications table
+- [x] Source is persisted with the application and shows correctly on edit
 
 ---
 

@@ -2,12 +2,52 @@ import type { TRPCRouterRecord } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
-import { and, count, desc, eq, ne } from "@stepsnaps/db";
-import { JobApplication, Journey } from "@stepsnaps/db/schema";
+import type { db as _dbTypeHelper } from "@stepsnaps/db/client";
+import { and, count, desc, eq, ne, sql } from "@stepsnaps/db";
+import { JobApplication, Journey, Source } from "@stepsnaps/db/schema";
 
 import { protectedProcedure } from "../trpc";
 
+type Db = typeof _dbTypeHelper;
+
 const PER_PAGE = 25;
+
+/** Find or create a source by name (case-insensitive) for a user. */
+async function findOrCreateSource(
+  db: Db,
+  userId: string,
+  name: string,
+): Promise<string> {
+  const trimmed = name.trim();
+  if (!trimmed) throw new Error("Source name cannot be empty");
+
+  // Case-insensitive lookup
+  const existing = await db.query.Source.findFirst({
+    where: and(
+      eq(Source.userId, userId),
+      eq(sql`lower(${Source.name})`, trimmed.toLowerCase()),
+    ),
+  });
+
+  if (existing) return existing.id;
+
+  const [created] = await db
+    .insert(Source)
+    .values({ userId, name: trimmed })
+    .returning();
+
+  return created?.id ?? "";
+}
+
+/** Seed "LinkedIn" as a default source if the user has no sources yet. */
+async function seedDefaultSources(db: Db, userId: string) {
+  const existing = await db.query.Source.findFirst({
+    where: eq(Source.userId, userId),
+  });
+  if (!existing) {
+    await db.insert(Source).values({ userId, name: "LinkedIn" });
+  }
+}
 
 export const jobApplicationRouter = {
   /** Paginated list of active (non-closed) applications for the user's active journey. */
@@ -73,6 +113,7 @@ export const jobApplicationRouter = {
         salary: z.string().max(256).optional(),
         workMode: z.enum(["remote", "onsite", "hybrid"]).default("remote"),
         jobUrl: z.string().url().optional().or(z.literal("")),
+        sourceName: z.string().max(256).optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -91,6 +132,19 @@ export const jobApplicationRouter = {
         });
       }
 
+      // Seed default sources on first use
+      await seedDefaultSources(ctx.db, ctx.session.user.id);
+
+      // Find or create source if provided
+      let sourceId: string | null = null;
+      if (input.sourceName?.trim()) {
+        sourceId = await findOrCreateSource(
+          ctx.db,
+          ctx.session.user.id,
+          input.sourceName,
+        );
+      }
+
       const today = new Date().toISOString().slice(0, 10);
 
       const [application] = await ctx.db
@@ -102,6 +156,7 @@ export const jobApplicationRouter = {
           salary: input.salary ?? null,
           workMode: input.workMode,
           jobUrl: input.jobUrl ?? null,
+          sourceId,
           appliedAt: today,
           status: "pending",
         })
@@ -143,6 +198,7 @@ export const jobApplicationRouter = {
         salary: z.string().max(256).optional().nullable(),
         workMode: z.enum(["remote", "onsite", "hybrid"]).optional(),
         jobUrl: z.string().url().optional().nullable().or(z.literal("")),
+        sourceName: z.string().max(256).optional().nullable(),
         status: z.enum(["on_hold", "interviewing"]).optional(),
       }),
     )
@@ -178,12 +234,25 @@ export const jobApplicationRouter = {
         }
       }
 
-      const { id, status, ...fields } = input;
+      // Resolve source
+      let sourceId: string | null | undefined;
+      if (input.sourceName === null || input.sourceName === "") {
+        sourceId = null; // Clear source
+      } else if (input.sourceName) {
+        sourceId = await findOrCreateSource(
+          ctx.db,
+          ctx.session.user.id,
+          input.sourceName,
+        );
+      }
+
+      const { id, status, sourceName: _sourceName, ...fields } = input;
 
       const [updated] = await ctx.db
         .update(JobApplication)
         .set({
           ...fields,
+          ...(sourceId !== undefined ? { sourceId } : {}),
           ...(status ? { status } : {}),
         })
         .where(eq(JobApplication.id, id))

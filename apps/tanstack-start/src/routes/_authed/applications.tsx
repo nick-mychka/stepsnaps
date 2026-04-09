@@ -16,6 +16,14 @@ import {
 import { Badge } from "@stepsnaps/ui/badge";
 import { Button } from "@stepsnaps/ui/button";
 import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@stepsnaps/ui/command";
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -25,6 +33,7 @@ import {
 } from "@stepsnaps/ui/dialog";
 import { Input } from "@stepsnaps/ui/input";
 import { Label } from "@stepsnaps/ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "@stepsnaps/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@stepsnaps/ui/radio-group";
 import {
   Select,
@@ -160,6 +169,7 @@ interface ApplicationRow {
   jobTitle: string | null;
   salary: string | null;
   workMode: "remote" | "onsite" | "hybrid";
+  source: { id: string; name: string } | null;
   appliedAt: string;
   status: "pending" | "interviewing" | "on_hold" | "closed";
 }
@@ -198,6 +208,10 @@ function createColumns(onEdit: (id: string) => void) {
         };
         return labels[info.getValue()] ?? info.getValue();
       },
+    }),
+    columnHelper.accessor("source", {
+      header: "Source",
+      cell: (info) => info.getValue()?.name ?? "—",
     }),
     columnHelper.accessor("appliedAt", {
       header: "Applied",
@@ -283,6 +297,101 @@ function ApplicationsTable(props: {
   );
 }
 
+// --- Source Typeahead ---
+
+function SourceTypeahead(props: {
+  value: string;
+  onChange: (value: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const trpc = useTRPC();
+
+  const { data: sources } = useQuery(
+    trpc.source.search.queryOptions({ query: search }, { enabled: open }),
+  );
+
+  const hasExactMatch = sources?.some(
+    (s) => s.name.toLowerCase() === search.trim().toLowerCase(),
+  );
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          className="w-full justify-between font-normal"
+          type="button"
+        >
+          {props.value || "Select source..."}
+          <span className="text-muted-foreground ml-2 text-xs">
+            {open ? "▲" : "▼"}
+          </span>
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent
+        className="w-[--radix-popover-trigger-width] p-0"
+        align="start"
+      >
+        <Command shouldFilter={false}>
+          <CommandInput
+            placeholder="Search sources..."
+            value={search}
+            onValueChange={setSearch}
+          />
+          <CommandList>
+            <CommandEmpty>
+              {search.trim() ? "No sources found." : "Type to search..."}
+            </CommandEmpty>
+            <CommandGroup>
+              {sources?.map((source) => (
+                <CommandItem
+                  key={source.id}
+                  value={source.name}
+                  onSelect={() => {
+                    props.onChange(source.name);
+                    setOpen(false);
+                    setSearch("");
+                  }}
+                >
+                  {source.name}
+                </CommandItem>
+              ))}
+              {search.trim() && !hasExactMatch && (
+                <CommandItem
+                  value={`create-${search}`}
+                  onSelect={() => {
+                    props.onChange(search.trim());
+                    setOpen(false);
+                    setSearch("");
+                  }}
+                >
+                  Create "{search.trim()}"
+                </CommandItem>
+              )}
+              {props.value && (
+                <CommandItem
+                  value="__clear__"
+                  onSelect={() => {
+                    props.onChange("");
+                    setOpen(false);
+                    setSearch("");
+                  }}
+                  className="text-muted-foreground"
+                >
+                  Clear selection
+                </CommandItem>
+              )}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
 // --- Add Application Dialog ---
 
 function AddApplicationDialog(props: {
@@ -299,11 +408,13 @@ function AddApplicationDialog(props: {
     "remote",
   );
   const [jobUrl, setJobUrl] = useState("");
+  const [sourceName, setSourceName] = useState("");
 
   const createApplication = useMutation(
     trpc.jobApplication.create.mutationOptions({
       onSuccess: async () => {
         await queryClient.invalidateQueries(trpc.jobApplication.pathFilter());
+        await queryClient.invalidateQueries(trpc.source.pathFilter());
         props.onOpenChange(false);
         resetForm();
         toast.success("Application added!");
@@ -320,6 +431,7 @@ function AddApplicationDialog(props: {
     setSalary("");
     setWorkMode("remote");
     setJobUrl("");
+    setSourceName("");
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -330,6 +442,7 @@ function AddApplicationDialog(props: {
       salary: salary.trim() || undefined,
       workMode,
       jobUrl: jobUrl.trim() || undefined,
+      sourceName: sourceName.trim() || undefined,
     });
   };
 
@@ -395,6 +508,10 @@ function AddApplicationDialog(props: {
                   <SelectItem value="hybrid">Hybrid</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="sourceName">Source</Label>
+              <SourceTypeahead value={sourceName} onChange={setSourceName} />
             </div>
             <div className="flex flex-col gap-2">
               <Label htmlFor="jobUrl">Job URL</Label>
@@ -469,6 +586,7 @@ function EditApplicationForm(props: {
     salary: string | null;
     workMode: "remote" | "onsite" | "hybrid";
     jobUrl: string | null;
+    source: { id: string; name: string } | null;
     status: "pending" | "interviewing" | "on_hold" | "closed";
   };
   applicationId: string;
@@ -483,11 +601,15 @@ function EditApplicationForm(props: {
   const [salary, setSalary] = useState(props.application.salary ?? "");
   const [workMode, setWorkMode] = useState(props.application.workMode);
   const [jobUrl, setJobUrl] = useState(props.application.jobUrl ?? "");
+  const [sourceName, setSourceName] = useState(
+    props.application.source?.name ?? "",
+  );
 
   const updateApplication = useMutation(
     trpc.jobApplication.update.mutationOptions({
       onSuccess: async () => {
         await queryClient.invalidateQueries(trpc.jobApplication.pathFilter());
+        await queryClient.invalidateQueries(trpc.source.pathFilter());
         props.onOpenChange(false);
         toast.success("Application updated!");
       },
@@ -506,6 +628,7 @@ function EditApplicationForm(props: {
       salary: salary.trim() || null,
       workMode,
       jobUrl: jobUrl.trim() || null,
+      sourceName: sourceName.trim() || null,
     });
   };
 
@@ -579,6 +702,10 @@ function EditApplicationForm(props: {
               <SelectItem value="hybrid">Hybrid</SelectItem>
             </SelectContent>
           </Select>
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="edit-sourceName">Source</Label>
+          <SourceTypeahead value={sourceName} onChange={setSourceName} />
         </div>
         <div className="flex flex-col gap-2">
           <Label htmlFor="edit-jobUrl">Job URL</Label>

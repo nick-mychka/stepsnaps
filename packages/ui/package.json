@@ -22,7 +22,9 @@
     "./tabs": "./src/tabs.tsx",
     "./select": "./src/select.tsx",
     "./radio-group": "./src/radio-group.tsx",
-    "./tooltip": "./src/tooltip.tsx"
+    "./tooltip": "./src/tooltip.tsx",
+    "./popover": "./src/popover.tsx",
+    "./command": "./src/command.tsx"
   },
   "license": "MIT",
   "scripts": {
@@ -34,6 +36,7 @@
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
+    "cmdk": "^1.1.1",
     "lucide-react": "^1.7.0",
     "radix-ui": "^1.4.3",
     "recharts": "3.8.0",
