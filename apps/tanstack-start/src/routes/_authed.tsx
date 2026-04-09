@@ -1,6 +1,15 @@
 import { createFileRoute, Outlet, useNavigate } from "@tanstack/react-router";
 
+import { Avatar, AvatarFallback } from "@stepsnaps/ui/avatar";
 import { Button } from "@stepsnaps/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@stepsnaps/ui/dropdown-menu";
 
 import { authClient } from "~/auth/client";
 import { Logo } from "~/component/logo";
@@ -54,23 +63,24 @@ function AuthedLayout() {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => navigate({ to: "/journey/history" })}
-            >
-              History
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
               onClick={() => navigate({ to: "/progress" })}
             >
               Progress
             </Button>
+
             <Button
               variant="ghost"
               size="sm"
               onClick={() => navigate({ to: "/settings/steps" })}
             >
               Steps
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate({ to: "/journey/history" })}
+            >
+              History
             </Button>
             <Button
               variant="ghost"
@@ -82,16 +92,34 @@ function AuthedLayout() {
             <span className="text-muted-foreground text-sm">
               {session.user.name}
             </span>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={async () => {
-                await authClient.signOut();
-                await navigate({ to: "/", replace: true });
-              }}
-            >
-              Sign out
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="rounded-full">
+                  <Avatar>
+                    <AvatarFallback>{session.user.name[0]}</AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-32">
+                <DropdownMenuGroup>
+                  <DropdownMenuItem>Profile</DropdownMenuItem>
+                  <DropdownMenuItem>Billing</DropdownMenuItem>
+                  <DropdownMenuItem>Settings</DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuItem
+                    variant="destructive"
+                    onClick={async () => {
+                      await authClient.signOut();
+                      await navigate({ to: "/", replace: true });
+                    }}
+                  >
+                    Log out
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </nav>
         </div>
       </header>
