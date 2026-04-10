@@ -36,6 +36,7 @@ import { Label } from "@stepsnaps/ui/label";
 import { Textarea } from "@stepsnaps/ui/textarea";
 import { toast } from "@stepsnaps/ui/toast";
 
+import { authClient } from "~/auth/client";
 import {
   BackgroundV1,
   BackgroundV2,
@@ -45,7 +46,6 @@ import {
   BackgroundV6,
   BackgroundV8,
 } from "~/component/journey-background";
-import { authClient } from "~/auth/client";
 import { useTRPC } from "~/lib/trpc";
 
 function getGreeting(name: string): string {
@@ -83,13 +83,13 @@ function DashboardPage() {
     trpc.journey.active.queryOptions(),
   );
   const { data: session } = authClient.useSession();
-  const [activeBg, setActiveBg] = useState<(typeof BG_VARIANTS)[number]["id"]>(2);
+  const [activeBg, setActiveBg] =
+    useState<(typeof BG_VARIANTS)[number]["id"]>(2);
 
   const greeting = getGreeting(session?.user.name ?? "");
 
-  const ActiveBg =
-    BG_VARIANTS.find((v) => v.id === activeBg)?.Component ??
-    BG_VARIANTS[0]!.Component;
+  const activeBgEntry = BG_VARIANTS.find((v) => v.id === activeBg);
+  const ActiveBg = activeBgEntry ? activeBgEntry.Component : BackgroundV2;
 
   return (
     <>
