@@ -44,16 +44,16 @@ A complete vertical slice from Google OAuth sign-in through journey creation, fi
 
 ### Acceptance criteria
 
-- [ ] User can sign in with Google OAuth and is redirected to the dashboard
-- [ ] User can sign out
-- [ ] Unauthenticated users are redirected to sign-in when accessing protected routes
-- [ ] User can start a new journey (records start date, status=active)
-- [ ] Only one active journey is allowed per user (API enforces this)
-- [ ] Dashboard shows active journey info or "Start Journey" prompt
-- [ ] User can finish a journey via a button that opens a dialog with optional company name and offer details
-- [ ] Finishing a journey sets status=completed and records end date
-- [ ] Journey history page lists all journeys with start date, end date, duration, and status
-- [ ] User can edit company name and offer details on a completed journey
+- [x] User can sign in with Google OAuth and is redirected to the dashboard
+- [x] User can sign out
+- [x] Unauthenticated users are redirected to sign-in when accessing protected routes
+- [x] User can start a new journey (records start date, status=active)
+- [x] Only one active journey is allowed per user (API enforces this)
+- [x] Dashboard shows active journey info or "Start Journey" prompt
+- [x] User can finish a journey via a button that opens a dialog with optional company name and offer details
+- [x] Finishing a journey sets status=completed and records end date
+- [x] Journey history page lists all journeys with start date, end date, duration, and status
+- [x] User can edit company name and offer details on a completed journey
 
 ---
 
@@ -67,14 +67,14 @@ The step definitions and daily snap system. When a user creates their first jour
 
 ### Acceptance criteria
 
-- [ ] On first journey creation, 7 predefined step definitions are seeded for the user
-- [ ] Snap form displays all active step definitions as inputs (numeric input or textarea)
-- [ ] User can create a snap for today with values for each step
-- [ ] API enforces one snap per calendar day per journey (upsert behavior)
-- [ ] User can edit today's snap unlimited times (values update in place)
-- [ ] Snap form pre-populates with existing values when editing
-- [ ] Snap values are stored per step definition (numeric_value or text_value based on type)
-- [ ] Days without snaps return empty/zero when queried
+- [x] On first journey creation, 7 predefined step definitions are seeded for the user
+- [x] Snap form displays all active step definitions as inputs (numeric input or textarea)
+- [x] User can create a snap for today with values for each step
+- [x] API enforces one snap per calendar day per journey (upsert behavior)
+- [x] User can edit today's snap unlimited times (values update in place)
+- [x] Snap form pre-populates with existing values when editing
+- [x] Snap values are stored per step definition (numeric_value or text_value based on type)
+- [x] Days without snaps return empty/zero when queried
 
 ---
 
@@ -88,14 +88,14 @@ A settings page where users manage their step definitions. Users can delete (sof
 
 ### Acceptance criteria
 
-- [ ] Settings page lists all step definitions (predefined and custom), showing active/inactive state
-- [ ] User can deactivate (soft-delete) predefined steps
-- [ ] User can add a custom step with name and type (numeric or text)
-- [ ] User can edit a custom step's name and type
-- [ ] User can delete (deactivate) custom steps
-- [ ] Deactivated steps no longer appear in the snap form for new snaps
-- [ ] Past snap values for deactivated steps are preserved and visible in timeline/charts
-- [ ] Sort order is maintained and can be adjusted
+- [x] Settings page lists all step definitions (predefined and custom), showing active/inactive state
+- [x] User can deactivate (soft-delete) predefined steps
+- [x] User can add a custom step with name and type (numeric or text)
+- [x] User can edit a custom step's name and type
+- [x] User can delete (deactivate) custom steps
+- [x] Deactivated steps no longer appear in the snap form for new snaps
+- [x] Past snap values for deactivated steps are preserved and visible in timeline/charts
+- [x] Sort order is maintained and can be adjusted
 
 ---
 
@@ -109,13 +109,13 @@ A vertical timeline view within the progress page. Each day that has a snap is r
 
 ### Acceptance criteria
 
-- [ ] Progress page has a timeline view showing snaps as vertical cards
-- [ ] Each card displays the date and all step values (label + value)
-- [ ] Cards are ordered reverse-chronologically
-- [ ] User can click edit on a card to open the snap form pre-filled with that day's values
-- [ ] User can save edits to any past snap (not just today)
-- [ ] User can delete a snap from the timeline (with confirmation dialog)
-- [ ] Empty/missed days are handled gracefully (skipped or shown as empty)
+- [x] Progress page has a timeline view showing snaps as vertical cards
+- [x] Each card displays the date and all step values (label + value)
+- [x] Cards are ordered reverse-chronologically
+- [x] User can click edit on a card to open the snap form pre-filled with that day's values
+- [x] User can save edits to any past snap (not just today)
+- [x] User can delete a snap from the timeline (with confirmation dialog)
+- [x] Empty/missed days are handled gracefully (skipped or shown as empty)
 
 ---
 
@@ -129,14 +129,14 @@ A bar chart view within the progress page using Recharts. The X-axis shows days 
 
 ### Acceptance criteria
 
-- [ ] Progress page has a chart view with a toggle between chart and timeline
-- [ ] Bar chart renders with X-axis as days and Y-axis as step values
-- [ ] Each active step definition is a separate series in the chart
-- [ ] Numeric steps display their recorded values
-- [ ] Text steps display 1 (present) or 0 (absent)
-- [ ] Tooltip on text step bars shows the actual text content
-- [ ] Chart spans from journey start date to today (active) or end date (completed)
-- [ ] Days with no snap show as zero across all steps
+- [x] Progress page has a chart view with a toggle between chart and timeline
+- [x] Bar chart renders with X-axis as days and Y-axis as step values
+- [x] Each active step definition is a separate series in the chart
+- [x] Numeric steps display their recorded values
+- [x] Text steps display 1 (present) or 0 (absent)
+- [x] Tooltip on text step bars shows the actual text content
+- [x] Chart spans from journey start date to today (active) or end date (completed)
+- [x] Days with no snap show as zero across all steps
 
 ---
 
@@ -150,17 +150,17 @@ The full teams system. A user can create a team (becoming its admin). The admin 
 
 ### Acceptance criteria
 
-- [ ] User can create a team with a name
-- [ ] Team creator is automatically the admin
-- [ ] Admin can generate an invite link (unique token with expiration)
-- [ ] Admin can resend/regenerate invite links
-- [ ] Invite link landing page shows team info and options: join team, create own team, or private tracking
-- [ ] Non-registered users are directed through Google OAuth before seeing the choice screen
-- [ ] Accepting an invite adds the user as an active team member
-- [ ] Declining sets member status to declined
-- [ ] Users can be members of multiple teams
-- [ ] Teams page lists all teams the user belongs to or administers
-- [ ] Team detail page shows member list with status
-- [ ] Admin can view a teammate's chart and timeline progress (read-only)
-- [ ] Non-admin members cannot view other members' progress
-- [ ] Admin cannot edit or delete teammate snaps
+- [x] User can create a team with a name
+- [x] Team creator is automatically the admin
+- [x] Admin can generate an invite link (unique token with expiration)
+- [x] Admin can resend/regenerate invite links
+- [x] Invite link landing page shows team info and options: join team, create own team, or private tracking
+- [x] Non-registered users are directed through Google OAuth before seeing the choice screen
+- [x] Accepting an invite adds the user as an active team member
+- [x] Declining sets member status to declined
+- [x] Users can be members of multiple teams
+- [x] Teams page lists all teams the user belongs to or administers
+- [x] Team detail page shows member list with status
+- [x] Admin can view a teammate's chart and timeline progress (read-only)
+- [x] Non-admin members cannot view other members' progress
+- [x] Admin cannot edit or delete teammate snaps
