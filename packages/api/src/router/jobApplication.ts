@@ -39,16 +39,6 @@ async function findOrCreateSource(
   return created?.id ?? "";
 }
 
-/** Seed "LinkedIn" as a default source if the user has no sources yet. */
-async function seedDefaultSources(db: Db, userId: string) {
-  const existing = await db.query.Source.findFirst({
-    where: eq(Source.userId, userId),
-  });
-  if (!existing) {
-    await db.insert(Source).values({ userId, name: "LinkedIn" });
-  }
-}
-
 export const jobApplicationRouter = {
   /** Paginated list of applications for the user's active journey. */
   list: protectedProcedure
@@ -149,9 +139,6 @@ export const jobApplicationRouter = {
           message: "No active journey found",
         });
       }
-
-      // Seed default sources on first use
-      await seedDefaultSources(ctx.db, ctx.session.user.id);
 
       // Find or create source if provided
       let sourceId: string | null = null;
