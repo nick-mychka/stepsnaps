@@ -396,7 +396,7 @@ function ChartView(props: {
 const FUNNEL_LABELS = ["Interviews", "Recruiter Replies", "Applications Sent"];
 
 const FUNNEL_COLORS: Record<string, string> = {
-  Interviews: "#93c5fd",        // blue-300 — найсвітліший
+  Interviews: "#93c5fd", // blue-300 — найсвітліший
   "Recruiter Replies": "#3b82f6", // blue-500 — середній
   "Applications Sent": "#1d4ed8", // blue-700 — найтемніший
 };
@@ -423,7 +423,8 @@ function FunnelTooltip({ active, payload, label, config }: FunnelTooltipProps) {
       <div className="flex flex-col gap-1">
         {payload.map((item) => {
           const rawLabel = config[item.dataKey]?.label;
-          const labelText = typeof rawLabel === "string" ? rawLabel : item.dataKey;
+          const labelText =
+            typeof rawLabel === "string" ? rawLabel : item.dataKey;
           return (
             <div key={item.dataKey} className="flex items-center gap-3">
               <span
@@ -467,7 +468,8 @@ function ApplicationTrendChart(props: {
     const label = typeof rawLabel === "string" ? rawLabel : key;
     funnelConfig[key] = {
       label,
-      color: FUNNEL_COLORS[label] ?? chartConfig[key]?.color ?? "var(--chart-1)",
+      color:
+        FUNNEL_COLORS[label] ?? chartConfig[key]?.color ?? "var(--chart-1)",
     };
   }
 
