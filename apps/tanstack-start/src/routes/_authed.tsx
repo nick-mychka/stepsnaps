@@ -14,6 +14,7 @@ import {
 
 import { authClient } from "~/auth/client";
 import { Logo } from "~/component/logo";
+import { PageLoader } from "~/component/page-loader";
 import { useTRPC } from "~/lib/trpc";
 
 export const Route = createFileRoute("/_authed")({
@@ -26,13 +27,7 @@ function AuthedLayout() {
   const trpc = useTRPC();
   const { data: activeJourney } = useQuery(trpc.journey.active.queryOptions());
 
-  if (isPending) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <p className="text-muted-foreground">Loading...</p>
-      </div>
-    );
-  }
+  if (isPending) return <PageLoader />;
 
   if (!session) {
     void navigate({ to: "/", replace: true });
