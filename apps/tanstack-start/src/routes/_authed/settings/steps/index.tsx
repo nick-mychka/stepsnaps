@@ -30,7 +30,7 @@ import { toast } from "@stepsnaps/ui/toast";
 
 import { useTRPC } from "~/lib/trpc";
 
-export const Route = createFileRoute("/_authed/settings/steps")({
+export const Route = createFileRoute("/_authed/settings/steps/")({
   loader: ({ context }) => {
     const { trpc, queryClient } = context;
     void queryClient.prefetchQuery(trpc.stepDefinition.list.queryOptions());
