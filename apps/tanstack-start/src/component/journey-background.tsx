@@ -914,7 +914,12 @@ export function BackgroundV4({ preview = false }: { preview?: boolean }) {
   };
 
   // Build hex data
-  interface HexCell { cx: number; cy: number; norm: number; label?: string }
+  interface HexCell {
+    cx: number;
+    cy: number;
+    norm: number;
+    label?: string;
+  }
   const hexes: HexCell[] = [];
   for (let col = 0; col < COLS; col++) {
     for (let row = 0; row < ROWS; row++) {
@@ -1090,7 +1095,11 @@ export function BackgroundV5({ preview = false }: { preview?: boolean }) {
     }).join(" ");
   }
 
-  interface HexCell { cx: number; cy: number; norm: number }
+  interface HexCell {
+    cx: number;
+    cy: number;
+    norm: number;
+  }
   const hexes: HexCell[] = [];
   for (let col = 0; col < COLS; col++) {
     for (let row = 0; row < ROWS; row++) {
@@ -2002,7 +2011,9 @@ export function BackgroundV7({ preview = false }: { preview?: boolean }) {
   }
 
   // Generate particle starting points on a grid over the left/bottom area
-  interface Particle { pts: [number, number][] }
+  interface Particle {
+    pts: [number, number][];
+  }
   const particles: Particle[] = [];
 
   // Grid of seeds — left edge + bottom edge + scattered interior
@@ -2643,7 +2654,13 @@ export function BackgroundV9({ preview = false }: { preview?: boolean }) {
   ];
 
   // ── Edges: connect within threshold, coloured by zone ─────────────────────
-  interface Edge { x1: number; y1: number; x2: number; y2: number; norm: number }
+  interface Edge {
+    x1: number;
+    y1: number;
+    x2: number;
+    y2: number;
+    norm: number;
+  }
   const edges: Edge[] = [];
   for (let i = 0; i < nodes.length; i++) {
     for (let j = i + 1; j < nodes.length; j++) {
@@ -2745,7 +2762,12 @@ export function BackgroundV9({ preview = false }: { preview?: boolean }) {
   const arcs = hubs.slice(0, -1).flatMap((h, i) => {
     const next = hubs[i + 1];
     if (!next) return [];
-    return [{ d: hubArc(h, next, (i % 2 === 0 ? 1 : -1) * 60), norm: (h.x / 1440 + (1 - h.y / 900)) / 2 }];
+    return [
+      {
+        d: hubArc(h, next, (i % 2 === 0 ? 1 : -1) * 60),
+        norm: (h.x / 1440 + (1 - h.y / 900)) / 2,
+      },
+    ];
   });
 
   return (
