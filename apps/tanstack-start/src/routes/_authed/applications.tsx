@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   useMutation,
   useQuery,
@@ -51,6 +51,7 @@ import {
   TableHeader,
   TableRow,
 } from "@stepsnaps/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@stepsnaps/ui/tabs";
 import { Textarea } from "@stepsnaps/ui/textarea";
 import { toast } from "@stepsnaps/ui/toast";
 import {
@@ -66,25 +67,83 @@ export const Route = createFileRoute("/_authed/applications")({
   loader: ({ context }) => {
     const { trpc, queryClient } = context;
     void queryClient.prefetchQuery(
-      trpc.jobApplication.list.queryOptions({ page: 1 }),
+      trpc.jobApplication.list.queryOptions({ page: 1, tab: "active" }),
     );
   },
   component: ApplicationsPage,
 });
 
 function ApplicationsPage() {
+  const [activeTab, setActiveTab] = useState<"active" | "closed">("active");
   const [page, setPage] = useState(1);
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [editingAppId, setEditingAppId] = useState<string | null>(null);
   const [closingAppId, setClosingAppId] = useState<string | null>(null);
   const [interviewsAppId, setInterviewsAppId] = useState<string | null>(null);
 
   const trpc = useTRPC();
-  const { data } = useSuspenseQuery(
-    trpc.jobApplication.list.queryOptions({ page }),
+
+  // Debounce search input
+  const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const handleSearchChange = (value: string) => {
+    setSearch(value);
+    if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
+    searchTimerRef.current = setTimeout(() => {
+      setDebouncedSearch(value);
+      setPage(1);
+    }, 300);
+  };
+
+  // Active tab query (always fetched for initial load / nav check)
+  const activeListInput = {
+    page: activeTab === "active" ? page : 1,
+    tab: "active" as const,
+    ...(statusFilter !== "all"
+      ? { status: statusFilter as "pending" | "interviewing" | "on_hold" }
+      : {}),
+    ...(activeTab === "active" && debouncedSearch.trim()
+      ? { search: debouncedSearch.trim() }
+      : {}),
+  };
+
+  const { data: activeData } = useSuspenseQuery(
+    trpc.jobApplication.list.queryOptions(activeListInput),
   );
 
-  const totalPages = Math.max(1, Math.ceil(data.total / data.perPage));
+  // History tab query (lazy-loaded only when History tab is selected)
+  const { data: historyData } = useQuery(
+    trpc.jobApplication.list.queryOptions(
+      {
+        page: activeTab === "closed" ? page : 1,
+        tab: "closed" as const,
+        ...(activeTab === "closed" && debouncedSearch.trim()
+          ? { search: debouncedSearch.trim() }
+          : {}),
+      },
+      {
+        enabled: activeTab === "closed",
+      },
+    ),
+  );
+
+  const currentData = activeTab === "active" ? activeData : historyData;
+  const totalPages = currentData
+    ? Math.max(1, Math.ceil(currentData.total / currentData.perPage))
+    : 1;
+
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab as "active" | "closed");
+    setPage(1);
+    setStatusFilter("all");
+  };
+
+  const handleStatusFilterChange = (value: string) => {
+    setStatusFilter(value);
+    setPage(1);
+  };
 
   return (
     <main className="container mx-auto py-8">
@@ -93,40 +152,81 @@ function ApplicationsPage() {
         <Button onClick={() => setShowAddDialog(true)}>Add Application</Button>
       </div>
 
-      {data.total === 0 ? (
-        <EmptyState onAdd={() => setShowAddDialog(true)} />
-      ) : (
-        <>
-          <ApplicationsTable
-            data={data.items}
-            onEdit={setEditingAppId}
-            onInterviews={setInterviewsAppId}
-          />
-          {totalPages > 1 && (
-            <div className="mt-4 flex items-center justify-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                disabled={page <= 1}
-                onClick={() => setPage((p) => p - 1)}
+      <Tabs value={activeTab} onValueChange={handleTabChange}>
+        <div className="mb-4 flex items-center justify-between gap-4">
+          <TabsList>
+            <TabsTrigger value="active">Active</TabsTrigger>
+            <TabsTrigger value="closed">History</TabsTrigger>
+          </TabsList>
+
+          <div className="flex items-center gap-2">
+            <Input
+              placeholder="Search by company..."
+              value={search}
+              onChange={(e) => handleSearchChange(e.target.value)}
+              className="w-56"
+            />
+            {activeTab === "active" && (
+              <Select
+                value={statusFilter}
+                onValueChange={handleStatusFilterChange}
               >
-                Previous
-              </Button>
-              <span className="text-muted-foreground text-sm">
-                Page {page} of {totalPages}
-              </span>
-              <Button
-                variant="outline"
-                size="sm"
-                disabled={page >= totalPages}
-                onClick={() => setPage((p) => p + 1)}
-              >
-                Next
-              </Button>
+                <SelectTrigger className="w-40">
+                  <SelectValue placeholder="All statuses" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Statuses</SelectItem>
+                  <SelectItem value="pending">Pending</SelectItem>
+                  <SelectItem value="interviewing">Interviewing</SelectItem>
+                  <SelectItem value="on_hold">On Hold</SelectItem>
+                </SelectContent>
+              </Select>
+            )}
+          </div>
+        </div>
+
+        <TabsContent value="active">
+          {activeData.total === 0 &&
+          !debouncedSearch &&
+          statusFilter === "all" ? (
+            <EmptyState onAdd={() => setShowAddDialog(true)} />
+          ) : (
+            <>
+              <ApplicationsTable
+                data={activeData.items}
+                onEdit={setEditingAppId}
+                onInterviews={setInterviewsAppId}
+              />
+              {totalPages > 1 && (
+                <PaginationControls
+                  page={page}
+                  totalPages={totalPages}
+                  onPageChange={setPage}
+                />
+              )}
+            </>
+          )}
+        </TabsContent>
+
+        <TabsContent value="closed">
+          {historyData ? (
+            <>
+              <HistoryTable data={historyData.items} />
+              {totalPages > 1 && (
+                <PaginationControls
+                  page={page}
+                  totalPages={totalPages}
+                  onPageChange={setPage}
+                />
+              )}
+            </>
+          ) : (
+            <div className="flex items-center justify-center py-12">
+              <span className="text-muted-foreground text-sm">Loading...</span>
             </div>
           )}
-        </>
-      )}
+        </TabsContent>
+      </Tabs>
 
       <AddApplicationDialog
         open={showAddDialog}
@@ -259,22 +359,103 @@ function createColumns(
   ];
 }
 
-function StatusBadge(props: { status: string }) {
-  const variants: Record<string, "default" | "secondary" | "outline"> = {
-    pending: "secondary",
-    interviewing: "default",
-    on_hold: "outline",
-  };
+function StatusBadge(props: { status: string; closedReason?: string | null }) {
   const labels: Record<string, string> = {
     pending: "Pending",
     interviewing: "Interviewing",
     on_hold: "On Hold",
     closed: "Closed",
   };
+
+  // Color-coded: pending=gray, interviewing=blue, on_hold=yellow, closed=varies
+  const colorClasses: Record<string, string> = {
+    pending:
+      "border-transparent bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300",
+    interviewing:
+      "border-transparent bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300",
+    on_hold:
+      "border-transparent bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300",
+    closed:
+      "border-transparent bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300",
+  };
+
+  // Closed reason specific colors
+  const closedReasonColors: Record<string, string> = {
+    success:
+      "border-transparent bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300",
+    rejected:
+      "border-transparent bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300",
+    withdrawn:
+      "border-transparent bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300",
+    no_response:
+      "border-transparent bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400",
+  };
+
+  const className =
+    props.status === "closed" && props.closedReason
+      ? (closedReasonColors[props.closedReason] ?? colorClasses.closed)
+      : (colorClasses[props.status] ?? colorClasses.pending);
+
   return (
-    <Badge variant={variants[props.status] ?? "secondary"}>
-      {labels[props.status] ?? props.status}
+    <Badge className={className}>{labels[props.status] ?? props.status}</Badge>
+  );
+}
+
+const CLOSED_REASON_LABELS: Record<string, string> = {
+  rejected: "Rejected",
+  withdrawn: "Withdrawn",
+  no_response: "No Response",
+  success: "Success",
+};
+
+function ClosedReasonBadge(props: { reason: string | null }) {
+  if (!props.reason) return <span className="text-muted-foreground">—</span>;
+
+  const colorClasses: Record<string, string> = {
+    success:
+      "border-transparent bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300",
+    rejected:
+      "border-transparent bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300",
+    withdrawn:
+      "border-transparent bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300",
+    no_response:
+      "border-transparent bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400",
+  };
+
+  return (
+    <Badge className={colorClasses[props.reason] ?? ""}>
+      {CLOSED_REASON_LABELS[props.reason] ?? props.reason}
     </Badge>
+  );
+}
+
+function PaginationControls(props: {
+  page: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+}) {
+  return (
+    <div className="mt-4 flex items-center justify-center gap-2">
+      <Button
+        variant="outline"
+        size="sm"
+        disabled={props.page <= 1}
+        onClick={() => props.onPageChange(props.page - 1)}
+      >
+        Previous
+      </Button>
+      <span className="text-muted-foreground text-sm">
+        Page {props.page} of {props.totalPages}
+      </span>
+      <Button
+        variant="outline"
+        size="sm"
+        disabled={props.page >= props.totalPages}
+        onClick={() => props.onPageChange(props.page + 1)}
+      >
+        Next
+      </Button>
+    </div>
   );
 }
 
@@ -324,6 +505,110 @@ function ApplicationsTable(props: {
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
                 No applications found.
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </div>
+  );
+}
+
+// --- History Table ---
+
+interface HistoryRow {
+  id: string;
+  companyName: string;
+  jobTitle: string | null;
+  salary: string | null;
+  workMode: "remote" | "onsite" | "hybrid";
+  source: { id: string; name: string } | null;
+  appliedAt: string;
+  status: "pending" | "interviewing" | "on_hold" | "closed";
+  closedReason: string | null;
+  interviews: { id: string }[];
+}
+
+const historyColumnHelper = createColumnHelper<HistoryRow>();
+
+const historyColumns = [
+  historyColumnHelper.accessor("companyName", {
+    header: "Company",
+    cell: (info) => <span className="font-medium">{info.getValue()}</span>,
+  }),
+  historyColumnHelper.accessor("jobTitle", {
+    header: "Job Title",
+    cell: (info) => info.getValue() ?? "—",
+  }),
+  historyColumnHelper.accessor("salary", {
+    header: "Salary",
+    cell: (info) => info.getValue() ?? "—",
+  }),
+  historyColumnHelper.accessor("source", {
+    header: "Source",
+    cell: (info) => info.getValue()?.name ?? "—",
+  }),
+  historyColumnHelper.accessor("appliedAt", {
+    header: "Applied",
+    cell: (info) => info.getValue(),
+  }),
+  historyColumnHelper.accessor("closedReason", {
+    header: "Outcome",
+    cell: (info) => <ClosedReasonBadge reason={info.getValue()} />,
+  }),
+  historyColumnHelper.accessor("interviews", {
+    header: "Interviews",
+    cell: (info) => {
+      const count = info.getValue().length;
+      return count > 0 ? `${count}` : "—";
+    },
+  }),
+];
+
+function HistoryTable(props: { data: HistoryRow[] }) {
+  const table = useReactTable({
+    data: props.data,
+    columns: historyColumns,
+    getCoreRowModel: getCoreRowModel(),
+  });
+
+  return (
+    <div className="rounded-md border">
+      <Table>
+        <TableHeader>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow key={headerGroup.id}>
+              {headerGroup.headers.map((header) => (
+                <TableHead key={header.id}>
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )}
+                </TableHead>
+              ))}
+            </TableRow>
+          ))}
+        </TableHeader>
+        <TableBody>
+          {table.getRowModel().rows.length ? (
+            table.getRowModel().rows.map((row) => (
+              <TableRow key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell
+                colSpan={historyColumns.length}
+                className="h-24 text-center"
+              >
+                No closed applications yet.
               </TableCell>
             </TableRow>
           )}

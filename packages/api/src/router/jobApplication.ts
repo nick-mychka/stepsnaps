@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
 import type { db as _dbTypeHelper } from "@stepsnaps/db/client";
-import { and, count, desc, eq, ne, sql } from "@stepsnaps/db";
+import { and, count, desc, eq, ilike, ne, sql } from "@stepsnaps/db";
 import { JobApplication, Journey, Source } from "@stepsnaps/db/schema";
 
 import { protectedProcedure } from "../trpc";
@@ -50,11 +50,14 @@ async function seedDefaultSources(db: Db, userId: string) {
 }
 
 export const jobApplicationRouter = {
-  /** Paginated list of active (non-closed) applications for the user's active journey. */
+  /** Paginated list of applications for the user's active journey. */
   list: protectedProcedure
     .input(
       z.object({
         page: z.number().int().min(1).default(1),
+        tab: z.enum(["active", "closed"]).default("active"),
+        status: z.enum(["pending", "interviewing", "on_hold"]).optional(),
+        search: z.string().max(256).optional(),
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -72,12 +75,29 @@ export const jobApplicationRouter = {
 
       const offset = (input.page - 1) * PER_PAGE;
 
+      // Build where conditions
+      const conditions = [eq(JobApplication.journeyId, journey.id)];
+
+      if (input.tab === "closed") {
+        conditions.push(eq(JobApplication.status, "closed"));
+      } else if (input.status) {
+        // Filter by specific active status
+        conditions.push(eq(JobApplication.status, input.status));
+      } else {
+        conditions.push(ne(JobApplication.status, "closed"));
+      }
+
+      if (input.search?.trim()) {
+        conditions.push(
+          ilike(JobApplication.companyName, `%${input.search.trim()}%`),
+        );
+      }
+
+      const whereClause = and(...conditions);
+
       const [items, totalResult] = await Promise.all([
         ctx.db.query.JobApplication.findMany({
-          where: and(
-            eq(JobApplication.journeyId, journey.id),
-            ne(JobApplication.status, "closed"),
-          ),
+          where: whereClause,
           orderBy: desc(JobApplication.appliedAt),
           limit: PER_PAGE,
           offset,
@@ -91,12 +111,7 @@ export const jobApplicationRouter = {
         ctx.db
           .select({ count: count() })
           .from(JobApplication)
-          .where(
-            and(
-              eq(JobApplication.journeyId, journey.id),
-              ne(JobApplication.status, "closed"),
-            ),
-          ),
+          .where(whereClause),
       ]);
 
       return {

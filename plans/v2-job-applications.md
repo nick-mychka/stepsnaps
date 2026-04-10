@@ -135,12 +135,12 @@ Add status filtering, company name search, and the tabbed layout with a lazy-loa
 
 ### Acceptance criteria
 
-- [ ] User can filter active applications by status (pending, interviewing, on_hold)
-- [ ] User can search applications by company name
-- [ ] Tabs layout shows "Active" and "History" tabs
-- [ ] Switching to History tab loads closed applications on demand (lazy)
-- [ ] History table shows closedReason column
-- [ ] History table does not have edit functionality
-- [ ] Status badges are color-coded by status
-- [ ] Search and filter work together (AND logic)
-- [ ] Pagination resets when filters/search change
+- [x] User can filter active applications by status (pending, interviewing, on_hold)
+- [x] User can search applications by company name
+- [x] Tabs layout shows "Active" and "History" tabs
+- [x] Switching to History tab loads closed applications on demand (lazy)
+- [x] History table shows closedReason column
+- [x] History table does not have edit functionality
+- [x] Status badges are color-coded by status
+- [x] Search and filter work together (AND logic)
+- [x] Pagination resets when filters/search change
