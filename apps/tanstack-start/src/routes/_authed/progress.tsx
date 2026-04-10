@@ -6,6 +6,7 @@ import {
   useSuspenseQuery,
 } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { BookCheck } from "lucide-react";
 import {
   Bar,
   BarChart,
@@ -44,6 +45,12 @@ import { Input } from "@stepsnaps/ui/input";
 import { Label } from "@stepsnaps/ui/label";
 import { Textarea } from "@stepsnaps/ui/textarea";
 import { toast } from "@stepsnaps/ui/toast";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@stepsnaps/ui/tooltip";
 
 import { useTRPC } from "~/lib/trpc";
 
@@ -335,7 +342,7 @@ function ChartView(props: {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <ChartContainer config={chartConfig} className="min-h-[300px] w-full">
+          <ChartContainer config={chartConfig} className="min-h-75 w-full">
             <BarChart accessibilityLayer data={chartData}>
               <CartesianGrid vertical={false} />
               <XAxis
@@ -431,7 +438,7 @@ function FunnelTooltip({ active, payload, label, config }: FunnelTooltipProps) {
                 className="h-2 w-2 shrink-0 rounded-full"
                 style={{ backgroundColor: item.color }}
               />
-              <span className="text-muted-foreground min-w-[130px] text-xs">
+              <span className="text-muted-foreground min-w-32.5 text-xs">
                 {labelText}
               </span>
               <span className="text-foreground ml-auto text-xs font-medium tabular-nums">
@@ -491,7 +498,7 @@ function ApplicationTrendChart(props: {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={funnelConfig} className="min-h-[300px] w-full">
+        <ChartContainer config={funnelConfig} className="min-h-75 w-full">
           <LineChart accessibilityLayer data={chartData}>
             <CartesianGrid vertical={false} />
             <XAxis
@@ -584,9 +591,16 @@ function SnapCard(props: {
                     {sv.stepDefinition.type === "numeric" ? (
                       value
                     ) : (
-                      <span className="max-w-50 truncate" title={value}>
-                        {value}
-                      </span>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <BookCheck className="text-muted-foreground" />
+                          </TooltipTrigger>
+                          <TooltipContent className="max-w-100">
+                            {value}
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     )}
                   </span>
                 </div>
