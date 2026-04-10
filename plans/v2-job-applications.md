@@ -109,15 +109,15 @@ Full interview CRUD with auto-round-increment and automatic status transitions w
 
 ### Acceptance criteria
 
-- [ ] "Set Interview" button appears in the interview column of the table
-- [ ] InterviewsDialog shows all interviews for an application ordered by round
-- [ ] User can add a new interview with date, type, and optional note
-- [ ] Round number auto-increments (first interview = round 1, etc.)
-- [ ] Adding the first interview auto-transitions status from "pending" to "interviewing"
-- [ ] respondedAt is auto-set when status transitions to "interviewing"
-- [ ] User can edit an existing interview's date, type, and note
-- [ ] User can delete an interview
-- [ ] Interview type options include all 6 types from the spec
+- [x] "Set Interview" button appears in the interview column of the table
+- [x] InterviewsDialog shows all interviews for an application ordered by round
+- [x] User can add a new interview with date, type, and optional note
+- [x] Round number auto-increments (first interview = round 1, etc.)
+- [x] Adding the first interview auto-transitions status from "pending" to "interviewing"
+- [x] respondedAt is auto-set when status transitions to "interviewing"
+- [x] User can edit an existing interview's date, type, and note
+- [x] User can delete an interview
+- [x] Interview type options include all 6 types from the spec
 
 ---
 

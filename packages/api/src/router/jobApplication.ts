@@ -83,6 +83,9 @@ export const jobApplicationRouter = {
           offset,
           with: {
             source: true,
+            interviews: {
+              columns: { id: true },
+            },
           },
         }),
         ctx.db

@@ -1,4 +1,5 @@
 import { authRouter } from "./router/auth";
+import { interviewRouter } from "./router/interview";
 import { jobApplicationRouter } from "./router/jobApplication";
 import { journeyRouter } from "./router/journey";
 import { postRouter } from "./router/post";
@@ -10,6 +11,7 @@ import { createTRPCRouter } from "./trpc";
 
 export const appRouter = createTRPCRouter({
   auth: authRouter,
+  interview: interviewRouter,
   jobApplication: jobApplicationRouter,
   journey: journeyRouter,
   post: postRouter,
