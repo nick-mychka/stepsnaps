@@ -1,5 +1,4 @@
-import type { ReactNode } from "react";
-
+import { cn } from "@stepsnaps/ui";
 import { Button } from "@stepsnaps/ui/button";
 
 interface StepListItemProps {
@@ -10,70 +9,72 @@ interface StepListItemProps {
     isPredefined: boolean;
     isActive: boolean;
   };
-  index: number;
-  total: number;
+  isFirst: boolean;
+  isLast: boolean;
   isReordering: boolean;
   isToggling: boolean;
   onMoveUp: () => void;
   onMoveDown: () => void;
   onToggleActive: () => void;
-  editDialog?: ReactNode;
+  onEdit: () => void;
 }
 
 export function StepListItem({
   step,
-  index,
-  total,
+  isFirst,
+  isLast,
   isReordering,
   isToggling,
-  editDialog,
   onMoveUp,
   onMoveDown,
   onToggleActive,
+  onEdit,
 }: StepListItemProps) {
   return (
     <div
-      className={`flex items-center justify-between rounded-md border p-3 ${
-        !step.isActive ? "opacity-50" : ""
-      }`}
+      className={cn("flex items-center justify-between rounded-md border p-3", {
+        "opacity-50": !step.isActive,
+      })}
     >
-      <div className="flex flex-col gap-0.5">
-        <div className="flex items-center gap-2">
-          <span className="font-medium">{step.name}</span>
-          <span className="bg-muted text-muted-foreground rounded px-1.5 py-0.5 text-xs">
-            {step.type}
-          </span>
-          {step.isPredefined && (
-            <span className="text-muted-foreground text-xs">predefined</span>
-          )}
-          {!step.isActive && (
-            <span className="text-destructive text-xs">inactive</span>
-          )}
-        </div>
+      <div className="flex items-center gap-2">
+        <span className="font-medium">{step.name}</span>
+        <span className="bg-muted text-muted-foreground rounded px-1 py-0.5 text-xs">
+          {step.type}
+        </span>
+        {step.isPredefined && (
+          <span className="text-muted-foreground text-xs">Predefined</span>
+        )}
+        {!step.isActive && (
+          <span className="text-destructive text-xs">Inactive</span>
+        )}
       </div>
       <div className="flex items-center gap-1">
         <Button
           variant="ghost"
           size="sm"
+          disabled={isFirst || isReordering}
           onClick={onMoveUp}
-          disabled={index === 0 || isReordering}
         >
           &uarr;
         </Button>
         <Button
           variant="ghost"
           size="sm"
+          disabled={isLast || isReordering}
           onClick={onMoveDown}
-          disabled={index === total - 1 || isReordering}
         >
           &darr;
         </Button>
-        {editDialog}
+        {!step.isPredefined && (
+          <Button variant="ghost" size="sm" onClick={onEdit}>
+            Edit
+          </Button>
+        )}
         <Button
           variant="ghost"
           size="sm"
-          onClick={onToggleActive}
           disabled={isToggling}
+          onClick={onToggleActive}
         >
           {step.isActive ? "Deactivate" : "Activate"}
         </Button>

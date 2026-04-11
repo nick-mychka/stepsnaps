@@ -9,144 +9,119 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@stepsnaps/ui/dialog";
+import { Field, FieldGroup, FieldLabel } from "@stepsnaps/ui/field";
 import { Input } from "@stepsnaps/ui/input";
-import { Label } from "@stepsnaps/ui/label";
+import { RadioGroup, RadioGroupItem } from "@stepsnaps/ui/radio-group";
+import { Spinner } from "@stepsnaps/ui/spinner";
 
 import { useCreateStep } from "../-hooks/use-create-step";
 import { useUpdateStep } from "../-hooks/use-update-step";
 
-type StepFormDialogProps =
-  | { mode: "add" }
-  | {
-      mode: "edit";
-      step: { id: string; name: string; type: "numeric" | "text" };
-    };
+interface ContentProps {
+  step: { id: string; name: string; type: "numeric" | "text" } | null;
+  onOpenChange: (open: boolean) => void;
+}
 
-export function StepFormDialog(props: StepFormDialogProps) {
-  const isEdit = props.mode === "edit";
-  const [open, setOpen] = useState(false);
-  const [name, setName] = useState(isEdit ? props.step.name : "");
-  const [type, setType] = useState<"numeric" | "text">(
-    isEdit ? props.step.type : "numeric",
+interface Props extends ContentProps {
+  open: boolean;
+}
+
+type StepType = "numeric" | "text";
+
+export function StepFormDialog({ open, step, onOpenChange }: Props) {
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <StepFormDialogContent step={step} onOpenChange={onOpenChange} />
+      </DialogContent>
+    </Dialog>
   );
+}
+
+function StepFormDialogContent({ step, onOpenChange }: ContentProps) {
+  const isEdit = step !== null;
+  const [name, setName] = useState(isEdit ? step.name : "");
+  const [type, setType] = useState<StepType>(isEdit ? step.type : "numeric");
 
   const create = useCreateStep({
     onSuccess: () => {
       setName("");
       setType("numeric");
-      setOpen(false);
+      onOpenChange(false);
     },
   });
 
   const update = useUpdateStep({
     onSuccess: () => {
-      setOpen(false);
+      onOpenChange(false);
     },
   });
 
   const mutation = isEdit ? update : create;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.SubmitEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
     if (isEdit) {
-      update.mutate({ id: props.step.id, name: name.trim(), type });
+      update.mutate({ id: step.id, name: name.trim(), type });
     } else {
       create.mutate({ name: name.trim(), type });
     }
   };
 
-  const handleOpenChange = (v: boolean) => {
-    setOpen(v);
-    if (v && isEdit) {
-      setName(props.step.name);
-      setType(props.step.type);
-    }
-  };
-
-  const radioName = isEdit ? "edit-step-type" : "step-type";
   const nameInputId = isEdit ? "edit-step-name" : "step-name";
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
-        {isEdit ? (
-          <Button variant="ghost" size="sm">
-            Edit
+    <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
+      <DialogHeader>
+        <DialogTitle>{isEdit ? "Edit Step" : "Add Custom Step"}</DialogTitle>
+        <DialogDescription>
+          {isEdit
+            ? "Update the name or type of this step."
+            : "Create a new step to track in your daily snaps."}
+        </DialogDescription>
+      </DialogHeader>
+      <FieldGroup>
+        <Field>
+          <FieldLabel htmlFor={nameInputId}>Name</FieldLabel>
+          <Input
+            id={nameInputId}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder={isEdit ? undefined : "e.g., Leetcode Problems"}
+            maxLength={256}
+          />
+        </Field>
+        <Field>
+          <FieldLabel>Type</FieldLabel>
+          <RadioGroup
+            value={type}
+            onValueChange={(v: StepType) => setType(v)}
+            className="flex gap-4"
+          >
+            <Field orientation="horizontal">
+              <RadioGroupItem value="numeric" id="numeric" />
+              <FieldLabel htmlFor="numeric">Numeric</FieldLabel>
+            </Field>
+            <Field orientation="horizontal">
+              <RadioGroupItem value="text" id="text" />
+              <FieldLabel htmlFor="text">Text</FieldLabel>
+            </Field>
+          </RadioGroup>
+        </Field>
+      </FieldGroup>
+      <DialogFooter>
+        <DialogClose asChild>
+          <Button variant="outline" type="button">
+            Cancel
           </Button>
-        ) : (
-          <Button size="sm">Add Step</Button>
-        )}
-      </DialogTrigger>
-      <DialogContent>
-        <form onSubmit={handleSubmit}>
-          <DialogHeader>
-            <DialogTitle>
-              {isEdit ? "Edit Step" : "Add Custom Step"}
-            </DialogTitle>
-            <DialogDescription>
-              {isEdit
-                ? "Update the name or type of this step."
-                : "Create a new step to track in your daily snaps."}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="flex flex-col gap-4 py-4">
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor={nameInputId}>Name</Label>
-              <Input
-                id={nameInputId}
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder={isEdit ? undefined : "e.g., Leetcode Problems"}
-                maxLength={256}
-              />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <Label>Type</Label>
-              <div className="flex gap-4">
-                <label className="flex items-center gap-2 text-sm">
-                  <input
-                    type="radio"
-                    name={radioName}
-                    value="numeric"
-                    checked={type === "numeric"}
-                    onChange={() => setType("numeric")}
-                  />
-                  Numeric
-                </label>
-                <label className="flex items-center gap-2 text-sm">
-                  <input
-                    type="radio"
-                    name={radioName}
-                    value="text"
-                    checked={type === "text"}
-                    onChange={() => setType("text")}
-                  />
-                  Text
-                </label>
-              </div>
-            </div>
-          </div>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline" type="button">
-                Cancel
-              </Button>
-            </DialogClose>
-            <Button type="submit" disabled={mutation.isPending || !name.trim()}>
-              {isEdit
-                ? mutation.isPending
-                  ? "Saving..."
-                  : "Save"
-                : mutation.isPending
-                  ? "Adding..."
-                  : "Add Step"}
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+        </DialogClose>
+        <Button type="submit" disabled={mutation.isPending || !name.trim()}>
+          {mutation.isPending && <Spinner />}
+          {isEdit ? "Save" : "Add Step"}
+        </Button>
+      </DialogFooter>
+    </form>
   );
 }
