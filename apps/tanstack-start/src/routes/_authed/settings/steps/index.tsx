@@ -1,8 +1,4 @@
-import {
-  useMutation,
-  useQueryClient,
-  useSuspenseQuery,
-} from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
 import {
@@ -17,6 +13,7 @@ import { toast } from "@stepsnaps/ui/toast";
 import { useTRPC } from "~/lib/trpc";
 import { StepFormDialog } from "./-components/step-form-dialog";
 import { StepListItem } from "./-components/step-list-item";
+import { useStepDefinitions } from "./-hooks/use-step-definitions";
 
 export const Route = createFileRoute("/_authed/settings/steps/")({
   loader: ({ context }) => {
@@ -29,9 +26,7 @@ export const Route = createFileRoute("/_authed/settings/steps/")({
 function StepsSettingsPage() {
   const trpc = useTRPC();
   const queryClient = useQueryClient();
-  const { data: steps } = useSuspenseQuery(
-    trpc.stepDefinition.list.queryOptions(),
-  );
+  const { data: steps } = useStepDefinitions();
 
   const toggleActive = useMutation(
     trpc.stepDefinition.toggleActive.mutationOptions({
