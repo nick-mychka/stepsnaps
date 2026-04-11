@@ -29,6 +29,7 @@ import { Label } from "@stepsnaps/ui/label";
 import { toast } from "@stepsnaps/ui/toast";
 
 import { useTRPC } from "~/lib/trpc";
+import { StepListItem } from "./-components/step-list-item";
 
 export const Route = createFileRoute("/_authed/settings/steps/")({
   loader: ({ context }) => {
@@ -105,58 +106,24 @@ function StepsSettingsPage() {
           ) : (
             <div className="flex flex-col gap-2">
               {steps.map((step, index) => (
-                <div
+                <StepListItem
                   key={step.id}
-                  className={`flex items-center justify-between rounded-md border p-3 ${
-                    !step.isActive ? "opacity-50" : ""
-                  }`}
-                >
-                  <div className="flex flex-col gap-0.5">
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium">{step.name}</span>
-                      <span className="bg-muted text-muted-foreground rounded px-1.5 py-0.5 text-xs">
-                        {step.type}
-                      </span>
-                      {step.isPredefined && (
-                        <span className="text-muted-foreground text-xs">
-                          predefined
-                        </span>
-                      )}
-                      {!step.isActive && (
-                        <span className="text-destructive text-xs">
-                          inactive
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleMoveUp(index)}
-                      disabled={index === 0 || reorder.isPending}
-                    >
-                      &uarr;
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleMoveDown(index)}
-                      disabled={index === steps.length - 1 || reorder.isPending}
-                    >
-                      &darr;
-                    </Button>
-                    {!step.isPredefined && <EditStepDialog step={step} />}
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => toggleActive.mutate({ id: step.id })}
-                      disabled={toggleActive.isPending}
-                    >
-                      {step.isActive ? "Deactivate" : "Activate"}
-                    </Button>
-                  </div>
-                </div>
+                  step={step}
+                  index={index}
+                  total={steps.length}
+                  isReordering={reorder.isPending}
+                  isToggling={toggleActive.isPending}
+                  onMoveUp={() => handleMoveUp(index)}
+                  onMoveDown={() => handleMoveDown(index)}
+                  onToggleActive={() =>
+                    toggleActive.mutate({ id: step.id })
+                  }
+                  editDialog={
+                    !step.isPredefined ? (
+                      <EditStepDialog step={step} />
+                    ) : undefined
+                  }
+                />
               ))}
             </div>
           )}
