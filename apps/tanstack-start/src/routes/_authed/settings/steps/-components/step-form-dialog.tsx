@@ -17,6 +17,7 @@ import { Label } from "@stepsnaps/ui/label";
 import { toast } from "@stepsnaps/ui/toast";
 
 import { useTRPC } from "~/lib/trpc";
+import { useCreateStep } from "../-hooks/use-create-step";
 
 type StepFormDialogProps =
   | { mode: "add" }
@@ -35,18 +36,13 @@ export function StepFormDialog(props: StepFormDialogProps) {
     isEdit ? props.step.type : "numeric",
   );
 
-  const create = useMutation(
-    trpc.stepDefinition.create.mutationOptions({
-      onSuccess: async () => {
-        await queryClient.invalidateQueries(trpc.stepDefinition.pathFilter());
-        toast.success("Step added!");
-        setName("");
-        setType("numeric");
-        setOpen(false);
-      },
-      onError: (err) => toast.error(err.message),
-    }),
-  );
+  const create = useCreateStep({
+    onSuccess: () => {
+      setName("");
+      setType("numeric");
+      setOpen(false);
+    },
+  });
 
   const update = useMutation(
     trpc.stepDefinition.update.mutationOptions({
