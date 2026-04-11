@@ -1,4 +1,3 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
 import {
@@ -8,11 +7,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@stepsnaps/ui/card";
-import { toast } from "@stepsnaps/ui/toast";
 
-import { useTRPC } from "~/lib/trpc";
 import { StepFormDialog } from "./-components/step-form-dialog";
 import { StepListItem } from "./-components/step-list-item";
+import { useReorderSteps } from "./-hooks/use-reorder-steps";
 import { useStepDefinitions } from "./-hooks/use-step-definitions";
 import { useToggleStep } from "./-hooks/use-toggle-step";
 
@@ -25,20 +23,11 @@ export const Route = createFileRoute("/_authed/settings/steps/")({
 });
 
 function StepsSettingsPage() {
-  const trpc = useTRPC();
-  const queryClient = useQueryClient();
   const { data: steps } = useStepDefinitions();
 
   const toggleActive = useToggleStep();
 
-  const reorder = useMutation(
-    trpc.stepDefinition.reorder.mutationOptions({
-      onSuccess: async () => {
-        await queryClient.invalidateQueries(trpc.stepDefinition.pathFilter());
-      },
-      onError: (err) => toast.error(err.message),
-    }),
-  );
+  const reorder = useReorderSteps();
 
   const swapAndReorder = (a: number, b: number) => {
     const ids = steps.map((s) => s.id);
