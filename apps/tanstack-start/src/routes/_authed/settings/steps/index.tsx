@@ -103,9 +103,7 @@ function StepsSettingsPage() {
                   isToggling={toggleActive.isPending}
                   onMoveUp={() => handleMoveUp(index)}
                   onMoveDown={() => handleMoveDown(index)}
-                  onToggleActive={() =>
-                    toggleActive.mutate({ id: step.id })
-                  }
+                  onToggleActive={() => toggleActive.mutate({ id: step.id })}
                   editDialog={
                     !step.isPredefined ? (
                       <EditStepDialog step={step} />
