@@ -6,7 +6,7 @@ import {
   useSuspenseQuery,
 } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { BookCheck } from "lucide-react";
+import { BookCheck, MoreVertical, SquarePen, Trash2 } from "lucide-react";
 import {
   Bar,
   BarChart,
@@ -41,6 +41,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@stepsnaps/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@stepsnaps/ui/dropdown-menu";
 import { Input } from "@stepsnaps/ui/input";
 import { Label } from "@stepsnaps/ui/label";
 import { Textarea } from "@stepsnaps/ui/textarea";
@@ -563,12 +569,23 @@ function SnapCard(props: {
         <div className="flex items-center justify-between">
           <CardTitle className="text-base">{formatted}</CardTitle>
           <div className="flex gap-1">
-            <Button variant="ghost" size="sm" onClick={onEdit}>
-              Edit
-            </Button>
-            <Button variant="ghost" size="sm" onClick={onDelete}>
-              Delete
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <MoreVertical />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={onEdit}>
+                  <SquarePen />
+                  Edit
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={onDelete}>
+                  <Trash2 />
+                  Delete
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </CardHeader>
