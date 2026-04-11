@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { Button } from "@stepsnaps/ui/button";
 import {
@@ -14,10 +13,9 @@ import {
 } from "@stepsnaps/ui/dialog";
 import { Input } from "@stepsnaps/ui/input";
 import { Label } from "@stepsnaps/ui/label";
-import { toast } from "@stepsnaps/ui/toast";
 
-import { useTRPC } from "~/lib/trpc";
 import { useCreateStep } from "../-hooks/use-create-step";
+import { useUpdateStep } from "../-hooks/use-update-step";
 
 type StepFormDialogProps =
   | { mode: "add" }
@@ -28,8 +26,6 @@ type StepFormDialogProps =
 
 export function StepFormDialog(props: StepFormDialogProps) {
   const isEdit = props.mode === "edit";
-  const trpc = useTRPC();
-  const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const [name, setName] = useState(isEdit ? props.step.name : "");
   const [type, setType] = useState<"numeric" | "text">(
@@ -44,16 +40,11 @@ export function StepFormDialog(props: StepFormDialogProps) {
     },
   });
 
-  const update = useMutation(
-    trpc.stepDefinition.update.mutationOptions({
-      onSuccess: async () => {
-        await queryClient.invalidateQueries(trpc.stepDefinition.pathFilter());
-        toast.success("Step updated!");
-        setOpen(false);
-      },
-      onError: (err) => toast.error(err.message),
-    }),
-  );
+  const update = useUpdateStep({
+    onSuccess: () => {
+      setOpen(false);
+    },
+  });
 
   const mutation = isEdit ? update : create;
 
