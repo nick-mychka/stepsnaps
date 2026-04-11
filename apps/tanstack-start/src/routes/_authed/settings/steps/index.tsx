@@ -14,6 +14,7 @@ import { useTRPC } from "~/lib/trpc";
 import { StepFormDialog } from "./-components/step-form-dialog";
 import { StepListItem } from "./-components/step-list-item";
 import { useStepDefinitions } from "./-hooks/use-step-definitions";
+import { useToggleStep } from "./-hooks/use-toggle-step";
 
 export const Route = createFileRoute("/_authed/settings/steps/")({
   loader: ({ context }) => {
@@ -28,14 +29,7 @@ function StepsSettingsPage() {
   const queryClient = useQueryClient();
   const { data: steps } = useStepDefinitions();
 
-  const toggleActive = useMutation(
-    trpc.stepDefinition.toggleActive.mutationOptions({
-      onSuccess: async () => {
-        await queryClient.invalidateQueries(trpc.stepDefinition.pathFilter());
-      },
-      onError: (err) => toast.error(err.message),
-    }),
-  );
+  const toggleActive = useToggleStep();
 
   const reorder = useMutation(
     trpc.stepDefinition.reorder.mutationOptions({
