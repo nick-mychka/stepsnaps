@@ -6,7 +6,16 @@ import {
   useSuspenseQuery,
 } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { BookCheck, MoreVertical, SquarePen, Trash2 } from "lucide-react";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Line,
+  LineChart,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 import type { ChartConfig } from "@stepsnaps/ui/chart";
 import { Button } from "@stepsnaps/ui/button";
@@ -32,10 +41,22 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@stepsnaps/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@stepsnaps/ui/dropdown-menu";
 import { Input } from "@stepsnaps/ui/input";
 import { Label } from "@stepsnaps/ui/label";
 import { Textarea } from "@stepsnaps/ui/textarea";
 import { toast } from "@stepsnaps/ui/toast";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@stepsnaps/ui/tooltip";
 
 import { useTRPC } from "~/lib/trpc";
 
@@ -318,6 +339,163 @@ function ChartView(props: {
   }
 
   return (
+    <div className="flex flex-col gap-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>Daily Activity</CardTitle>
+          <CardDescription>
+            {startDate} to {endDate ?? "today"}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ChartContainer config={chartConfig} className="min-h-75 w-full">
+            <BarChart accessibilityLayer data={chartData}>
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="label"
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+              />
+              <YAxis tickLine={false} axisLine={false} />
+              <ChartTooltip
+                content={
+                  <ChartTooltipContent
+                    formatter={(value, name, item) => {
+                      const key = String(name);
+                      const textKey = `${key}_text`;
+                      const payload = item.payload as
+                        | Record<string, unknown>
+                        | undefined;
+                      const textValue = payload?.[textKey];
+                      if (typeof textValue === "string" && textValue) {
+                        return (
+                          <span>
+                            {chartConfig[key]?.label}: {textValue}
+                          </span>
+                        );
+                      }
+                      return undefined;
+                    }}
+                  />
+                }
+              />
+              <ChartLegend content={<ChartLegendContent />} />
+              {stepKeys.map(({ key }) => (
+                <Bar
+                  key={key}
+                  dataKey={key}
+                  fill={`var(--color-${key})`}
+                  radius={2}
+                />
+              ))}
+            </BarChart>
+          </ChartContainer>
+        </CardContent>
+      </Card>
+
+      <ApplicationTrendChart
+        chartData={chartData}
+        chartConfig={chartConfig}
+        stepKeys={stepKeys}
+        startDate={startDate}
+        endDate={endDate}
+      />
+    </div>
+  );
+}
+
+// ── Names that belong to the outreach funnel ─────────────────────────────────
+const FUNNEL_LABELS = ["Interviews", "Recruiter Replies", "Applications Sent"];
+
+const FUNNEL_COLORS: Record<string, string> = {
+  Interviews: "#93c5fd", // blue-300 — найсвітліший
+  "Recruiter Replies": "#3b82f6", // blue-500 — середній
+  "Applications Sent": "#1d4ed8", // blue-700 — найтемніший
+};
+
+interface FunnelTooltipPayloadItem {
+  dataKey: string;
+  value: number;
+  color: string;
+}
+
+interface FunnelTooltipProps {
+  active?: boolean;
+  payload?: FunnelTooltipPayloadItem[];
+  label?: string;
+  config: ChartConfig;
+}
+
+function FunnelTooltip({ active, payload, label, config }: FunnelTooltipProps) {
+  if (!active || !payload?.length) return null;
+
+  return (
+    <div className="bg-background border-border rounded-lg border px-3 py-2 shadow-md">
+      <p className="text-foreground mb-2 text-sm font-semibold">{label}</p>
+      <div className="flex flex-col gap-1">
+        {payload.map((item) => {
+          const rawLabel = config[item.dataKey]?.label;
+          const labelText =
+            typeof rawLabel === "string" ? rawLabel : item.dataKey;
+          return (
+            <div key={item.dataKey} className="flex items-center gap-3">
+              <span
+                className="h-2 w-2 shrink-0 rounded-full"
+                style={{ backgroundColor: item.color }}
+              />
+              <span className="text-muted-foreground min-w-32.5 text-xs">
+                {labelText}
+              </span>
+              <span className="text-foreground ml-auto text-xs font-medium tabular-nums">
+                {item.value}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function ApplicationTrendChart(props: {
+  chartData: Record<string, unknown>[];
+  chartConfig: ChartConfig;
+  stepKeys: { id: string; key: string; type: "numeric" | "text" }[];
+  startDate: string;
+  endDate: string | null;
+}) {
+  const { chartData, chartConfig, stepKeys, startDate, endDate } = props;
+
+  // Filter only funnel step keys
+  const funnelKeys = stepKeys.filter(({ key }) => {
+    const lbl = chartConfig[key]?.label;
+    return typeof lbl === "string" && FUNNEL_LABELS.includes(lbl);
+  });
+
+  if (funnelKeys.length === 0) return null;
+
+  const funnelConfig: ChartConfig = {};
+  for (const { key } of funnelKeys) {
+    const rawLabel = chartConfig[key]?.label;
+    const label = typeof rawLabel === "string" ? rawLabel : key;
+    funnelConfig[key] = {
+      label,
+      color:
+        FUNNEL_COLORS[label] ?? chartConfig[key]?.color ?? "var(--chart-1)",
+    };
+  }
+
+  // Compute integer ticks 0..max so Y-axis steps by 1
+  const maxVal = Math.max(
+    0,
+    ...chartData.flatMap((row) =>
+      funnelKeys.map(({ key }) => Number(row[key] ?? 0)),
+    ),
+  );
+  const yTicks = Array.from({ length: maxVal + 1 }, (_, i) => i);
+
+  return (
     <Card>
       <CardHeader>
         <CardTitle>Daily Activity</CardTitle>
@@ -326,8 +504,8 @@ function ChartView(props: {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig} className="min-h-[300px] w-full">
-          <BarChart accessibilityLayer data={chartData}>
+        <ChartContainer config={funnelConfig} className="min-h-75 w-full">
+          <LineChart accessibilityLayer data={chartData}>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="label"
@@ -335,39 +513,26 @@ function ChartView(props: {
               axisLine={false}
               tickMargin={8}
             />
-            <YAxis tickLine={false} axisLine={false} />
-            <ChartTooltip
-              content={
-                <ChartTooltipContent
-                  formatter={(value, name, item) => {
-                    const key = String(name);
-                    const textKey = `${key}_text`;
-                    const payload = item.payload as
-                      | Record<string, unknown>
-                      | undefined;
-                    const textValue = payload?.[textKey];
-                    if (typeof textValue === "string" && textValue) {
-                      return (
-                        <span>
-                          {chartConfig[key]?.label}: {textValue}
-                        </span>
-                      );
-                    }
-                    return undefined;
-                  }}
-                />
-              }
+            <YAxis
+              tickLine={false}
+              axisLine={false}
+              allowDecimals={false}
+              ticks={yTicks}
             />
+            <ChartTooltip content={<FunnelTooltip config={funnelConfig} />} />
             <ChartLegend content={<ChartLegendContent />} />
-            {stepKeys.map(({ key }) => (
-              <Bar
+            {funnelKeys.map(({ key }) => (
+              <Line
                 key={key}
+                type="monotone"
                 dataKey={key}
-                fill={`var(--color-${key})`}
-                radius={2}
+                stroke={`var(--color-${key})`}
+                strokeWidth={2}
+                dot={{ r: 3, strokeWidth: 0, fill: `var(--color-${key})` }}
+                activeDot={{ r: 5, strokeWidth: 0 }}
               />
             ))}
-          </BarChart>
+          </LineChart>
         </ChartContainer>
       </CardContent>
     </Card>
@@ -404,12 +569,23 @@ function SnapCard(props: {
         <div className="flex items-center justify-between">
           <CardTitle className="text-base">{formatted}</CardTitle>
           <div className="flex gap-1">
-            <Button variant="ghost" size="sm" onClick={onEdit}>
-              Edit
-            </Button>
-            <Button variant="ghost" size="sm" onClick={onDelete}>
-              Delete
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <MoreVertical />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={onEdit}>
+                  <SquarePen />
+                  Edit
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={onDelete}>
+                  <Trash2 />
+                  Delete
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </CardHeader>
@@ -432,9 +608,16 @@ function SnapCard(props: {
                     {sv.stepDefinition.type === "numeric" ? (
                       value
                     ) : (
-                      <span className="max-w-50 truncate" title={value}>
-                        {value}
-                      </span>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <BookCheck className="text-muted-foreground" />
+                          </TooltipTrigger>
+                          <TooltipContent className="max-w-100">
+                            {value}
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     )}
                   </span>
                 </div>

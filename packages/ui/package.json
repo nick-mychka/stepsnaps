@@ -24,7 +24,8 @@
     "./radio-group": "./src/radio-group.tsx",
     "./tooltip": "./src/tooltip.tsx",
     "./popover": "./src/popover.tsx",
-    "./command": "./src/command.tsx"
+    "./command": "./src/command.tsx",
+    "./spinner": "./src/spinner.tsx"
   },
   "license": "MIT",
   "scripts": {
