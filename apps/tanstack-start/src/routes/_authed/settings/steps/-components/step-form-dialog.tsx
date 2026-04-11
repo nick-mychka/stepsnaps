@@ -18,15 +18,35 @@ import { toast } from "@stepsnaps/ui/toast";
 
 import { useTRPC } from "~/lib/trpc";
 
-export function EditStepDialog(props: {
-  step: { id: string; name: string; type: "numeric" | "text" };
-}) {
-  const { step } = props;
+type StepFormDialogProps =
+  | { mode: "add" }
+  | {
+      mode: "edit";
+      step: { id: string; name: string; type: "numeric" | "text" };
+    };
+
+export function StepFormDialog(props: StepFormDialogProps) {
+  const isEdit = props.mode === "edit";
   const trpc = useTRPC();
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
-  const [name, setName] = useState(step.name);
-  const [type, setType] = useState<"numeric" | "text">(step.type);
+  const [name, setName] = useState(isEdit ? props.step.name : "");
+  const [type, setType] = useState<"numeric" | "text">(
+    isEdit ? props.step.type : "numeric",
+  );
+
+  const create = useMutation(
+    trpc.stepDefinition.create.mutationOptions({
+      onSuccess: async () => {
+        await queryClient.invalidateQueries(trpc.stepDefinition.pathFilter());
+        toast.success("Step added!");
+        setName("");
+        setType("numeric");
+        setOpen(false);
+      },
+      onError: (err) => toast.error(err.message),
+    }),
+  );
 
   const update = useMutation(
     trpc.stepDefinition.update.mutationOptions({
@@ -39,43 +59,60 @@ export function EditStepDialog(props: {
     }),
   );
 
+  const mutation = isEdit ? update : create;
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
-    update.mutate({ id: step.id, name: name.trim(), type });
+    if (isEdit) {
+      update.mutate({ id: props.step.id, name: name.trim(), type });
+    } else {
+      create.mutate({ name: name.trim(), type });
+    }
   };
 
+  const handleOpenChange = (v: boolean) => {
+    setOpen(v);
+    if (v && isEdit) {
+      setName(props.step.name);
+      setType(props.step.type);
+    }
+  };
+
+  const radioName = isEdit ? "edit-step-type" : "step-type";
+  const nameInputId = isEdit ? "edit-step-name" : "step-name";
+
   return (
-    <Dialog
-      open={open}
-      onOpenChange={(v) => {
-        setOpen(v);
-        if (v) {
-          setName(step.name);
-          setType(step.type);
-        }
-      }}
-    >
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="sm">
-          Edit
-        </Button>
+        {isEdit ? (
+          <Button variant="ghost" size="sm">
+            Edit
+          </Button>
+        ) : (
+          <Button size="sm">Add Step</Button>
+        )}
       </DialogTrigger>
       <DialogContent>
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>Edit Step</DialogTitle>
+            <DialogTitle>
+              {isEdit ? "Edit Step" : "Add Custom Step"}
+            </DialogTitle>
             <DialogDescription>
-              Update the name or type of this step.
+              {isEdit
+                ? "Update the name or type of this step."
+                : "Create a new step to track in your daily snaps."}
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-col gap-4 py-4">
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="edit-step-name">Name</Label>
+              <Label htmlFor={nameInputId}>Name</Label>
               <Input
-                id="edit-step-name"
+                id={nameInputId}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                placeholder={isEdit ? undefined : "e.g., Leetcode Problems"}
                 maxLength={256}
               />
             </div>
@@ -85,7 +122,7 @@ export function EditStepDialog(props: {
                 <label className="flex items-center gap-2 text-sm">
                   <input
                     type="radio"
-                    name="edit-step-type"
+                    name={radioName}
                     value="numeric"
                     checked={type === "numeric"}
                     onChange={() => setType("numeric")}
@@ -95,7 +132,7 @@ export function EditStepDialog(props: {
                 <label className="flex items-center gap-2 text-sm">
                   <input
                     type="radio"
-                    name="edit-step-type"
+                    name={radioName}
                     value="text"
                     checked={type === "text"}
                     onChange={() => setType("text")}
@@ -111,8 +148,14 @@ export function EditStepDialog(props: {
                 Cancel
               </Button>
             </DialogClose>
-            <Button type="submit" disabled={update.isPending || !name.trim()}>
-              {update.isPending ? "Saving..." : "Save"}
+            <Button type="submit" disabled={mutation.isPending || !name.trim()}>
+              {isEdit
+                ? mutation.isPending
+                  ? "Saving..."
+                  : "Save"
+                : mutation.isPending
+                  ? "Adding..."
+                  : "Add Step"}
             </Button>
           </DialogFooter>
         </form>

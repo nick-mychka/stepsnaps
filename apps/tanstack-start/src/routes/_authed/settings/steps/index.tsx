@@ -15,8 +15,7 @@ import {
 import { toast } from "@stepsnaps/ui/toast";
 
 import { useTRPC } from "~/lib/trpc";
-import { AddStepDialog } from "./-components/add-step-dialog";
-import { EditStepDialog } from "./-components/edit-step-dialog";
+import { StepFormDialog } from "./-components/step-form-dialog";
 import { StepListItem } from "./-components/step-list-item";
 
 export const Route = createFileRoute("/_authed/settings/steps/")({
@@ -82,7 +81,7 @@ function StepsSettingsPage() {
                 affect future snaps.
               </CardDescription>
             </div>
-            <AddStepDialog />
+            <StepFormDialog mode="add" />
           </div>
         </CardHeader>
         <CardContent>
@@ -106,7 +105,7 @@ function StepsSettingsPage() {
                   onToggleActive={() => toggleActive.mutate({ id: step.id })}
                   editDialog={
                     !step.isPredefined ? (
-                      <EditStepDialog step={step} />
+                      <StepFormDialog mode="edit" step={step} />
                     ) : undefined
                   }
                 />
