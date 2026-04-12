@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, Outlet, useNavigate } from "@tanstack/react-router";
+import { Footprints, History, LogOut, Users } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@stepsnaps/ui/avatar";
 import { Button } from "@stepsnaps/ui/button";
@@ -95,14 +96,17 @@ function AuthedLayout() {
                   <DropdownMenuItem
                     onClick={() => navigate({ to: "/settings/steps" })}
                   >
+                    <Footprints />
                     Steps
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => navigate({ to: "/journey/history" })}
                   >
+                    <History />
                     History
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => navigate({ to: "/teams" })}>
+                    <Users />
                     Teams
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
@@ -115,6 +119,7 @@ function AuthedLayout() {
                       await navigate({ to: "/", replace: true });
                     }}
                   >
+                    <LogOut />
                     Log out
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
