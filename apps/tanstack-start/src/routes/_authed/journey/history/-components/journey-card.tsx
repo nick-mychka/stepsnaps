@@ -1,0 +1,62 @@
+import { Badge } from "@stepsnaps/ui/badge";
+import { Button } from "@stepsnaps/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@stepsnaps/ui/card";
+
+export interface JourneyData {
+  id: string;
+  startDate: string;
+  endDate: string | null;
+  status: "active" | "completed";
+  companyName: string | null;
+  offerDetails: string | null;
+}
+
+interface Props {
+  journey: JourneyData;
+  onEdit: () => void;
+}
+
+export function JourneyCard({ journey, onEdit }: Props) {
+  const start = new Date(journey.startDate);
+  const end = journey.endDate ? new Date(journey.endDate) : new Date();
+  const duration =
+    Math.floor((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+
+  return (
+    <Card className="max-w-lg">
+      <CardHeader>
+        <div className="flex items-center gap-2">
+          <CardTitle className="text-lg">
+            {journey.companyName ?? "Journey"}
+          </CardTitle>
+          <Badge
+            variant={journey.status === "active" ? "default" : "secondary"}
+          >
+            {journey.status}
+          </Badge>
+        </div>
+        <CardDescription>
+          {journey.startDate} &mdash; {journey.endDate ?? "present"} &middot;{" "}
+          {duration} day
+          {duration !== 1 && "s"}
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-2">
+        {journey.offerDetails && (
+          <p className="text-sm">{journey.offerDetails}</p>
+        )}
+        {journey.status === "completed" && (
+          <Button variant="outline" size="sm" onClick={onEdit}>
+            Edit Details
+          </Button>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
