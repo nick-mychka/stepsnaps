@@ -48,6 +48,11 @@ export function StepsPage() {
     swapAndReorder(index, index + 1);
   };
 
+  const closeStepFormDialog = () => {
+    setSelectedStep(null);
+    setDialogOpen(false);
+  };
+
   return (
     <>
       <main className="container mx-auto py-12">
@@ -100,7 +105,7 @@ export function StepsPage() {
       <StepFormDialog
         open={isDialogOpen}
         step={selectedStep}
-        onOpenChange={setDialogOpen}
+        onOpenChange={closeStepFormDialog}
       />
     </>
   );

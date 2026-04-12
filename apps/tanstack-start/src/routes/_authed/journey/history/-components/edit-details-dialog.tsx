@@ -1,0 +1,93 @@
+import { useState } from "react";
+
+import { Button } from "@stepsnaps/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@stepsnaps/ui/dialog";
+import { Input } from "@stepsnaps/ui/input";
+import { Label } from "@stepsnaps/ui/label";
+import { Textarea } from "@stepsnaps/ui/textarea";
+
+import type { JourneyData } from "./journey-card";
+import { useUpdateJourneyDetails } from "../-hooks/use-update-journey-details";
+
+interface ContentProps {
+  journey: JourneyData;
+  onOpenChange: (open: boolean) => void;
+}
+
+interface Props extends ContentProps {
+  open: boolean;
+}
+
+export function EditDetailsDialog({ open, journey, onOpenChange }: Props) {
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <EditDetailsDialogContent
+          journey={journey}
+          onOpenChange={onOpenChange}
+        />
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function EditDetailsDialogContent({ journey, onOpenChange }: ContentProps) {
+  const [companyName, setCompanyName] = useState(journey.companyName ?? "");
+  const [offerDetails, setOfferDetails] = useState(journey.offerDetails ?? "");
+
+  const updateDetails = useUpdateJourneyDetails({
+    onSuccess: () => onOpenChange(false),
+  });
+
+  const handleSave = () => {
+    updateDetails.mutate({
+      id: journey.id,
+      companyName: companyName.trim() || null,
+      offerDetails: offerDetails.trim() || null,
+    });
+  };
+
+  return (
+    <>
+      <DialogHeader>
+        <DialogTitle>Edit Journey Details</DialogTitle>
+        <DialogDescription>
+          Update the company name and offer details.
+        </DialogDescription>
+      </DialogHeader>
+      <div className="flex flex-col gap-4 py-4">
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="editCompanyName">Company Name</Label>
+          <Input
+            id="editCompanyName"
+            value={companyName}
+            onChange={(e) => setCompanyName(e.target.value)}
+          />
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="editOfferDetails">Offer Details</Label>
+          <Textarea
+            id="editOfferDetails"
+            value={offerDetails}
+            onChange={(e) => setOfferDetails(e.target.value)}
+          />
+        </div>
+      </div>
+      <DialogFooter>
+        <Button variant="outline" onClick={() => onOpenChange(false)}>
+          Cancel
+        </Button>
+        <Button onClick={handleSave} disabled={updateDetails.isPending}>
+          {updateDetails.isPending ? "Saving..." : "Save"}
+        </Button>
+      </DialogFooter>
+    </>
+  );
+}
