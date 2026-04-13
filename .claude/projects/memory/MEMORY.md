@@ -1,0 +1,4 @@
+- [StepSnaps V1 scope](project_stepsnaps_v1.md) — Key product decisions and constraints for V1 release
+- [StepSnaps V2 — Job Applications](project_stepsnaps_v2.md) — V2 adds job application tracking with status pipeline and interviews
+- [StepSnaps V3 — Snap Goals](project_stepsnaps_v3.md) — V3 adds optional goals to numeric steps with progress bars (current active work)
+- [Deployment target](project_deployment.md) — Stepsnaps deploys to Railway, not Vercel

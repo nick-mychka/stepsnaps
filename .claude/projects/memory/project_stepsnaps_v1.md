@@ -21,4 +21,4 @@ StepSnaps V1 is a web-only (TanStack Start) app for tracking daily hiring journe
 
 **Why:** First release focused on core tracking + accountability loop. Keep scope tight.
 
-**How to apply:** Reference `prd/v1-daily-hiring-journey-tracker.md` for full details. Scope decisions should stay within these boundaries.
+**How to apply:** Reference `prd/v1-daily-hiring-journey-tracker.md` for full details.
