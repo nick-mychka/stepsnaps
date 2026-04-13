@@ -5,7 +5,7 @@ import {
   useSuspenseQuery,
 } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { CalendarDays, CheckCircle2, Flame, MoreVertical } from "lucide-react";
+import { CalendarDays, CheckCircle2, Flame } from "lucide-react";
 
 import { Button } from "@stepsnaps/ui/button";
 import {
@@ -25,18 +25,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@stepsnaps/ui/dialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@stepsnaps/ui/dropdown-menu";
+import { DropdownMenuItem } from "@stepsnaps/ui/dropdown-menu";
 import { Input } from "@stepsnaps/ui/input";
 import { Label } from "@stepsnaps/ui/label";
 import { Textarea } from "@stepsnaps/ui/textarea";
 import { toast } from "@stepsnaps/ui/toast";
 
 import { authClient } from "~/auth/client";
+import { ActionsMenu } from "~/component/actions-menu";
 import {
   BackgroundV1,
   BackgroundV2,
@@ -173,19 +169,12 @@ function ActiveJourneyCard(props: {
           </div>
           <CardDescription>Started {formattedStartDate}</CardDescription>
           <CardAction>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <MoreVertical />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onSelect={() => setShowFinishDialog(true)}>
-                  <CheckCircle2 />
-                  Finish Journey
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <ActionsMenu>
+              <DropdownMenuItem onSelect={() => setShowFinishDialog(true)}>
+                <CheckCircle2 />
+                Finish Journey
+              </DropdownMenuItem>
+            </ActionsMenu>
           </CardAction>
         </CardHeader>
         <CardContent className="flex flex-col items-center gap-2 pt-10 pb-6">

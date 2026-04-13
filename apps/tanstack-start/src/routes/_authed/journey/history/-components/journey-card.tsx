@@ -2,6 +2,7 @@ import { Badge } from "@stepsnaps/ui/badge";
 import { Button } from "@stepsnaps/ui/button";
 import {
   Card,
+  CardAction,
   CardContent,
   CardDescription,
   CardHeader,
@@ -46,15 +47,17 @@ export function JourneyCard({ journey, onEdit }: Props) {
           {duration} day
           {duration !== 1 && "s"}
         </CardDescription>
+        <CardAction>
+          {journey.status === "completed" && (
+            <Button variant="outline" size="sm" onClick={onEdit}>
+              Edit Details
+            </Button>
+          )}
+        </CardAction>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
         {journey.offerDetails && (
           <p className="text-sm">{journey.offerDetails}</p>
-        )}
-        {journey.status === "completed" && (
-          <Button variant="outline" size="sm" onClick={onEdit}>
-            Edit Details
-          </Button>
         )}
       </CardContent>
     </Card>

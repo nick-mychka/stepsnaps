@@ -6,7 +6,7 @@ import {
   useSuspenseQuery,
 } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { BookCheck, MoreVertical, SquarePen, Trash2 } from "lucide-react";
+import { BookCheck, SquarePen, Trash2 } from "lucide-react";
 import {
   Bar,
   BarChart,
@@ -41,12 +41,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@stepsnaps/ui/dialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@stepsnaps/ui/dropdown-menu";
+import { DropdownMenuItem } from "@stepsnaps/ui/dropdown-menu";
 import { Input } from "@stepsnaps/ui/input";
 import { Label } from "@stepsnaps/ui/label";
 import { Textarea } from "@stepsnaps/ui/textarea";
@@ -58,6 +53,8 @@ import {
   TooltipTrigger,
 } from "@stepsnaps/ui/tooltip";
 
+import { ActionsMenu } from "~/component/actions-menu";
+import { BackgroundV6 } from "~/component/journey-background";
 import { useTRPC } from "~/lib/trpc";
 
 export const Route = createFileRoute("/_authed/progress")({
@@ -99,37 +96,40 @@ function ProgressPage() {
   }
 
   return (
-    <main className="container mx-auto py-8">
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Progress</h1>
-        <div className="flex gap-1 rounded-lg border p-1">
-          <Button
-            variant={view === "timeline" ? "default" : "ghost"}
-            size="sm"
-            onClick={() => setView("timeline")}
-          >
-            Timeline
-          </Button>
-          <Button
-            variant={view === "chart" ? "default" : "ghost"}
-            size="sm"
-            onClick={() => setView("chart")}
-          >
-            Chart
-          </Button>
+    <>
+      <BackgroundV6 />
+      <main className="container mx-auto py-8">
+        <div className="mb-6 flex items-center justify-between">
+          <h1 className="text-3xl font-bold">Progress</h1>
+          <div className="flex gap-1 rounded-lg border p-1">
+            <Button
+              variant={view === "timeline" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setView("timeline")}
+            >
+              Timeline
+            </Button>
+            <Button
+              variant={view === "chart" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setView("chart")}
+            >
+              Chart
+            </Button>
+          </div>
         </div>
-      </div>
 
-      {view === "timeline" ? (
-        <TimelineView journeyId={activeJourney.id} />
-      ) : (
-        <ChartView
-          journeyId={activeJourney.id}
-          startDate={activeJourney.startDate}
-          endDate={activeJourney.endDate}
-        />
-      )}
-    </main>
+        {view === "timeline" ? (
+          <TimelineView journeyId={activeJourney.id} />
+        ) : (
+          <ChartView
+            journeyId={activeJourney.id}
+            startDate={activeJourney.startDate}
+            endDate={activeJourney.endDate}
+          />
+        )}
+      </main>
+    </>
   );
 }
 
@@ -569,23 +569,16 @@ function SnapCard(props: {
         <div className="flex items-center justify-between">
           <CardTitle className="text-base">{formatted}</CardTitle>
           <div className="flex gap-1">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon">
-                  <MoreVertical />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={onEdit}>
-                  <SquarePen />
-                  Edit
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={onDelete}>
-                  <Trash2 />
-                  Delete
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <ActionsMenu>
+              <DropdownMenuItem onSelect={onEdit}>
+                <SquarePen />
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={onDelete}>
+                <Trash2 />
+                Delete
+              </DropdownMenuItem>
+            </ActionsMenu>
           </div>
         </div>
       </CardHeader>
