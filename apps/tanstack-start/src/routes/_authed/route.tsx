@@ -12,6 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@stepsnaps/ui/dropdown-menu";
+import { ThemeToggle } from "@stepsnaps/ui/theme";
 
 import { authClient } from "~/auth/client";
 import { Logo } from "~/component/logo";
@@ -79,6 +80,7 @@ function AuthedLayout() {
             <span className="text-muted-foreground text-sm">
               {session.user.name}
             </span>
+            <ThemeToggle />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="rounded-full">
