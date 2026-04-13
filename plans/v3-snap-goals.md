@@ -23,18 +23,18 @@ End-to-end ability to set, edit, and remove goal values on numeric step definiti
 
 ### Acceptance criteria
 
-- [ ] `StepDefinition` table has a nullable `goalValue` numeric column
-- [ ] Database migration runs cleanly (existing steps get `null` goalValue)
-- [ ] `stepDefinition.create` accepts optional `goalValue` and persists it
-- [ ] `stepDefinition.update` accepts optional `goalValue` and persists it (works for both custom and predefined steps)
-- [ ] `stepDefinition.active` and `stepDefinition.list` queries return `goalValue`
-- [ ] Step form dialog shows a "Daily goal" numeric input when type is "numeric"
-- [ ] Step form dialog hides the goal input when type is "text"
-- [ ] User can create a custom numeric step with a goal
-- [ ] User can edit the goal on any existing numeric step (including predefined)
-- [ ] User can clear the goal (set to empty/null)
-- [ ] New users get predefined numeric steps with `goalValue: 10`
-- [ ] Existing users' steps are unaffected (goalValue stays null until they set one)
+- [x] `StepDefinition` table has a nullable `goalValue` numeric column
+- [x] Database migration runs cleanly (existing steps get `null` goalValue)
+- [x] `stepDefinition.create` accepts optional `goalValue` and persists it
+- [x] `stepDefinition.update` accepts optional `goalValue` and persists it (works for both custom and predefined steps)
+- [x] `stepDefinition.active` and `stepDefinition.list` queries return `goalValue`
+- [x] Step form dialog shows a "Daily goal" numeric input when type is "numeric"
+- [x] Step form dialog hides the goal input when type is "text"
+- [x] User can create a custom numeric step with a goal
+- [x] User can edit the goal on any existing numeric step (including predefined)
+- [x] User can clear the goal (set to empty/null)
+- [x] New users get predefined numeric steps with `goalValue: 10`
+- [x] Existing users' steps are unaffected (goalValue stays null until they set one)
 
 ---
 
