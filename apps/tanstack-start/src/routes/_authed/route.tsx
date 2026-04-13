@@ -1,5 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute, Outlet, useNavigate } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Link,
+  Outlet,
+  useNavigate,
+} from "@tanstack/react-router";
 import { Footprints, History, LogOut, Users } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@stepsnaps/ui/avatar";
@@ -47,34 +52,18 @@ function AuthedLayout() {
             <Logo />
           </button>
           <nav className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate({ to: "/dashboard" })}
-            >
-              Dashboard
+            <Button variant="ghost" size="sm" asChild>
+              <Link to="/dashboard">Dashboard</Link>
             </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate({ to: "/snap/new" })}
-            >
-              Snap
+            <Button variant="ghost" size="sm" asChild>
+              <Link to="/snap/new">Snap</Link>
             </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate({ to: "/progress" })}
-            >
-              Progress
+            <Button variant="ghost" size="sm" asChild>
+              <Link to="/progress">Progress</Link>
             </Button>
             {activeJourney && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => navigate({ to: "/applications" })}
-              >
-                Applications
+              <Button variant="ghost" size="sm" asChild>
+                <Link to="/applications">Applications</Link>
               </Button>
             )}
             <span className="text-muted-foreground text-sm">
@@ -95,21 +84,23 @@ function AuthedLayout() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-32">
                 <DropdownMenuGroup>
-                  <DropdownMenuItem
-                    onClick={() => navigate({ to: "/settings/steps" })}
-                  >
-                    <Footprints />
-                    Steps
+                  <DropdownMenuItem asChild>
+                    <Link to="/settings/steps">
+                      <Footprints />
+                      Steps
+                    </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => navigate({ to: "/journey/history" })}
-                  >
-                    <History />
-                    History
+                  <DropdownMenuItem asChild>
+                    <Link to="/journey/history">
+                      <History />
+                      History
+                    </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => navigate({ to: "/teams" })}>
-                    <Users />
-                    Teams
+                  <DropdownMenuItem asChild>
+                    <Link to="/teams">
+                      <Users />
+                      Teams
+                    </Link>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
