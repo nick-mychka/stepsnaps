@@ -576,11 +576,11 @@ function SnapCard(props: {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={onEdit}>
+                <DropdownMenuItem onSelect={onEdit}>
                   <SquarePen />
                   Edit
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={onDelete}>
+                <DropdownMenuItem onSelect={onDelete}>
                   <Trash2 />
                   Delete
                 </DropdownMenuItem>
