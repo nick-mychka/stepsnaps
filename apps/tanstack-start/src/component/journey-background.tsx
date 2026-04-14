@@ -2989,5 +2989,1162 @@ export function BackgroundV9({ preview = false }: { preview?: boolean }) {
   );
 }
 
+// ─── V10 — Orbital Rings  ░░ Cosmic & Structured ────────────────────────────
+//
+// The metaphor: your job search as a gravitational system. Each elliptical
+// orbit = one phase of the journey. Company "satellites" dot every ring.
+// A single trajectory arc connects all milestone tips from Start to Offer.
+//
+// Style: cosmic, ordered, quietly mathematical.
+
+function orbitalPoint(
+  cx: number,
+  cy: number,
+  rx: number,
+  ry: number,
+  cosA: number,
+  sinA: number,
+  t: number,
+): { x: number; y: number } {
+  return {
+    x: cx + rx * Math.cos(t) * cosA - ry * Math.sin(t) * sinA,
+    y: cy + rx * Math.cos(t) * sinA + ry * Math.sin(t) * cosA,
+  };
+}
+
+export function BackgroundV10({ preview = false }: { preview?: boolean }) {
+  const dark = useDark();
+  const gId = (s: string) => (preview ? `${s}P` : s);
+
+  const c = dark
+    ? { ring: "#6366f1", dot: "#818cf8", traj: "#a78bfa", offer: "#4ade80" }
+    : { ring: "#4338ca", dot: "#6366f1", traj: "#7c3aed", offer: "#15803d" };
+
+  // All orbits share one center — bottom-left corner
+  const OX = 180;
+  const OY = 870;
+  const A = -Math.PI / 6; // -30° tilt toward top-right
+  const cosA = Math.cos(A);
+  const sinA = Math.sin(A);
+
+  const orbits = [
+    { rx: 260, ry: 86, nDots: 5, strokeOp: 0.08, label: null, success: false },
+    {
+      rx: 460,
+      ry: 152,
+      nDots: 7,
+      strokeOp: 0.11,
+      label: "Applying",
+      success: false,
+    },
+    {
+      rx: 660,
+      ry: 218,
+      nDots: 8,
+      strokeOp: 0.13,
+      label: "Screening",
+      success: false,
+    },
+    {
+      rx: 870,
+      ry: 287,
+      nDots: 9,
+      strokeOp: 0.16,
+      label: "Interviews",
+      success: false,
+    },
+    {
+      rx: 1080,
+      ry: 357,
+      nDots: 8,
+      strokeOp: 0.19,
+      label: "Final Round",
+      success: false,
+    },
+    {
+      rx: 1290,
+      ry: 427,
+      nDots: 6,
+      strokeOp: 0.28,
+      label: "Offer! 🎉",
+      success: true,
+    },
+  ];
+
+  // Tip of each orbit at t=0 (right end of major axis → top-right after rotation)
+  const orbitsWithTips = orbits.map((orb) => ({
+    orb,
+    tip: orbitalPoint(OX, OY, orb.rx, orb.ry, cosA, sinA, 0),
+  }));
+  const trajD = `M ${orbitsWithTips.map(({ tip: t }) => `${t.x.toFixed(0)},${t.y.toFixed(0)}`).join(" L ")}`;
+
+  return (
+    <Wrap preview={preview}>
+      <svg {...SVG}>
+        <defs>
+          <radialGradient id={gId("v10bg")} cx="90%" cy="5%" r="75%">
+            <stop
+              offset="0%"
+              stopColor={dark ? "#1e1b4b" : "#e0e7ff"}
+              stopOpacity={dark ? 0.55 : 0.45}
+            />
+            <stop
+              offset="100%"
+              stopColor={dark ? "#000" : "#fff"}
+              stopOpacity="0"
+            />
+          </radialGradient>
+          <linearGradient id={gId("v10tg")} x1="0%" y1="100%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor={c.ring} />
+            <stop offset="60%" stopColor={c.traj} />
+            <stop offset="100%" stopColor={c.offer} />
+          </linearGradient>
+          <filter
+            id={gId("v10glo")}
+            x="-50%"
+            y="-50%"
+            width="200%"
+            height="200%"
+          >
+            <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="b" />
+            <feMerge>
+              <feMergeNode in="b" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+          <filter
+            id={gId("v10fin")}
+            x="-80%"
+            y="-80%"
+            width="260%"
+            height="260%"
+          >
+            <feGaussianBlur in="SourceGraphic" stdDeviation="9" result="b" />
+            <feMerge>
+              <feMergeNode in="b" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+
+        {/* Ambient glow toward top-right */}
+        <rect width="1440" height="900" fill={`url(#${gId("v10bg")})`} />
+
+        {/* Orbital ellipses */}
+        {orbits.map((orb, i) => (
+          <ellipse
+            key={i}
+            cx={OX}
+            cy={OY}
+            rx={orb.rx}
+            ry={orb.ry}
+            transform={`rotate(-30, ${OX}, ${OY})`}
+            stroke={orb.success ? c.offer : c.ring}
+            strokeWidth={orb.success ? 1.5 : 0.9}
+            strokeDasharray={orb.success ? undefined : "5 8"}
+            fill="none"
+            opacity={orb.strokeOp}
+          />
+        ))}
+
+        {/* Company dots on each orbit */}
+        {orbits.flatMap((orb, oi) =>
+          Array.from({ length: orb.nDots }, (_, j) => {
+            const t = (j / orb.nDots) * Math.PI * 2 + oi * 0.38;
+            return { t, j };
+          })
+            .filter(({ t }) => {
+              const { x, y } = orbitalPoint(
+                OX,
+                OY,
+                orb.rx,
+                orb.ry,
+                cosA,
+                sinA,
+                t,
+              );
+              return x >= -5 && x <= 1445 && y >= -5 && y <= 905;
+            })
+            .map(({ t, j }) => {
+              const { x, y } = orbitalPoint(
+                OX,
+                OY,
+                orb.rx,
+                orb.ry,
+                cosA,
+                sinA,
+                t,
+              );
+              const prox = 1 - Math.hypot(x - 1440, y) / Math.hypot(1440, 900);
+              return (
+                <circle
+                  key={`${oi}-${j}`}
+                  cx={x}
+                  cy={y}
+                  r={orb.success ? 3 : 2}
+                  fill={orb.success ? c.offer : c.dot}
+                  opacity={
+                    Math.min(0.12 + prox * 0.55, 0.7) * (orb.success ? 1.3 : 1)
+                  }
+                />
+              );
+            }),
+        )}
+
+        {/* Trajectory through tips — glow + sharp */}
+        <path
+          d={trajD}
+          stroke={`url(#${gId("v10tg")})`}
+          strokeWidth="7"
+          fill="none"
+          opacity={0.07}
+          filter={`url(#${gId("v10glo")})`}
+        />
+        <path
+          d={trajD}
+          stroke={`url(#${gId("v10tg")})`}
+          strokeWidth="1.8"
+          fill="none"
+          opacity={0.38}
+          strokeLinecap="round"
+        />
+
+        {/* Milestone rings at orbit tips */}
+        {orbitsWithTips.map(({ orb, tip: { x, y } }, i) => {
+          const prox = i / (orbitsWithTips.length - 1);
+          return (
+            <g key={i} opacity={0.18 + prox * 0.72}>
+              <circle
+                cx={x}
+                cy={y}
+                r={orb.success ? 18 : 10}
+                fill={orb.success ? c.offer : c.ring}
+                opacity={0.1}
+                filter={orb.success ? `url(#${gId("v10fin")})` : undefined}
+              />
+              <circle
+                cx={x}
+                cy={y}
+                r={orb.success ? 5.5 : 3.5}
+                fill={orb.success ? c.offer : c.traj}
+                filter={orb.success ? `url(#${gId("v10fin")})` : undefined}
+              />
+              {orb.label && (
+                <text
+                  x={x + 10}
+                  y={y - 7}
+                  fontSize={orb.success ? 12 : 9.5}
+                  fill={orb.success ? c.offer : dark ? "#e2e8f0" : "#1e1b4b"}
+                  fontFamily="monospace"
+                  fontWeight={orb.success ? "bold" : "normal"}
+                  opacity={0.78}
+                >
+                  {orb.label}
+                </text>
+              )}
+            </g>
+          );
+        })}
+
+        {/* Origin dot */}
+        <circle cx={OX} cy={OY} r={4} fill={c.ring} opacity={0.45} />
+        <text
+          x={OX + 8}
+          y={OY - 4}
+          fontSize="9"
+          fill={dark ? "#e2e8f0" : "#1e1b4b"}
+          opacity={0.35}
+          fontFamily="monospace"
+        >
+          Start
+        </text>
+      </svg>
+    </Wrap>
+  );
+}
+
+// ─── V11 — Topographic  ░░ Terrain & Elevation ───────────────────────────────
+//
+// The metaphor: hiring is climbing. Organic contour lines radiate from the
+// peak (the Offer, top-right corner). The dashed journey trail ascends
+// through each elevation band — from the lowland chaos of job boards to the
+// clear summit of an accepted offer.
+//
+// Style: cartographic, focused, contemplative.
+
+function organicContour(
+  cx: number,
+  cy: number,
+  rx: number,
+  ry: number,
+  seed: number,
+  n = 24,
+): string {
+  const pts = Array.from({ length: n }, (_, i) => {
+    const t = (i / n) * Math.PI * 2;
+    const r =
+      1 +
+      0.14 * Math.sin(seed * 4.1 + i * 2.3) +
+      0.07 * Math.cos(seed * 2.7 + i * 4.9);
+    return { x: cx + rx * Math.cos(t) * r, y: cy + ry * Math.sin(t) * r };
+  });
+
+  // Smooth closed path via quadratic beziers through midpoints (Chaikin)
+  const last = pts[n - 1] ?? { x: 0, y: 0 };
+  const first = pts[0] ?? { x: 0, y: 0 };
+  let d = `M ${((last.x + first.x) / 2).toFixed(1)},${((last.y + first.y) / 2).toFixed(1)} `;
+  for (let i = 0; i < n; i++) {
+    const p = pts[i] ?? { x: 0, y: 0 };
+    const next = pts[(i + 1) % n] ?? { x: 0, y: 0 };
+    const mx = ((p.x + next.x) / 2).toFixed(1);
+    const my = ((p.y + next.y) / 2).toFixed(1);
+    d += `Q ${p.x.toFixed(1)},${p.y.toFixed(1)} ${mx},${my} `;
+  }
+  return d + "Z";
+}
+
+export function BackgroundV11({ preview = false }: { preview?: boolean }) {
+  const dark = useDark();
+  const gId = (s: string) => (preview ? `${s}P` : s);
+
+  const c = dark
+    ? { contour: "#6366f1", fill: "#3730a3", path: "#a78bfa", offer: "#4ade80" }
+    : {
+        contour: "#4338ca",
+        fill: "#6366f1",
+        path: "#7c3aed",
+        offer: "#15803d",
+      };
+
+  // Peak = Offer (top-right)
+  const PX = 1380;
+  const PY = 80;
+
+  // Opacity fields depend on `dark` — path strings are hoisted to module level
+  const contours = CONTOUR_PATHS_V11.map((d, i) => ({
+    d,
+    fillOp: dark ? 0.022 * (10 - i) : 0.014 * (10 - i),
+    strokeOp: dark ? 0.055 + (9 - i) * 0.014 : 0.07 + (9 - i) * 0.016,
+    major: i % 3 === 0,
+  }));
+
+  // Journey trail bottom-left → peak
+  const trail =
+    "M 80,860 C 200,740 340,660 460,570 C 580,480 680,400 800,320 " +
+    "C 920,240 1060,170 1180,130 C 1260,105 1320,90 1365,83";
+
+  const milestones = [
+    { x: 80, y: 860, label: "Start", offer: false },
+    { x: 460, y: 570, label: "First Apply", offer: false },
+    { x: 800, y: 320, label: "Interviews", offer: false },
+    { x: 1180, y: 130, label: "Final Round", offer: false },
+    { x: 1365, y: 83, label: "Offer! 🎉", offer: true },
+  ];
+
+  return (
+    <Wrap preview={preview}>
+      <svg {...SVG}>
+        <defs>
+          <linearGradient id={gId("v11bg")} x1="0%" y1="100%" x2="100%" y2="0%">
+            <stop
+              offset="0%"
+              stopColor={dark ? "#000" : "#fff"}
+              stopOpacity="0"
+            />
+            <stop
+              offset="100%"
+              stopColor={dark ? "#1e1b4b" : "#e0e7ff"}
+              stopOpacity={dark ? 0.42 : 0.3}
+            />
+          </linearGradient>
+          <linearGradient id={gId("v11pg")} x1="0%" y1="100%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor={dark ? "#6366f1" : "#4338ca"} />
+            <stop offset="60%" stopColor={dark ? "#a78bfa" : "#7c3aed"} />
+            <stop offset="100%" stopColor={dark ? "#4ade80" : "#15803d"} />
+          </linearGradient>
+          <filter
+            id={gId("v11glo")}
+            x="-60%"
+            y="-60%"
+            width="220%"
+            height="220%"
+          >
+            <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="b" />
+            <feMerge>
+              <feMergeNode in="b" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+          <filter
+            id={gId("v11fin")}
+            x="-100%"
+            y="-100%"
+            width="300%"
+            height="300%"
+          >
+            <feGaussianBlur in="SourceGraphic" stdDeviation="12" result="b" />
+            <feMerge>
+              <feMergeNode in="b" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+
+        {/* Background gradient toward peak */}
+        <rect width="1440" height="900" fill={`url(#${gId("v11bg")})`} />
+
+        {/* Contour fills (outermost first so innermost draws on top) */}
+        {contours
+          .slice()
+          .reverse()
+          .map(({ d, fillOp }, i) => (
+            <path
+              key={`f${i}`}
+              d={d}
+              fill={c.fill}
+              fillOpacity={fillOp}
+              stroke="none"
+            />
+          ))}
+
+        {/* Contour lines */}
+        {contours.map(({ d, strokeOp, major }, i) => (
+          <path
+            key={`l${i}`}
+            d={d}
+            stroke={c.contour}
+            strokeWidth={major ? 1.2 : 0.65}
+            fill="none"
+            opacity={strokeOp}
+          />
+        ))}
+
+        {/* Trail glow + sharp dashed */}
+        <path
+          d={trail}
+          stroke={`url(#${gId("v11pg")})`}
+          strokeWidth="8"
+          fill="none"
+          opacity={0.1}
+          filter={`url(#${gId("v11glo")})`}
+        />
+        <path
+          d={trail}
+          stroke={`url(#${gId("v11pg")})`}
+          strokeWidth="2"
+          strokeDasharray="10 5"
+          fill="none"
+          opacity={0.45}
+          strokeLinecap="round"
+        />
+
+        {/* Milestones */}
+        {milestones.map(({ x, y, label, offer: isOffer }, i) => {
+          const prox = i / (milestones.length - 1);
+          return (
+            <g key={i} opacity={0.22 + prox * 0.68}>
+              {isOffer && (
+                <circle
+                  cx={x}
+                  cy={y}
+                  r={28}
+                  fill={dark ? "#4ade80" : "#15803d"}
+                  opacity={0.07}
+                  filter={`url(#${gId("v11fin")})`}
+                />
+              )}
+              {/* Outer ring */}
+              <circle
+                cx={x}
+                cy={y}
+                r={isOffer ? 12 : 8}
+                stroke={isOffer ? (dark ? "#4ade80" : "#15803d") : c.contour}
+                strokeWidth="0.8"
+                fill="none"
+                opacity={0.35}
+              />
+              {/* Core dot */}
+              <circle
+                cx={x}
+                cy={y}
+                r={isOffer ? 6 : 4}
+                fill={isOffer ? (dark ? "#4ade80" : "#15803d") : c.path}
+                filter={isOffer ? `url(#${gId("v11glo")})` : undefined}
+              />
+              <text
+                x={x + 14}
+                y={y - 7}
+                fontSize={isOffer ? 11 : 9}
+                fill={
+                  isOffer
+                    ? dark
+                      ? "#4ade80"
+                      : "#15803d"
+                    : dark
+                      ? "#e2e8f0"
+                      : "#1e1b4b"
+                }
+                fontFamily="monospace"
+                fontWeight={isOffer ? "bold" : "normal"}
+                opacity={0.82}
+              >
+                {label}
+              </text>
+            </g>
+          );
+        })}
+
+        {/* Summit glow */}
+        <circle
+          cx={PX}
+          cy={PY}
+          r={40}
+          fill={dark ? "#4ade80" : "#15803d"}
+          opacity={0.06}
+          filter={`url(#${gId("v11fin")})`}
+        />
+
+        <text
+          x={38}
+          y={880}
+          fontSize="9"
+          fill={dark ? "white" : "#0f172a"}
+          opacity={0.12}
+          fontFamily="monospace"
+        >
+          Elevation: 0 → Offer
+        </text>
+      </svg>
+    </Wrap>
+  );
+}
+
+// ─── Shared helpers (deterministic, computed once at module level) ────────────
+
+function dustField(n: number, seed: number) {
+  return Array.from({ length: n }, (_, i) => ({
+    x: Math.abs(Math.sin(seed * 1.3 + i * 7.41)) * 1440,
+    y: Math.abs(Math.cos(seed * 2.1 + i * 5.87)) * 900,
+    r: 0.5 + Math.abs(Math.sin(seed + i * 11.1)) * 1.1,
+    op: 0.025 + Math.abs(Math.cos(seed + i * 8.3)) * 0.07,
+  }));
+}
+
+const DUST_V12 = dustField(60, 12.4);
+const DUST_V13 = dustField(50, 88.1);
+
+// V11 contour path strings depend only on constants — computed once
+const CONTOUR_PATHS_V11 = Array.from({ length: 10 }, (_, i) => {
+  const scale = (i + 1) * 145;
+  return organicContour(1380, 80, scale * 1.05, scale * 0.72, (i + 1) * 13.7);
+});
+
+// ─── V12 — Deep Thorny Path  ░░ V1 Pro ───────────────────────────────────────
+//
+// V1 refined: same winding road and thorn spikes, but with stardust texture,
+// three-layer path glow, multi-ring milestone halos, and glowing dead-end
+// dots. All opacities pulled back so the content breathes in front of it.
+//
+// Style: dark, layered, premium.
+
+export function BackgroundV12({ preview = false }: { preview?: boolean }) {
+  const dark = useDark();
+  const gId = (s: string) => (preview ? `${s}P` : s);
+
+  const c = dark
+    ? {
+        p1: "#4f46e5",
+        p2: "#7c3aed",
+        p3: "#0ea5e9",
+        rej: "#ef4444",
+        fin: "#22c55e",
+        thorn: "rgba(255,255,255,0.4)",
+      }
+    : {
+        p1: "#3730a3",
+        p2: "#6d28d9",
+        p3: "#0369a1",
+        rej: "#dc2626",
+        fin: "#15803d",
+        thorn: "rgba(15,23,42,0.4)",
+      };
+
+  // All opacities lower than V1 — background must not compete with content
+  const pathOp = dark ? 0.2 : 0.13;
+  const rejOp = dark ? 0.16 : 0.1;
+  const msOp = dark ? 0.26 : 0.16;
+  const thornOp = dark ? 0.07 : 0.045;
+
+  const thorns: number[][] = [
+    [175, 866, 169, 854, 181, 854],
+    [255, 857, 249, 845, 261, 845],
+    [338, 847, 332, 835, 344, 835],
+    [430, 824, 424, 812, 436, 812],
+    [476, 812, 468, 808, 476, 800],
+    [458, 740, 446, 736, 458, 726],
+    [412, 718, 400, 714, 412, 704],
+    [352, 690, 340, 686, 352, 676],
+    [364, 648, 356, 640, 368, 636],
+    [408, 618, 400, 610, 412, 606],
+    [464, 604, 456, 596, 468, 592],
+    [528, 594, 520, 586, 532, 582],
+    [578, 588, 572, 578, 582, 576],
+    [616, 556, 608, 546, 620, 542],
+    [624, 534, 616, 524, 628, 520],
+    [612, 506, 604, 496, 616, 492],
+    [602, 478, 594, 468, 606, 464],
+    [544, 450, 536, 440, 548, 436],
+    [524, 436, 516, 426, 528, 422],
+    [586, 410, 578, 400, 590, 396],
+    [634, 396, 626, 386, 638, 382],
+    [696, 382, 688, 372, 700, 368],
+    [742, 374, 734, 364, 746, 360],
+    [800, 366, 792, 356, 804, 352],
+    [848, 348, 840, 338, 852, 334],
+    [872, 320, 864, 310, 876, 306],
+    [876, 292, 868, 282, 880, 278],
+    [850, 270, 842, 260, 854, 256],
+    [846, 256, 838, 246, 850, 242],
+    [794, 242, 786, 232, 798, 228],
+    [752, 226, 744, 216, 756, 212],
+    [756, 210, 748, 200, 760, 196],
+    [790, 162, 782, 152, 794, 148],
+    [848, 152, 840, 142, 852, 138],
+    [912, 142, 904, 132, 916, 128],
+    [988, 134, 980, 124, 992, 120],
+    [1060, 128, 1052, 118, 1064, 114],
+    [1134, 116, 1126, 106, 1138, 102],
+    [1202, 100, 1194, 90, 1206, 86],
+    [1266, 80, 1258, 70, 1270, 66],
+  ];
+
+  const milestones = [
+    { cx: 100, cy: 870, r: 7, label: "Start", col: c.p1, op: 0.55 },
+    { cx: 420, cy: 820, r: 4, label: "Polish CV", col: c.p2, op: msOp },
+    { cx: 360, cy: 680, r: 4, label: "Job Boards", col: c.p2, op: msOp },
+    { cx: 600, cy: 580, r: 4, label: "First Reply", col: c.p2, op: msOp },
+    { cx: 610, cy: 492, r: 4, label: "Recruiter Call", col: c.p2, op: msOp },
+    { cx: 688, cy: 380, r: 4, label: "Phone Screen", col: c.p2, op: msOp },
+    { cx: 842, cy: 342, r: 4, label: "Tech Interview", col: c.p2, op: msOp },
+    { cx: 844, cy: 258, r: 4, label: "System Design", col: c.p2, op: msOp },
+    { cx: 880, cy: 148, r: 4, label: "Final Round", col: c.p3, op: msOp },
+    { cx: 1128, cy: 112, r: 4, label: "Ref. Check", col: c.p3, op: msOp },
+    {
+      cx: 1322,
+      cy: 52,
+      r: 9,
+      label: "Offer! 🎉",
+      col: c.fin,
+      op: 0.65,
+      glow: true,
+    },
+  ];
+
+  const deadEnds = [
+    { d: "M 420 820 C 510 844,586 868,612 896", ex: 612, ey: 896 },
+    { d: "M 600 580 C 684 566,762 552,832 534", ex: 832, ey: 534 },
+    {
+      d: "M 840 342 C 910 318,968 302,994 274 C 1014 256,1008 238,992 228",
+      ex: 992,
+      ey: 228,
+    },
+    { d: "M 1128 112 C 1174 88,1216 72,1234 46", ex: 1234, ey: 46 },
+  ];
+
+  const mainPath =
+    "M 100 870 C 220 860,340 845,420 820 C 500 795,520 765,480 740" +
+    " C 440 715,360 706,342 682 C 320 655,358 624,420 610" +
+    " C 480 596,560 606,600 580 C 640 554,642 520,610 494" +
+    " C 578 468,514 456,544 432 C 568 414,634 408,692 386" +
+    " C 750 364,818 368,846 342 C 874 316,880 288,846 262" +
+    " C 812 236,750 228,756 204 C 762 180,820 160,882 144" +
+    " C 940 128,1020 130,1100 116 C 1178 102,1252 86,1322 52";
+
+  return (
+    <Wrap preview={preview}>
+      <svg {...SVG}>
+        <defs>
+          <linearGradient id={gId("v12g")} x1="0%" y1="100%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor={c.p1} />
+            <stop offset="45%" stopColor={c.p2} />
+            <stop offset="100%" stopColor={c.p3} />
+          </linearGradient>
+          {/* Ambient washes */}
+          <radialGradient id={gId("v12s")} cx="7%" cy="97%" r="45%">
+            <stop
+              offset="0%"
+              stopColor={c.p1}
+              stopOpacity={dark ? 0.18 : 0.1}
+            />
+            <stop offset="100%" stopColor={c.p1} stopOpacity="0" />
+          </radialGradient>
+          <radialGradient id={gId("v12e")} cx="92%" cy="6%" r="40%">
+            <stop
+              offset="0%"
+              stopColor={c.fin}
+              stopOpacity={dark ? 0.12 : 0.07}
+            />
+            <stop offset="100%" stopColor={c.fin} stopOpacity="0" />
+          </radialGradient>
+          <filter id={gId("v12w")} x="-8%" y="-8%" width="116%" height="116%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="14" />
+          </filter>
+          <filter id={gId("v12b")} x="-5%" y="-5%" width="110%" height="110%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="4" />
+          </filter>
+          <filter
+            id={gId("v12end")}
+            x="-80%"
+            y="-80%"
+            width="260%"
+            height="260%"
+          >
+            <feGaussianBlur in="SourceGraphic" stdDeviation="7" result="b" />
+            <feMerge>
+              <feMergeNode in="b" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+          <filter
+            id={gId("v12rj")}
+            x="-40%"
+            y="-40%"
+            width="180%"
+            height="180%"
+          >
+            <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="b" />
+            <feMerge>
+              <feMergeNode in="b" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+
+        {/* Ambient start / finish washes */}
+        <rect width="1440" height="900" fill={`url(#${gId("v12s")})`} />
+        <rect width="1440" height="900" fill={`url(#${gId("v12e")})`} />
+
+        {/* Stardust field */}
+        {DUST_V12.map((d, i) => (
+          <circle
+            key={i}
+            cx={d.x}
+            cy={d.y}
+            r={d.r}
+            fill={dark ? "#818cf8" : "#6366f1"}
+            opacity={d.op}
+          />
+        ))}
+
+        {/* Path — wide soft bloom */}
+        <path
+          d={mainPath}
+          stroke={`url(#${gId("v12g")})`}
+          strokeWidth="18"
+          fill="none"
+          opacity={0.04}
+          filter={`url(#${gId("v12w")})`}
+        />
+        {/* Path — medium glow */}
+        <path
+          d={mainPath}
+          stroke={`url(#${gId("v12g")})`}
+          strokeWidth="6"
+          fill="none"
+          opacity={0.07}
+          filter={`url(#${gId("v12b")})`}
+        />
+        {/* Path — sharp dashed */}
+        <path
+          d={mainPath}
+          stroke={`url(#${gId("v12g")})`}
+          strokeWidth="1.8"
+          strokeDasharray="10 7"
+          fill="none"
+          strokeLinecap="round"
+          opacity={pathOp}
+        />
+
+        {/* Thorn spikes */}
+        {thorns.map((t, i) => {
+          const size = 1 + (i % 3) * 0.3; // subtle size variation
+          return (
+            <g key={i} opacity={thornOp}>
+              <line
+                x1={t[0]}
+                y1={t[1]}
+                x2={t[2]}
+                y2={t[3]}
+                stroke={c.thorn}
+                strokeWidth={size}
+                strokeLinecap="round"
+              />
+              <line
+                x1={t[0]}
+                y1={t[1]}
+                x2={t[4]}
+                y2={t[5]}
+                stroke={c.thorn}
+                strokeWidth={size}
+                strokeLinecap="round"
+              />
+            </g>
+          );
+        })}
+
+        {/* Dead ends */}
+        {deadEnds.map(({ d, ex, ey }, i) => (
+          <g key={i}>
+            <path
+              d={d}
+              stroke={c.rej}
+              strokeWidth="1.2"
+              strokeDasharray="4 5"
+              strokeLinecap="round"
+              opacity={rejOp}
+            />
+            {/* Glowing endpoint dot */}
+            <circle
+              cx={ex}
+              cy={ey}
+              r={5}
+              fill={c.rej}
+              opacity={rejOp * 0.4}
+              filter={`url(#${gId("v12rj")})`}
+            />
+            <circle
+              cx={ex}
+              cy={ey}
+              r={2.5}
+              fill={c.rej}
+              opacity={rejOp * 0.8}
+            />
+          </g>
+        ))}
+
+        {/* Milestones — 3-ring halos */}
+        {milestones.map((m, i) => (
+          <g key={i} opacity={m.op}>
+            {/* Outer halo */}
+            <circle
+              cx={m.cx}
+              cy={m.cy}
+              r={m.r * 3.2}
+              stroke={m.col}
+              strokeWidth="0.6"
+              fill="none"
+              opacity={0.25}
+            />
+            {/* Mid ring */}
+            <circle
+              cx={m.cx}
+              cy={m.cy}
+              r={m.r * 1.9}
+              stroke={m.col}
+              strokeWidth="0.6"
+              fill="none"
+              opacity={0.4}
+            />
+            {/* Core */}
+            <circle
+              cx={m.cx}
+              cy={m.cy}
+              r={m.r}
+              fill={m.col}
+              filter={m.glow ? `url(#${gId("v12end")})` : undefined}
+            />
+            <text
+              x={m.cx + m.r + 6}
+              y={m.cy + 4}
+              fontSize={m.glow ? 10 : 8.5}
+              fill={m.glow ? m.col : dark ? "#e2e8f0" : "#1e1b4b"}
+              fontFamily="monospace"
+              fontWeight={m.glow ? "bold" : "normal"}
+              opacity={0.82}
+            >
+              {m.label}
+            </text>
+          </g>
+        ))}
+      </svg>
+    </Wrap>
+  );
+}
+
+// ─── V13 — Deep Ribbons  ░░ V3 Pro ───────────────────────────────────────────
+//
+// V3 refined: 35 attempt-ribbons (vs 20) with varying stroke width — thicker
+// where the attempt climbed higher. Rejection marks upgraded to glowing
+// endpoint dots. Success ribbon gains three glow layers and milestone beads
+// along the winning path. Stardust texture throughout.
+//
+// Style: dramatic, dense, emotionally layered.
+
+export function BackgroundV13({ preview = false }: { preview?: boolean }) {
+  const dark = useDark();
+  const gId = (s: string) => (preview ? `${s}P` : s);
+
+  const successCol = dark ? "#22c55e" : "#15803d";
+  const rejectCol = dark ? "#f87171" : "#ef4444";
+  // Lower than V3
+  const ribbonOp = dark ? 0.14 : 0.09;
+  const successOp = dark ? 0.55 : 0.42;
+
+  // All 20 V3 ribbons + 15 more, with extra `w` field (stroke width)
+  // [sx, sy, cp1x, cp1y, cp2x, cp2y, ex, ey, w]
+  const ribbons: number[][] = [
+    // --- original 20 ---
+    [80, 900, 60, 720, 40, 560, 100, 480, 1.2],
+    [180, 900, 200, 700, 180, 500, 220, 400, 1.5],
+    [310, 900, 330, 720, 350, 580, 290, 500, 1.3],
+    [440, 900, 460, 740, 440, 600, 480, 540, 1.1],
+    [560, 900, 580, 760, 600, 640, 540, 580, 1.0],
+    [680, 900, 700, 780, 680, 660, 720, 600, 1.0],
+    [800, 900, 820, 800, 840, 700, 780, 640, 0.9],
+    [920, 900, 940, 820, 960, 750, 900, 700, 0.8],
+    [1040, 900, 1060, 840, 1080, 780, 1020, 740, 0.8],
+    [1160, 900, 1180, 860, 1200, 820, 1140, 790, 0.7],
+    [240, 900, 220, 660, 200, 440, 260, 340, 1.6],
+    [380, 900, 360, 640, 320, 440, 360, 320, 1.7],
+    [520, 900, 540, 680, 560, 500, 500, 420, 1.5],
+    [660, 900, 640, 700, 620, 540, 660, 440, 1.4],
+    [780, 900, 800, 720, 820, 580, 760, 500, 1.3],
+    [900, 900, 920, 760, 940, 640, 880, 560, 1.2],
+    [1020, 900, 1040, 800, 1060, 700, 1000, 640, 1.1],
+    [140, 900, 120, 580, 100, 380, 160, 260, 1.8],
+    [460, 900, 440, 560, 420, 360, 480, 260, 1.7],
+    [700, 900, 720, 600, 740, 400, 680, 320, 1.6],
+    // --- 15 new ribbons ---
+    [120, 900, 110, 800, 100, 720, 140, 680, 0.9],
+    [260, 900, 250, 820, 240, 760, 280, 730, 0.8],
+    [400, 900, 390, 840, 380, 800, 420, 780, 0.8],
+    [540, 900, 530, 860, 520, 830, 560, 820, 0.7],
+    [620, 900, 610, 870, 600, 850, 640, 840, 0.7],
+    [740, 900, 730, 870, 720, 855, 760, 850, 0.7],
+    [860, 900, 850, 878, 840, 862, 880, 858, 0.7],
+    [330, 900, 310, 740, 290, 580, 350, 480, 1.4],
+    [490, 900, 470, 720, 450, 560, 510, 460, 1.3],
+    [640, 900, 620, 740, 600, 580, 660, 480, 1.2],
+    [820, 900, 800, 740, 780, 560, 840, 460, 1.1],
+    [200, 900, 180, 660, 160, 480, 220, 380, 1.5],
+    [580, 900, 560, 680, 540, 500, 600, 400, 1.3],
+    [960, 900, 940, 780, 920, 660, 980, 580, 1.0],
+    [1100, 900, 1080, 850, 1060, 820, 1120, 800, 0.8],
+  ];
+
+  // Milestone beads along the success ribbon
+  const beads = [
+    { cx: 580, cy: 740, label: "Applied" },
+    { cx: 572, cy: 530, label: "Recruiter" },
+    { cx: 628, cy: 400, label: "Tech Screen" },
+    { cx: 760, cy: 286, label: "Interviews" },
+    { cx: 980, cy: 120, label: "Final Round" },
+    { cx: 1360, cy: 30, label: "Offer! 🎉", offer: true },
+  ];
+
+  const successPath =
+    "M 600 900 C 580 740, 560 560, 620 420 C 680 280, 820 180, 980 120" +
+    " C 1100 72, 1240 52, 1360 30";
+
+  return (
+    <Wrap preview={preview}>
+      <svg {...SVG}>
+        <defs>
+          <linearGradient id={gId("v13rej")} x1="0%" y1="100%" x2="0%" y2="0%">
+            <stop
+              offset="0%"
+              stopColor={dark ? "#6366f1" : "#4f46e5"}
+              stopOpacity="0.5"
+            />
+            <stop offset="100%" stopColor={rejectCol} stopOpacity="0.7" />
+          </linearGradient>
+          <linearGradient id={gId("v13win")} x1="0%" y1="100%" x2="0%" y2="0%">
+            <stop
+              offset="0%"
+              stopColor={dark ? "#6366f1" : "#4f46e5"}
+              stopOpacity="0.5"
+            />
+            <stop
+              offset="40%"
+              stopColor={dark ? "#a855f7" : "#7c3aed"}
+              stopOpacity="0.7"
+            />
+            <stop offset="100%" stopColor={successCol} stopOpacity="1" />
+          </linearGradient>
+          {/* Soft bloom for success ribbon */}
+          <filter
+            id={gId("v13wb")}
+            x="-10%"
+            y="-10%"
+            width="120%"
+            height="120%"
+          >
+            <feGaussianBlur in="SourceGraphic" stdDeviation="16" />
+          </filter>
+          <filter id={gId("v13mb")} x="-8%" y="-8%" width="116%" height="116%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="b" />
+            <feMerge>
+              <feMergeNode in="b" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+          <filter
+            id={gId("v13rej")}
+            x="-40%"
+            y="-40%"
+            width="180%"
+            height="180%"
+          >
+            <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="b" />
+            <feMerge>
+              <feMergeNode in="b" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+          <filter
+            id={gId("v13fin")}
+            x="-80%"
+            y="-80%"
+            width="260%"
+            height="260%"
+          >
+            <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="b" />
+            <feMerge>
+              <feMergeNode in="b" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+
+        {/* Stardust */}
+        {DUST_V13.map((d, i) => (
+          <circle
+            key={i}
+            cx={d.x}
+            cy={d.y}
+            r={d.r}
+            fill={dark ? "#818cf8" : "#6366f1"}
+            opacity={d.op}
+          />
+        ))}
+
+        {/* Rejected ribbons */}
+        {ribbons.map((seg, i) => {
+          const [
+            sx = 0,
+            sy = 0,
+            cp1x = 0,
+            cp1y = 0,
+            cp2x = 0,
+            cp2y = 0,
+            ex = 0,
+            ey = 0,
+            w = 1,
+          ] = seg;
+          return (
+            <g key={i}>
+              <path
+                d={`M ${sx} ${sy} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${ex} ${ey}`}
+                stroke={`url(#${gId("v13rej")})`}
+                strokeWidth={w}
+                strokeLinecap="round"
+                opacity={ribbonOp}
+              />
+              {/* Glowing endpoint instead of plain X */}
+              <circle
+                cx={ex}
+                cy={ey}
+                r={4}
+                fill={rejectCol}
+                opacity={ribbonOp * 0.55}
+                filter={`url(#${gId("v13rej")})`}
+              />
+              <circle
+                cx={ex}
+                cy={ey}
+                r={1.8}
+                fill={rejectCol}
+                opacity={ribbonOp * 1.1}
+              />
+            </g>
+          );
+        })}
+
+        {/* Success ribbon — 3 glow layers */}
+        <path
+          d={successPath}
+          stroke={successCol}
+          strokeWidth="24"
+          fill="none"
+          opacity={0.04}
+          filter={`url(#${gId("v13wb")})`}
+        />
+        <path
+          d={successPath}
+          stroke={`url(#${gId("v13win")})`}
+          strokeWidth="7"
+          fill="none"
+          opacity={0.12}
+          filter={`url(#${gId("v13mb")})`}
+        />
+        <path
+          d={successPath}
+          stroke={`url(#${gId("v13win")})`}
+          strokeWidth="2"
+          strokeLinecap="round"
+          fill="none"
+          opacity={successOp}
+        />
+
+        {/* Milestone beads along winning ribbon */}
+        {beads.map(({ cx, cy, label, offer: isOffer }, i) => {
+          const prox = i / (beads.length - 1);
+          return (
+            <g key={i} opacity={0.3 + prox * 0.6}>
+              <circle
+                cx={cx}
+                cy={cy}
+                r={isOffer ? 10 : 6}
+                fill={isOffer ? successCol : dark ? "#a855f7" : "#7c3aed"}
+                opacity={0.15}
+                filter={isOffer ? `url(#${gId("v13fin")})` : undefined}
+              />
+              <circle
+                cx={cx}
+                cy={cy}
+                r={isOffer ? 5 : 3}
+                fill={isOffer ? successCol : dark ? "#a855f7" : "#7c3aed"}
+                filter={isOffer ? `url(#${gId("v13fin")})` : undefined}
+              />
+              <text
+                x={cx + 9}
+                y={cy - 5}
+                fontSize={isOffer ? 10 : 8.5}
+                fill={isOffer ? successCol : dark ? "#e2e8f0" : "#1e1b4b"}
+                fontFamily="monospace"
+                fontWeight={isOffer ? "bold" : "normal"}
+                opacity={0.82}
+              >
+                {label}
+              </text>
+            </g>
+          );
+        })}
+
+        <text
+          x={40}
+          y={878}
+          fontSize="9"
+          fill={dark ? "white" : "#0f172a"}
+          opacity={0.1}
+          fontFamily="monospace"
+        >
+          Every line is an attempt. One is the answer.
+        </text>
+      </svg>
+    </Wrap>
+  );
+}
+
 // Backward compat
 export { BackgroundV1 as JourneyBackground };

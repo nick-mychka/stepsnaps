@@ -41,6 +41,10 @@ import {
   BackgroundV5,
   BackgroundV6,
   BackgroundV8,
+  BackgroundV10,
+  BackgroundV11,
+  BackgroundV12,
+  BackgroundV13,
 } from "~/component/journey-background";
 import { useTRPC } from "~/lib/trpc";
 
@@ -51,6 +55,26 @@ function getGreeting(name: string): string {
   if (hour >= 5 && hour < 12) return `Good Morning, ${firstName} 🌤️`;
   if (hour >= 12 && hour < 18) return `Good Afternoon, ${firstName} ☀️`;
   return `Good Evening, ${firstName} 🌙`;
+}
+
+function GreetingBlock({ greeting }: { greeting: string }) {
+  const full = new Date().toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+
+  return (
+    <div className="mb-16">
+      <h1 className="text-3xl font-bold">{greeting}</h1>
+      <div className="border-primary mt-3 border-l-2 pl-3">
+        <p className="text-muted-foreground text-xs font-semibold tracking-widest uppercase">
+          {full}
+        </p>
+      </div>
+    </div>
+  );
 }
 
 export const Route = createFileRoute("/_authed/dashboard")({
@@ -70,6 +94,10 @@ const BG_VARIANTS = [
   { id: 6 as const, label: "Circuit Board", Component: BackgroundV6 },
   // { id: 7 as const, label: "Flow Field", Component: BackgroundV7 },
   { id: 8 as const, label: "Word Scatter", Component: BackgroundV8 },
+  { id: 10 as const, label: "Orbital Rings", Component: BackgroundV10 },
+  { id: 11 as const, label: "Topographic", Component: BackgroundV11 },
+  { id: 12 as const, label: "Deep Thorny Path", Component: BackgroundV12 },
+  { id: 13 as const, label: "Deep Ribbons", Component: BackgroundV13 },
   // { id: 9 as const, label: "Deep Network", Component: BackgroundV9 },
 ];
 
@@ -90,8 +118,8 @@ function DashboardPage() {
   return (
     <>
       <ActiveBg />
-      <main className="container mx-auto py-12">
-        <h1 className="mb-16 text-3xl font-bold">{greeting}</h1>
+      <main className="px-8 py-12">
+        <GreetingBlock greeting={greeting} />
         {activeJourney ? (
           <ActiveJourneyCard journey={activeJourney} />
         ) : (
