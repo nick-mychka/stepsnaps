@@ -38,7 +38,7 @@ function AuthedLayout() {
     <div className="flex h-screen flex-col">
       {/* Header — full width */}
       <header className="border-b">
-        <div className="flex h-16 items-center px-8">
+        <div className="flex h-16 items-center px-6">
           <Link to="/dashboard" className="text-xl font-bold tracking-tight">
             <Logo />
           </Link>

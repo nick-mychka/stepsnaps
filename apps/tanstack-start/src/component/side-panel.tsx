@@ -55,9 +55,9 @@ export function SidePanel({
 }: SidePanelProps) {
   return (
     <TooltipProvider delayDuration={200}>
-      <aside className="border-border bg-background flex w-16 flex-col items-center border-r py-3">
+      <aside className="border-border bg-background flex w-16 flex-col items-center border-r py-8">
         {/* Top — nav icons */}
-        <div className="flex flex-col items-center gap-1">
+        <div className="flex flex-col items-center gap-3">
           <NavIcon to="/dashboard" label="Dashboard" icon={LayoutDashboard} />
           <NavIcon to="/progress" label="Progress" icon={TrendingUp} />
           <NavIcon to="/snap/new" label="Snap" icon={Camera} />
@@ -67,7 +67,7 @@ export function SidePanel({
         </div>
 
         {/* Bottom — theme + account */}
-        <div className="mt-auto flex flex-col items-center gap-3 pb-2">
+        <div className="mt-auto flex flex-col items-center gap-6">
           <Tooltip>
             <TooltipTrigger asChild>
               <ThemeToggle />
