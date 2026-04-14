@@ -127,6 +127,7 @@ export const SnapValue = pgTable("snap_value", (t) => ({
     .references(() => StepDefinition.id),
   numericValue: t.numeric({ precision: 10, scale: 2 }),
   textValue: t.text(),
+  goalValue: t.numeric({ precision: 10, scale: 2 }),
   createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
 }));
 
