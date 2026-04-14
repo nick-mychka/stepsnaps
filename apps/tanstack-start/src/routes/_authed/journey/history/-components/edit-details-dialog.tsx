@@ -9,6 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@stepsnaps/ui/dialog";
+import { Field, FieldGroup, FieldLabel } from "@stepsnaps/ui/field";
 import { Input } from "@stepsnaps/ui/input";
 import { Label } from "@stepsnaps/ui/label";
 import { Textarea } from "@stepsnaps/ui/textarea";
@@ -62,24 +63,24 @@ function EditDetailsDialogContent({ journey, onOpenChange }: ContentProps) {
           Update the company name and offer details.
         </DialogDescription>
       </DialogHeader>
-      <div className="flex flex-col gap-4 py-4">
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="editCompanyName">Company Name</Label>
+      <FieldGroup>
+        <Field>
+          <FieldLabel htmlFor="editCompanyName">Company Name</FieldLabel>
           <Input
             id="editCompanyName"
             value={companyName}
             onChange={(e) => setCompanyName(e.target.value)}
           />
-        </div>
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="editOfferDetails">Offer Details</Label>
+        </Field>
+        <Field>
+          <FieldLabel htmlFor="editOfferDetails">Offer Details</FieldLabel>
           <Textarea
             id="editOfferDetails"
             value={offerDetails}
             onChange={(e) => setOfferDetails(e.target.value)}
           />
-        </div>
-      </div>
+        </Field>
+      </FieldGroup>
       <DialogFooter>
         <Button variant="outline" onClick={() => onOpenChange(false)}>
           Cancel
