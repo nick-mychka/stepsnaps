@@ -11,7 +11,6 @@ import {
 } from "@stepsnaps/ui/dialog";
 import { Field, FieldGroup, FieldLabel } from "@stepsnaps/ui/field";
 import { Input } from "@stepsnaps/ui/input";
-import { Label } from "@stepsnaps/ui/label";
 import { Textarea } from "@stepsnaps/ui/textarea";
 
 import type { JourneyData } from "./journey-card";
