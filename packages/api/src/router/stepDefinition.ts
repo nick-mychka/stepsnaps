@@ -31,6 +31,7 @@ export const stepDefinitionRouter = {
       z.object({
         name: z.string().min(1).max(256),
         type: z.enum(["numeric", "text"]),
+        goalValue: z.number().nullable().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -47,6 +48,10 @@ export const stepDefinitionRouter = {
           userId: ctx.session.user.id,
           name: input.name,
           type: input.type,
+          goalValue:
+            input.goalValue !== undefined
+              ? (input.goalValue?.toString() ?? null)
+              : null,
           isPredefined: false,
           sortOrder,
           isActive: true,
@@ -63,6 +68,7 @@ export const stepDefinitionRouter = {
         id: z.string().uuid(),
         name: z.string().min(1).max(256).optional(),
         type: z.enum(["numeric", "text"]).optional(),
+        goalValue: z.number().nullable().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -84,6 +90,9 @@ export const stepDefinitionRouter = {
         .set({
           ...(input.name !== undefined && { name: input.name }),
           ...(input.type !== undefined && { type: input.type }),
+          ...(input.goalValue !== undefined && {
+            goalValue: input.goalValue?.toString() ?? null,
+          }),
         })
         .where(eq(StepDefinition.id, input.id))
         .returning();

@@ -19,7 +19,13 @@ import { useCreateStep } from "../-hooks/use-create-step";
 import { useUpdateStep } from "../-hooks/use-update-step";
 
 interface ContentProps {
-  step: { id: string; name: string; type: "numeric" | "text" } | null;
+  step: {
+    id: string;
+    name: string;
+    type: "numeric" | "text";
+    isPredefined: boolean;
+    goalValue: string | null;
+  } | null;
   onOpenChange: (open: boolean) => void;
 }
 
@@ -43,11 +49,15 @@ function StepFormDialogContent({ step, onOpenChange }: ContentProps) {
   const isEdit = step !== null;
   const [name, setName] = useState(isEdit ? step.name : "");
   const [type, setType] = useState<StepType>(isEdit ? step.type : "numeric");
+  const [goalValue, setGoalValue] = useState(
+    isEdit && step.goalValue !== null ? step.goalValue : "",
+  );
 
   const create = useCreateStep({
     onSuccess: () => {
       setName("");
       setType("numeric");
+      setGoalValue("");
       onOpenChange(false);
     },
   });
@@ -60,13 +70,21 @@ function StepFormDialogContent({ step, onOpenChange }: ContentProps) {
 
   const mutation = isEdit ? update : create;
 
+  const parsedGoal =
+    type === "numeric" && goalValue.trim() !== "" ? Number(goalValue) : null;
+
   const handleSubmit = (e: React.SubmitEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
     if (isEdit) {
-      update.mutate({ id: step.id, name: name.trim(), type });
+      update.mutate({
+        id: step.id,
+        name: name.trim(),
+        type,
+        goalValue: parsedGoal,
+      });
     } else {
-      create.mutate({ name: name.trim(), type });
+      create.mutate({ name: name.trim(), type, goalValue: parsedGoal });
     }
   };
 
@@ -78,7 +96,9 @@ function StepFormDialogContent({ step, onOpenChange }: ContentProps) {
         <DialogTitle>{isEdit ? "Edit Step" : "Add Custom Step"}</DialogTitle>
         <DialogDescription>
           {isEdit
-            ? "Update the name or type of this step."
+            ? step.isPredefined
+              ? "Update the daily goal for this step."
+              : "Update the name, type, or goal of this step."
             : "Create a new step to track in your daily snaps."}
         </DialogDescription>
       </DialogHeader>
@@ -91,6 +111,7 @@ function StepFormDialogContent({ step, onOpenChange }: ContentProps) {
             onChange={(e) => setName(e.target.value)}
             placeholder={isEdit ? undefined : "e.g., Leetcode Problems"}
             maxLength={256}
+            disabled={isEdit && step.isPredefined}
           />
         </Field>
         <Field>
@@ -99,6 +120,7 @@ function StepFormDialogContent({ step, onOpenChange }: ContentProps) {
             value={type}
             onValueChange={(v: StepType) => setType(v)}
             className="flex gap-4"
+            disabled={isEdit && step.isPredefined}
           >
             <Field orientation="horizontal">
               <RadioGroupItem value="numeric" id="numeric" />
@@ -110,6 +132,20 @@ function StepFormDialogContent({ step, onOpenChange }: ContentProps) {
             </Field>
           </RadioGroup>
         </Field>
+        {type === "numeric" && (
+          <Field>
+            <FieldLabel htmlFor="step-goal">Daily goal</FieldLabel>
+            <Input
+              id="step-goal"
+              type="number"
+              min={0}
+              step="any"
+              value={goalValue}
+              onChange={(e) => setGoalValue(e.target.value)}
+              placeholder="Optional"
+            />
+          </Field>
+        )}
       </FieldGroup>
       <DialogFooter>
         <DialogClose asChild>

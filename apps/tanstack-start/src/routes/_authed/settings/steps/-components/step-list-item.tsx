@@ -8,6 +8,7 @@ interface StepListItemProps {
     type: "numeric" | "text";
     isPredefined: boolean;
     isActive: boolean;
+    goalValue: string | null;
   };
   isFirst: boolean;
   isLast: boolean;
@@ -65,11 +66,9 @@ export function StepListItem({
         >
           &darr;
         </Button>
-        {!step.isPredefined && (
-          <Button variant="ghost" size="sm" onClick={onEdit}>
-            Edit
-          </Button>
-        )}
+        <Button variant="ghost" size="sm" onClick={onEdit}>
+          Edit
+        </Button>
         <Button
           variant="ghost"
           size="sm"

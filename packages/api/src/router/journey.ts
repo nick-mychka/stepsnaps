@@ -83,29 +83,48 @@ export const journeyRouter = {
 
       if (!existingSteps) {
         const predefinedSteps = [
-          { name: "Interviews", type: "numeric" as const, sortOrder: 0 },
+          {
+            name: "Interviews",
+            type: "numeric" as const,
+            sortOrder: 0,
+            goalValue: "10",
+          },
           {
             name: "Recruiter Replies",
             type: "numeric" as const,
             sortOrder: 1,
+            goalValue: "10",
           },
           {
             name: "Applications Sent",
             type: "numeric" as const,
             sortOrder: 2,
+            goalValue: "10",
           },
-          { name: "Code Commits", type: "numeric" as const, sortOrder: 3 },
+          {
+            name: "Code Commits",
+            type: "numeric" as const,
+            sortOrder: 3,
+            goalValue: "10",
+          },
           {
             name: "Coding Time (hours)",
             type: "numeric" as const,
             sortOrder: 4,
+            goalValue: "10",
           },
           {
             name: "English Study (minutes)",
             type: "numeric" as const,
             sortOrder: 5,
+            goalValue: "10",
           },
-          { name: "New Knowledge", type: "text" as const, sortOrder: 6 },
+          {
+            name: "New Knowledge",
+            type: "text" as const,
+            sortOrder: 6,
+            goalValue: null,
+          },
         ];
 
         await ctx.db.insert(StepDefinition).values(
@@ -113,6 +132,7 @@ export const journeyRouter = {
             userId: ctx.session.user.id,
             name: step.name,
             type: step.type,
+            goalValue: step.goalValue,
             isPredefined: true,
             sortOrder: step.sortOrder,
             isActive: true,
