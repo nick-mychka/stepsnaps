@@ -97,11 +97,11 @@ const BG_VARIANTS = [
   { id: 5 as const, label: "Symbiosis", Component: BackgroundV5 },
   { id: 6 as const, label: "Circuit Board", Component: BackgroundV6 },
   // { id: 7 as const, label: "Flow Field", Component: BackgroundV7 },
-  { id: 8 as const,  label: "Word Scatter",     Component: BackgroundV8  },
-  { id: 10 as const, label: "Orbital Rings",    Component: BackgroundV10 },
-  { id: 11 as const, label: "Topographic",      Component: BackgroundV11 },
+  { id: 8 as const, label: "Word Scatter", Component: BackgroundV8 },
+  { id: 10 as const, label: "Orbital Rings", Component: BackgroundV10 },
+  { id: 11 as const, label: "Topographic", Component: BackgroundV11 },
   { id: 12 as const, label: "Deep Thorny Path", Component: BackgroundV12 },
-  { id: 13 as const, label: "Deep Ribbons",     Component: BackgroundV13 },
+  { id: 13 as const, label: "Deep Ribbons", Component: BackgroundV13 },
   // { id: 9 as const, label: "Deep Network", Component: BackgroundV9 },
 ];
 

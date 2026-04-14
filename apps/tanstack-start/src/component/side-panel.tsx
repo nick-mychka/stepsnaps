@@ -38,11 +38,8 @@ function NavIcon({
     <Tooltip>
       <TooltipTrigger asChild>
         <Button variant="ghost" size="icon" className="group" asChild>
-          <Link
-            to={to}
-            activeProps={{ className: "[&>svg]:text-primary" }}
-          >
-            <Icon className="size-5 transition-colors group-hover:text-primary" />
+          <Link to={to} activeProps={{ className: "[&>svg]:text-primary" }}>
+            <Icon className="group-hover:text-primary size-5 transition-colors" />
           </Link>
         </Button>
       </TooltipTrigger>
@@ -51,7 +48,11 @@ function NavIcon({
   );
 }
 
-export function SidePanel({ user, hasActiveJourney, onSignOut }: SidePanelProps) {
+export function SidePanel({
+  user,
+  hasActiveJourney,
+  onSignOut,
+}: SidePanelProps) {
   return (
     <TooltipProvider delayDuration={200}>
       <aside className="border-border bg-background flex w-16 flex-col items-center border-r py-3">
