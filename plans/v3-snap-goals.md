@@ -23,18 +23,18 @@ End-to-end ability to set, edit, and remove goal values on numeric step definiti
 
 ### Acceptance criteria
 
-- [ ] `StepDefinition` table has a nullable `goalValue` numeric column
-- [ ] Database migration runs cleanly (existing steps get `null` goalValue)
-- [ ] `stepDefinition.create` accepts optional `goalValue` and persists it
-- [ ] `stepDefinition.update` accepts optional `goalValue` and persists it (works for both custom and predefined steps)
-- [ ] `stepDefinition.active` and `stepDefinition.list` queries return `goalValue`
-- [ ] Step form dialog shows a "Daily goal" numeric input when type is "numeric"
-- [ ] Step form dialog hides the goal input when type is "text"
-- [ ] User can create a custom numeric step with a goal
-- [ ] User can edit the goal on any existing numeric step (including predefined)
-- [ ] User can clear the goal (set to empty/null)
-- [ ] New users get predefined numeric steps with `goalValue: 10`
-- [ ] Existing users' steps are unaffected (goalValue stays null until they set one)
+- [x] `StepDefinition` table has a nullable `goalValue` numeric column
+- [x] Database migration runs cleanly (existing steps get `null` goalValue)
+- [x] `stepDefinition.create` accepts optional `goalValue` and persists it
+- [x] `stepDefinition.update` accepts optional `goalValue` and persists it (works for both custom and predefined steps)
+- [x] `stepDefinition.active` and `stepDefinition.list` queries return `goalValue`
+- [x] Step form dialog shows a "Daily goal" numeric input when type is "numeric"
+- [x] Step form dialog hides the goal input when type is "text"
+- [x] User can create a custom numeric step with a goal
+- [x] User can edit the goal on any existing numeric step (including predefined)
+- [x] User can clear the goal (set to empty/null)
+- [x] New users get predefined numeric steps with `goalValue: 10`
+- [x] Existing users' steps are unaffected (goalValue stays null until they set one)
 
 ---
 
@@ -48,17 +48,17 @@ End-to-end progress visualization on the snap form. Add a `goalValue` column to 
 
 ### Acceptance criteria
 
-- [ ] `SnapValue` table has a nullable `goalValue` numeric column
-- [ ] Creating a new snap snapshots the current `StepDefinition.goalValue` into each `SnapValue.goalValue`
-- [ ] Re-saving an existing snap preserves the originally snapshotted `goalValue` (does not overwrite with current step definition goal)
-- [ ] Changing a step's goal and creating a snap on a new date uses the new goal
-- [ ] `snap.byDate` returns `goalValue` on each snap value
-- [ ] shadcn `Progress` component is available in `packages/ui`
-- [ ] Snap form shows a progress bar below each numeric input where `goalValue` is present
-- [ ] Progress bar fills proportionally: `value / goalValue * 100`, capped at 100%
-- [ ] "X of Y" label displays to the right of the progress bar
-- [ ] Empty/zero numeric value shows 0% progress bar
-- [ ] Value exceeding goal shows 100% filled bar
-- [ ] Numeric steps with no goal (null) show just the input, no progress bar
-- [ ] Text steps show no progress bar
-- [ ] Editing a past snap shows progress bars against the snapshotted goal from that snap
+- [x] `SnapValue` table has a nullable `goalValue` numeric column
+- [x] Creating a new snap snapshots the current `StepDefinition.goalValue` into each `SnapValue.goalValue`
+- [x] Re-saving an existing snap preserves the originally snapshotted `goalValue` (does not overwrite with current step definition goal)
+- [x] Changing a step's goal and creating a snap on a new date uses the new goal
+- [x] `snap.byDate` returns `goalValue` on each snap value
+- [x] shadcn `Progress` component is available in `packages/ui`
+- [x] Snap form shows a progress bar below each numeric input where `goalValue` is present
+- [x] Progress bar fills proportionally: `value / goalValue * 100`, capped at 100%
+- [x] "X of Y" label displays to the right of the progress bar
+- [x] Empty/zero numeric value shows 0% progress bar
+- [x] Value exceeding goal shows 100% filled bar
+- [x] Numeric steps with no goal (null) show just the input, no progress bar
+- [x] Text steps show no progress bar
+- [x] Editing a past snap shows progress bars against the snapshotted goal from that snap
