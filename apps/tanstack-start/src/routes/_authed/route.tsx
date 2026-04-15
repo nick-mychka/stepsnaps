@@ -21,6 +21,12 @@ function AuthedLayout() {
   const navigate = useNavigate();
   const trpc = useTRPC();
   const { data: activeJourney } = useQuery(trpc.journey.active.queryOptions());
+  const full = new Date().toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
 
   if (isPending) return <PageLoader />;
 
@@ -38,10 +44,15 @@ function AuthedLayout() {
     <div className="flex h-screen flex-col">
       {/* Header — full width */}
       <header className="border-b">
-        <div className="flex h-16 items-center px-6">
+        <div className="flex h-16 items-center justify-between px-6">
           <Link to="/dashboard" className="text-xl font-bold tracking-tight">
             <Logo />
           </Link>
+          <div className="border-primary border-l-2 pl-3">
+            <p className="text-muted-foreground text-xs font-semibold tracking-widest uppercase">
+              {full}
+            </p>
+          </div>
         </div>
       </header>
 
