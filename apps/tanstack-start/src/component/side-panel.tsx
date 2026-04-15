@@ -1,5 +1,14 @@
 import { Link } from "@tanstack/react-router";
-import { Briefcase, Camera, LayoutDashboard, TrendingUp } from "lucide-react";
+import {
+  Briefcase,
+  Camera,
+  Footprints,
+  History,
+  LayoutDashboard,
+  LogOut,
+  TrendingUp,
+  Users,
+} from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@stepsnaps/ui/avatar";
 import { Button } from "@stepsnaps/ui/button";
@@ -94,18 +103,28 @@ export function SidePanel({
                 <DropdownMenuContent side="right" align="end" className="w-36">
                   <DropdownMenuGroup>
                     <DropdownMenuItem asChild>
-                      <Link to="/settings/steps">Steps</Link>
+                      <Link to="/settings/steps">
+                        <Footprints />
+                        Steps
+                      </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link to="/journey/history">History</Link>
+                      <Link to="/journey/history">
+                        <History />
+                        History
+                      </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link to="/teams">Teams</Link>
+                      <Link to="/teams">
+                        <Users />
+                        Teams
+                      </Link>
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
                   <DropdownMenuGroup>
                     <DropdownMenuItem variant="destructive" onClick={onSignOut}>
+                      <LogOut />
                       Log out
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
