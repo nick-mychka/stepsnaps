@@ -58,21 +58,9 @@ function getGreeting(name: string): string {
 }
 
 function GreetingBlock({ greeting }: { greeting: string }) {
-  const full = new Date().toLocaleDateString("en-US", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
-
   return (
     <div className="mb-16">
       <h1 className="text-3xl font-bold">{greeting}</h1>
-      <div className="border-primary mt-3 border-l-2 pl-3">
-        <p className="text-muted-foreground text-xs font-semibold tracking-widest uppercase">
-          {full}
-        </p>
-      </div>
     </div>
   );
 }
@@ -108,12 +96,12 @@ function DashboardPage() {
   );
   const { data: session } = authClient.useSession();
   const [activeBg, setActiveBg] =
-    useState<(typeof BG_VARIANTS)[number]["id"]>(2);
+    useState<(typeof BG_VARIANTS)[number]["id"]>(10);
 
   const greeting = getGreeting(session?.user.name ?? "");
 
   const activeBgEntry = BG_VARIANTS.find((v) => v.id === activeBg);
-  const ActiveBg = activeBgEntry ? activeBgEntry.Component : BackgroundV2;
+  const ActiveBg = activeBgEntry ? activeBgEntry.Component : BackgroundV10;
 
   return (
     <>
@@ -189,7 +177,7 @@ function ActiveJourneyCard(props: {
 
   return (
     <>
-      <Card className="max-w-xl">
+      <Card className="max-w-lg">
         <CardHeader>
           <div className="flex items-center gap-2">
             <Flame className="size-5 text-orange-400" />
