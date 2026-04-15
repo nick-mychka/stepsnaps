@@ -6,8 +6,7 @@
       "Bash(pnpm format:*)",
       "Bash(pnpm ui-add:*)",
       "Bash(npm view:*)",
-      "Bash(npx tsc:*)",
-      "Bash(git -C /Users/edkowich/stepsnaps branch --show-current)"
+      "Bash(npx tsc:*)"
     ]
   }
 }
