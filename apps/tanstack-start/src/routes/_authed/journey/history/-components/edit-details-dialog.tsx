@@ -11,6 +11,7 @@ import {
 } from "@stepsnaps/ui/dialog";
 import { Field, FieldGroup, FieldLabel } from "@stepsnaps/ui/field";
 import { Input } from "@stepsnaps/ui/input";
+import { Spinner } from "@stepsnaps/ui/spinner";
 import { Textarea } from "@stepsnaps/ui/textarea";
 
 import type { JourneyData } from "./journey-card";
@@ -85,7 +86,8 @@ function EditDetailsDialogContent({ journey, onOpenChange }: ContentProps) {
           Cancel
         </Button>
         <Button onClick={handleSave} disabled={updateDetails.isPending}>
-          {updateDetails.isPending ? "Saving..." : "Save"}
+          {updateDetails.isPending && <Spinner />}
+          Save
         </Button>
       </DialogFooter>
     </>

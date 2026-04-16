@@ -7,6 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@stepsnaps/ui/dialog";
+import { Spinner } from "@stepsnaps/ui/spinner";
 
 import { useDeleteSnap } from "../-hooks/use-delete-snap";
 
@@ -38,7 +39,8 @@ export function DeleteSnapDialog(props: {
             onClick={() => deleteSnap.mutate({ id: props.snapId })}
             disabled={deleteSnap.isPending}
           >
-            {deleteSnap.isPending ? "Deleting..." : "Delete"}
+            {deleteSnap.isPending && <Spinner />}
+            Delete
           </Button>
         </DialogFooter>
       </DialogContent>

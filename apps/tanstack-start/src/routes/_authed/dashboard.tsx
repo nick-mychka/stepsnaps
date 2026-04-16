@@ -28,6 +28,7 @@ import {
 import { DropdownMenuItem } from "@stepsnaps/ui/dropdown-menu";
 import { Input } from "@stepsnaps/ui/input";
 import { Label } from "@stepsnaps/ui/label";
+import { Spinner } from "@stepsnaps/ui/spinner";
 import { Textarea } from "@stepsnaps/ui/textarea";
 import { toast } from "@stepsnaps/ui/toast";
 
@@ -256,7 +257,8 @@ function StartJourneyCard() {
           }}
           disabled={startJourney.isPending}
         >
-          {startJourney.isPending ? "Starting..." : "Start Journey"}
+          {startJourney.isPending && <Spinner />}
+          Start Journey
         </Button>
       </CardContent>
     </Card>
@@ -329,7 +331,8 @@ function FinishJourneyDialog(props: {
             Cancel
           </Button>
           <Button onClick={handleSubmit} disabled={finishJourney.isPending}>
-            {finishJourney.isPending ? "Finishing..." : "Finish Journey"}
+            {finishJourney.isPending && <Spinner />}
+            Finish Journey
           </Button>
         </DialogFooter>
       </DialogContent>

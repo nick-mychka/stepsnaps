@@ -43,6 +43,7 @@ import {
   SelectValue,
 } from "@stepsnaps/ui/select";
 import { Separator } from "@stepsnaps/ui/separator";
+import { Spinner } from "@stepsnaps/ui/spinner";
 import {
   Table,
   TableBody,
@@ -854,7 +855,8 @@ function AddApplicationDialog(props: {
               Cancel
             </Button>
             <Button type="submit" disabled={createApplication.isPending}>
-              {createApplication.isPending ? "Adding..." : "Add Application"}
+              {createApplication.isPending && <Spinner />}
+              Add Application
             </Button>
           </DialogFooter>
         </form>
@@ -1089,7 +1091,8 @@ function EditApplicationForm(props: {
           Cancel
         </Button>
         <Button type="submit" disabled={updateApplication.isPending}>
-          {updateApplication.isPending ? "Saving..." : "Save Changes"}
+          {updateApplication.isPending && <Spinner />}
+          Save Changes
         </Button>
       </DialogFooter>
     </form>
@@ -1215,7 +1218,8 @@ function CloseApplicationDialog(props: {
               variant="destructive"
               disabled={closeApplication.isPending}
             >
-              {closeApplication.isPending ? "Closing..." : "Close Application"}
+              {closeApplication.isPending && <Spinner />}
+              Close Application
             </Button>
           </DialogFooter>
         </form>
@@ -1504,7 +1508,8 @@ function InterviewsDialog(props: {
             onChange={(e) => setNote(e.target.value)}
           />
           <Button type="submit" disabled={createInterview.isPending}>
-            {createInterview.isPending ? "Adding..." : "Add Interview"}
+            {createInterview.isPending && <Spinner />}
+            Add Interview
           </Button>
         </form>
       </DialogContent>

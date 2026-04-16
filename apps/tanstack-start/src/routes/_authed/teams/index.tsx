@@ -26,6 +26,7 @@ import {
 } from "@stepsnaps/ui/dialog";
 import { Input } from "@stepsnaps/ui/input";
 import { Label } from "@stepsnaps/ui/label";
+import { Spinner } from "@stepsnaps/ui/spinner";
 import { toast } from "@stepsnaps/ui/toast";
 
 import { useTRPC } from "~/lib/trpc";
@@ -144,7 +145,8 @@ function CreateTeamDialog() {
               </Button>
             </DialogClose>
             <Button type="submit" disabled={create.isPending || !name.trim()}>
-              {create.isPending ? "Creating..." : "Create"}
+              {create.isPending && <Spinner />}
+              Create
             </Button>
           </DialogFooter>
         </form>

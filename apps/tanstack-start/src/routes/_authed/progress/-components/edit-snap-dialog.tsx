@@ -12,6 +12,7 @@ import {
 } from "@stepsnaps/ui/dialog";
 import { Input } from "@stepsnaps/ui/input";
 import { Label } from "@stepsnaps/ui/label";
+import { Spinner } from "@stepsnaps/ui/spinner";
 import { Textarea } from "@stepsnaps/ui/textarea";
 
 import type { SnapWithValues } from "../-types";
@@ -201,7 +202,8 @@ export function EditSnapDialog(props: {
               Cancel
             </Button>
             <Button type="submit" disabled={upsertSnap.isPending}>
-              {upsertSnap.isPending ? "Saving..." : "Save Changes"}
+              {upsertSnap.isPending && <Spinner />}
+              Save Changes
             </Button>
           </DialogFooter>
         </form>
