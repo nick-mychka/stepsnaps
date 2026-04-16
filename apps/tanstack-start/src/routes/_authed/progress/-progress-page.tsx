@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from "@stepsnaps/ui/card";
 
-import { BackgroundV6 } from "~/component/journey-background";
+import { BackgroundV3 } from "~/component/journey-background";
 import { ChartView } from "./-components/chart-view";
 import { TimelineView } from "./-components/timeline-view";
 import { useActiveJourney } from "./-hooks/use-active-journey";
@@ -44,7 +44,7 @@ export function ProgressPage() {
 
   return (
     <>
-      <BackgroundV6 />
+      <BackgroundV3 />
       <main className="container mx-auto py-8">
         <div className="mb-6 flex items-center justify-between">
           <h1 className="text-3xl font-bold">Progress</h1>
