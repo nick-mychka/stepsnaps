@@ -9,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@stepsnaps/ui/card";
+import { Spinner } from "@stepsnaps/ui/spinner";
 import { toast } from "@stepsnaps/ui/toast";
 
 import { authClient } from "~/auth/client";
@@ -130,7 +131,8 @@ function InvitePage() {
             onClick={() => acceptInvite.mutate({ token })}
             disabled={acceptInvite.isPending}
           >
-            {acceptInvite.isPending ? "Joining..." : "Join Team"}
+            {acceptInvite.isPending && <Spinner />}
+            Join Team
           </Button>
           <Button
             variant="outline"
@@ -145,7 +147,8 @@ function InvitePage() {
             onClick={() => declineInvite.mutate({ token })}
             disabled={declineInvite.isPending}
           >
-            {declineInvite.isPending ? "Declining..." : "Decline"}
+            {declineInvite.isPending && <Spinner />}
+            Decline
           </Button>
         </CardContent>
       </Card>

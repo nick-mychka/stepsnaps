@@ -18,6 +18,7 @@ import {
 import { Input } from "@stepsnaps/ui/input";
 import { Label } from "@stepsnaps/ui/label";
 import { Progress } from "@stepsnaps/ui/progress";
+import { Spinner } from "@stepsnaps/ui/spinner";
 import { Textarea } from "@stepsnaps/ui/textarea";
 import { toast } from "@stepsnaps/ui/toast";
 
@@ -222,11 +223,8 @@ function SnapForm(props: { journeyId: string }) {
               })}
 
               <Button type="submit" disabled={upsertSnap.isPending}>
-                {upsertSnap.isPending
-                  ? "Saving..."
-                  : existingSnap
-                    ? "Update Snap"
-                    : "Save Snap"}
+                {upsertSnap.isPending && <Spinner />}
+                {existingSnap ? "Update Snap" : "Save Snap"}
               </Button>
             </form>
           )}

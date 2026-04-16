@@ -22,6 +22,7 @@ import {
   CardTitle,
 } from "@stepsnaps/ui/card";
 import { Input } from "@stepsnaps/ui/input";
+import { Spinner } from "@stepsnaps/ui/spinner";
 import { toast } from "@stepsnaps/ui/toast";
 
 import { useTRPC } from "~/lib/trpc";
@@ -205,7 +206,8 @@ function InviteSection(props: { teamId: string }) {
             onClick={() => createInvite.mutate({ teamId })}
             disabled={createInvite.isPending}
           >
-            {createInvite.isPending ? "Generating..." : "Generate Link"}
+            {createInvite.isPending && <Spinner />}
+            Generate Link
           </Button>
         </div>
       </CardHeader>
