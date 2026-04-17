@@ -50,6 +50,7 @@ Add a dedicated **Job Applications** page that lets users create, track, and man
 ### Status Transitions
 
 Valid transitions enforced server-side:
+
 - `pending` -> `interviewing` (auto, on first interview added)
 - `pending` -> `on_hold` (manual, via edit dialog)
 - `interviewing` -> `on_hold` (manual, via edit dialog)
@@ -61,6 +62,7 @@ Valid transitions enforced server-side:
 ### API Design (tRPC routers)
 
 **jobApplication router:**
+
 - `list` (query): paginated, filterable by status, searchable by company name, split by tab (active vs closed). Returns `{ items, total, page, perPage }`.
 - `byId` (query): single application with interviews.
 - `create` (mutation): accepts `sourceName` string, does find-or-create on Source table server-side.
@@ -68,12 +70,14 @@ Valid transitions enforced server-side:
 - `close` (mutation): separate procedure, sets status=closed + closedReason.
 
 **interview router:**
+
 - `list` (query): all interviews for an application, ordered by round.
 - `create` (mutation): auto-calculates round. If first interview and status is pending, auto-transitions to interviewing + sets respondedAt.
 - `update` (mutation): update date, type, note. Round is not editable.
 - `delete` (mutation): remove an interview.
 
 **source router:**
+
 - `search` (query): typeahead search, ILIKE match, limit 10.
 - `list` (query): all user sources.
 
@@ -83,7 +87,7 @@ Valid transitions enforced server-side:
 
 ### UI Architecture
 
-- **Route**: `/applications` as a new protected route under `_authed/`.
+- **Route**: `/applications` as a new protected route under `_authenticated/`.
 - **Nav**: Conditional "Applications" button in header, only rendered when user has an active journey. Uses `useQuery` (non-suspense) for `journey.active` to conditionally render.
 - **Table**: TanStack Table with manual server-side pagination (`pageCount` from API). Columns: company name (clickable), job title, salary, work mode, source, applied at, status (badge), interviews (button).
 - **Tabs**: shadcn Tabs for Active vs History. History tab uses `enabled: activeTab === "closed"` for lazy loading.

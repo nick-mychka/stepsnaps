@@ -4,7 +4,7 @@
 
 ## Architectural decisions
 
-- **Route**: `/applications` under `_authed/`, conditional nav item visible only when active journey exists
+- **Route**: `/applications` under `_authenticated/`, conditional nav item visible only when active journey exists
 - **Schema**: 3 new tables (Source, JobApplication, Interview) + 4 new enums (work_mode, job_application_status, closed_reason, interview_type). All tied to existing Journey via FK. Cascade deletes: Journey -> JobApplication -> Interview. Source FK uses set null.
 - **Key models**: JobApplication belongs to Journey. Interview belongs to JobApplication. Source belongs to User. One journey has many applications, one application has many interviews.
 - **API**: 3 new tRPC routers (jobApplication, interview, source) using `protectedProcedure` and `TRPCRouterRecord` pattern from existing routers. Ownership verified by joining through journeyId -> Journey.userId.

@@ -3,6 +3,7 @@ import {
   createFileRoute,
   Link,
   Outlet,
+  redirect,
   useNavigate,
 } from "@tanstack/react-router";
 
@@ -12,12 +13,22 @@ import { PageLoader } from "~/component/page-loader";
 import { SidePanel } from "~/component/side-panel";
 import { useTRPC } from "~/lib/trpc";
 
-export const Route = createFileRoute("/_authed")({
+export const Route = createFileRoute("/_authenticated")({
+  beforeLoad: async ({ context }) => {
+    const session = await context.queryClient.ensureQueryData(
+      context.trpc.auth.getSession.queryOptions(),
+    );
+    if (!session) {
+      throw redirect({ to: "/" });
+    }
+    return { session };
+  },
   component: AuthedLayout,
+  pendingComponent: PageLoader,
 });
 
 function AuthedLayout() {
-  const { data: session, isPending } = authClient.useSession();
+  const { session } = Route.useRouteContext();
   const navigate = useNavigate();
   const trpc = useTRPC();
   const { data: activeJourney } = useQuery(trpc.journey.active.queryOptions());
@@ -27,13 +38,6 @@ function AuthedLayout() {
     day: "numeric",
     year: "numeric",
   });
-
-  if (isPending) return <PageLoader />;
-
-  if (!session) {
-    void navigate({ to: "/", replace: true });
-    return null;
-  }
 
   async function handleSignOut() {
     await authClient.signOut();

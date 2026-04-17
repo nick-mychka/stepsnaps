@@ -64,7 +64,7 @@ import {
 
 import { useTRPC } from "~/lib/trpc";
 
-export const Route = createFileRoute("/_authed/applications")({
+export const Route = createFileRoute("/_authenticated/applications")({
   loader: ({ context }) => {
     const { trpc, queryClient } = context;
     void queryClient.prefetchQuery(

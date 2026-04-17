@@ -24,7 +24,7 @@ import { toast } from "@stepsnaps/ui/toast";
 
 import { useTRPC } from "~/lib/trpc";
 
-export const Route = createFileRoute("/_authed/snap/new")({
+export const Route = createFileRoute("/_authenticated/snap/new")({
   loader: ({ context }) => {
     const { trpc, queryClient } = context;
     void queryClient.prefetchQuery(trpc.journey.active.queryOptions());

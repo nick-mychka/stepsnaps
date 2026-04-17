@@ -1,12 +1,12 @@
 import { Link } from "@tanstack/react-router";
 import {
-  Briefcase,
+  Archive,
   Camera,
+  ChartSpline,
   Footprints,
-  History,
   LayoutDashboard,
   LogOut,
-  TrendingUp,
+  NotebookText,
   Users,
 } from "lucide-react";
 
@@ -68,11 +68,15 @@ export function SidePanel({
         {/* Top — nav icons */}
         <div className="flex flex-col items-center gap-3">
           <NavIcon to="/dashboard" label="Dashboard" icon={LayoutDashboard} />
-          <NavIcon to="/progress" label="Progress" icon={TrendingUp} />
           <NavIcon to="/snap/new" label="Snap" icon={Camera} />
           {hasActiveJourney && (
-            <NavIcon to="/applications" label="Applications" icon={Briefcase} />
+            <NavIcon
+              to="/applications"
+              label="Applications"
+              icon={NotebookText}
+            />
           )}
+          <NavIcon to="/progress" label="Progress" icon={ChartSpline} />
         </div>
 
         {/* Bottom — theme + account */}
@@ -110,7 +114,7 @@ export function SidePanel({
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                       <Link to="/journey/history">
-                        <History />
+                        <Archive />
                         History
                       </Link>
                     </DropdownMenuItem>

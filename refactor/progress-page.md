@@ -2,7 +2,7 @@
 
 ## Problem Statement
 
-The progress page (`routes/_authed/progress/index.tsx`) is a single 875-line file containing 8 components, inline type definitions, chart constants, heavy `useMemo` data-transformation logic, and all mutation logic for editing and deleting snaps. Everything is tangled together, making it hard to navigate, maintain, or extend individual pieces (e.g., adding new chart types or improving the edit flow) without touching the entire file.
+The progress page (`routes/_authenticated/progress/index.tsx`) is a single 875-line file containing 8 components, inline type definitions, chart constants, heavy `useMemo` data-transformation logic, and all mutation logic for editing and deleting snaps. Everything is tangled together, making it hard to navigate, maintain, or extend individual pieces (e.g., adding new chart types or improving the edit flow) without touching the entire file.
 
 ## Solution
 

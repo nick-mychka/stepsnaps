@@ -66,7 +66,7 @@ function GreetingBlock({ greeting }: { greeting: string }) {
   );
 }
 
-export const Route = createFileRoute("/_authed/dashboard")({
+export const Route = createFileRoute("/_authenticated/dashboard")({
   loader: ({ context }) => {
     const { trpc, queryClient } = context;
     void queryClient.prefetchQuery(trpc.journey.active.queryOptions());

@@ -22,7 +22,9 @@ import {
 
 import { useTRPC } from "~/lib/trpc";
 
-export const Route = createFileRoute("/_authed/teams/$teamId/member/$userId")({
+export const Route = createFileRoute(
+  "/_authenticated/teams/$teamId/member/$userId",
+)({
   loader: ({ context, params }) => {
     const { trpc, queryClient } = context;
     void queryClient.prefetchQuery(
@@ -320,28 +322,7 @@ function ReadOnlyChart(props: {
               tickMargin={8}
             />
             <YAxis tickLine={false} axisLine={false} />
-            <ChartTooltip
-              content={
-                <ChartTooltipContent
-                  formatter={(value, name, item) => {
-                    const key = String(name);
-                    const textKey = `${key}_text`;
-                    const payload = item.payload as
-                      | Record<string, unknown>
-                      | undefined;
-                    const textValue = payload?.[textKey];
-                    if (typeof textValue === "string" && textValue) {
-                      return (
-                        <span>
-                          {chartConfig[key]?.label}: {textValue}
-                        </span>
-                      );
-                    }
-                    return undefined;
-                  }}
-                />
-              }
-            />
+            <ChartTooltip content={<ChartTooltipContent />} />
             <ChartLegend content={<ChartLegendContent />} />
             {stepKeys.map(({ key }) => (
               <Bar
