@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import {
-  Aperture,
   Archive,
+  Camera,
   ChartSpline,
   Footprints,
   LayoutDashboard,
@@ -68,7 +68,7 @@ export function SidePanel({
         {/* Top — nav icons */}
         <div className="flex flex-col items-center gap-3">
           <NavIcon to="/dashboard" label="Dashboard" icon={LayoutDashboard} />
-          <NavIcon to="/snap/new" label="Snap" icon={Aperture} />
+          <NavIcon to="/snap/new" label="Snap" icon={Camera} />
           {hasActiveJourney && (
             <NavIcon
               to="/applications"
