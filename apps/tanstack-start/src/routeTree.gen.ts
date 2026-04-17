@@ -12,10 +12,10 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthedRouteRouteImport } from './routes/_authed/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as InviteTokenRouteImport } from './routes/invite/$token'
-import { Route as AuthedProgressRouteImport } from './routes/_authed/progress'
 import { Route as AuthedDashboardRouteImport } from './routes/_authed/dashboard'
 import { Route as AuthedApplicationsRouteImport } from './routes/_authed/applications'
 import { Route as AuthedTeamsIndexRouteImport } from './routes/_authed/teams/index'
+import { Route as AuthedProgressIndexRouteImport } from './routes/_authed/progress/index'
 import { Route as ApiTrpcSplatRouteImport } from './routes/api/trpc.$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth.$'
 import { Route as AuthedTeamsTeamIdRouteImport } from './routes/_authed/teams/$teamId'
@@ -38,11 +38,6 @@ const InviteTokenRoute = InviteTokenRouteImport.update({
   path: '/invite/$token',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthedProgressRoute = AuthedProgressRouteImport.update({
-  id: '/progress',
-  path: '/progress',
-  getParentRoute: () => AuthedRouteRoute,
-} as any)
 const AuthedDashboardRoute = AuthedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -56,6 +51,11 @@ const AuthedApplicationsRoute = AuthedApplicationsRouteImport.update({
 const AuthedTeamsIndexRoute = AuthedTeamsIndexRouteImport.update({
   id: '/teams/',
   path: '/teams/',
+  getParentRoute: () => AuthedRouteRoute,
+} as any)
+const AuthedProgressIndexRoute = AuthedProgressIndexRouteImport.update({
+  id: '/progress/',
+  path: '/progress/',
   getParentRoute: () => AuthedRouteRoute,
 } as any)
 const ApiTrpcSplatRoute = ApiTrpcSplatRouteImport.update({
@@ -101,12 +101,12 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/applications': typeof AuthedApplicationsRoute
   '/dashboard': typeof AuthedDashboardRoute
-  '/progress': typeof AuthedProgressRoute
   '/invite/$token': typeof InviteTokenRoute
   '/snap/new': typeof AuthedSnapNewRoute
   '/teams/$teamId': typeof AuthedTeamsTeamIdRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
+  '/progress/': typeof AuthedProgressIndexRoute
   '/teams/': typeof AuthedTeamsIndexRoute
   '/journey/history/': typeof AuthedJourneyHistoryIndexRoute
   '/settings/steps/': typeof AuthedSettingsStepsIndexRoute
@@ -116,12 +116,12 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/applications': typeof AuthedApplicationsRoute
   '/dashboard': typeof AuthedDashboardRoute
-  '/progress': typeof AuthedProgressRoute
   '/invite/$token': typeof InviteTokenRoute
   '/snap/new': typeof AuthedSnapNewRoute
   '/teams/$teamId': typeof AuthedTeamsTeamIdRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
+  '/progress': typeof AuthedProgressIndexRoute
   '/teams': typeof AuthedTeamsIndexRoute
   '/journey/history': typeof AuthedJourneyHistoryIndexRoute
   '/settings/steps': typeof AuthedSettingsStepsIndexRoute
@@ -133,12 +133,12 @@ export interface FileRoutesById {
   '/_authed': typeof AuthedRouteRouteWithChildren
   '/_authed/applications': typeof AuthedApplicationsRoute
   '/_authed/dashboard': typeof AuthedDashboardRoute
-  '/_authed/progress': typeof AuthedProgressRoute
   '/invite/$token': typeof InviteTokenRoute
   '/_authed/snap/new': typeof AuthedSnapNewRoute
   '/_authed/teams/$teamId': typeof AuthedTeamsTeamIdRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
+  '/_authed/progress/': typeof AuthedProgressIndexRoute
   '/_authed/teams/': typeof AuthedTeamsIndexRoute
   '/_authed/journey/history/': typeof AuthedJourneyHistoryIndexRoute
   '/_authed/settings/steps/': typeof AuthedSettingsStepsIndexRoute
@@ -150,12 +150,12 @@ export interface FileRouteTypes {
     | '/'
     | '/applications'
     | '/dashboard'
-    | '/progress'
     | '/invite/$token'
     | '/snap/new'
     | '/teams/$teamId'
     | '/api/auth/$'
     | '/api/trpc/$'
+    | '/progress/'
     | '/teams/'
     | '/journey/history/'
     | '/settings/steps/'
@@ -165,12 +165,12 @@ export interface FileRouteTypes {
     | '/'
     | '/applications'
     | '/dashboard'
-    | '/progress'
     | '/invite/$token'
     | '/snap/new'
     | '/teams/$teamId'
     | '/api/auth/$'
     | '/api/trpc/$'
+    | '/progress'
     | '/teams'
     | '/journey/history'
     | '/settings/steps'
@@ -181,12 +181,12 @@ export interface FileRouteTypes {
     | '/_authed'
     | '/_authed/applications'
     | '/_authed/dashboard'
-    | '/_authed/progress'
     | '/invite/$token'
     | '/_authed/snap/new'
     | '/_authed/teams/$teamId'
     | '/api/auth/$'
     | '/api/trpc/$'
+    | '/_authed/progress/'
     | '/_authed/teams/'
     | '/_authed/journey/history/'
     | '/_authed/settings/steps/'
@@ -224,13 +224,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InviteTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authed/progress': {
-      id: '/_authed/progress'
-      path: '/progress'
-      fullPath: '/progress'
-      preLoaderRoute: typeof AuthedProgressRouteImport
-      parentRoute: typeof AuthedRouteRoute
-    }
     '/_authed/dashboard': {
       id: '/_authed/dashboard'
       path: '/dashboard'
@@ -250,6 +243,13 @@ declare module '@tanstack/react-router' {
       path: '/teams'
       fullPath: '/teams/'
       preLoaderRoute: typeof AuthedTeamsIndexRouteImport
+      parentRoute: typeof AuthedRouteRoute
+    }
+    '/_authed/progress/': {
+      id: '/_authed/progress/'
+      path: '/progress'
+      fullPath: '/progress/'
+      preLoaderRoute: typeof AuthedProgressIndexRouteImport
       parentRoute: typeof AuthedRouteRoute
     }
     '/api/trpc/$': {
@@ -318,9 +318,9 @@ const AuthedTeamsTeamIdRouteWithChildren =
 interface AuthedRouteRouteChildren {
   AuthedApplicationsRoute: typeof AuthedApplicationsRoute
   AuthedDashboardRoute: typeof AuthedDashboardRoute
-  AuthedProgressRoute: typeof AuthedProgressRoute
   AuthedSnapNewRoute: typeof AuthedSnapNewRoute
   AuthedTeamsTeamIdRoute: typeof AuthedTeamsTeamIdRouteWithChildren
+  AuthedProgressIndexRoute: typeof AuthedProgressIndexRoute
   AuthedTeamsIndexRoute: typeof AuthedTeamsIndexRoute
   AuthedJourneyHistoryIndexRoute: typeof AuthedJourneyHistoryIndexRoute
   AuthedSettingsStepsIndexRoute: typeof AuthedSettingsStepsIndexRoute
@@ -329,9 +329,9 @@ interface AuthedRouteRouteChildren {
 const AuthedRouteRouteChildren: AuthedRouteRouteChildren = {
   AuthedApplicationsRoute: AuthedApplicationsRoute,
   AuthedDashboardRoute: AuthedDashboardRoute,
-  AuthedProgressRoute: AuthedProgressRoute,
   AuthedSnapNewRoute: AuthedSnapNewRoute,
   AuthedTeamsTeamIdRoute: AuthedTeamsTeamIdRouteWithChildren,
+  AuthedProgressIndexRoute: AuthedProgressIndexRoute,
   AuthedTeamsIndexRoute: AuthedTeamsIndexRoute,
   AuthedJourneyHistoryIndexRoute: AuthedJourneyHistoryIndexRoute,
   AuthedSettingsStepsIndexRoute: AuthedSettingsStepsIndexRoute,

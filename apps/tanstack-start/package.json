@@ -30,6 +30,7 @@
     "@trpc/server": "catalog:",
     "@trpc/tanstack-react-query": "catalog:",
     "better-auth": "catalog:",
+    "dayjs": "^1.11.20",
     "lucide-react": "^1.7.0",
     "nitro": "3.0.260311-beta",
     "react": "catalog:react19",
