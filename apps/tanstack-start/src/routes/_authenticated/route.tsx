@@ -12,7 +12,7 @@ import { PageLoader } from "~/component/page-loader";
 import { SidePanel } from "~/component/side-panel";
 import { useTRPC } from "~/lib/trpc";
 
-export const Route = createFileRoute("/_authed")({
+export const Route = createFileRoute("/_authenticated")({
   component: AuthedLayout,
 });
 

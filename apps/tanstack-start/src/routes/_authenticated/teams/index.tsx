@@ -31,7 +31,7 @@ import { toast } from "@stepsnaps/ui/toast";
 
 import { useTRPC } from "~/lib/trpc";
 
-export const Route = createFileRoute("/_authed/teams/")({
+export const Route = createFileRoute("/_authenticated/teams/")({
   loader: ({ context }) => {
     const { trpc, queryClient } = context;
     void queryClient.prefetchQuery(trpc.team.list.queryOptions());

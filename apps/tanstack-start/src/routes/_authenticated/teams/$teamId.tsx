@@ -27,7 +27,7 @@ import { toast } from "@stepsnaps/ui/toast";
 
 import { useTRPC } from "~/lib/trpc";
 
-export const Route = createFileRoute("/_authed/teams/$teamId")({
+export const Route = createFileRoute("/_authenticated/teams/$teamId")({
   loader: ({ context, params }) => {
     const { trpc, queryClient } = context;
     void queryClient.prefetchQuery(
@@ -39,7 +39,7 @@ export const Route = createFileRoute("/_authed/teams/$teamId")({
 
 function TeamDetailLayout() {
   const memberMatch = useMatch({
-    from: "/_authed/teams/$teamId/member/$userId",
+    from: "/_authenticated/teams/$teamId/member/$userId",
     shouldThrow: false,
   });
 

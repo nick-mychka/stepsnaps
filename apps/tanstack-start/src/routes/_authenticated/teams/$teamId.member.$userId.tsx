@@ -22,7 +22,9 @@ import {
 
 import { useTRPC } from "~/lib/trpc";
 
-export const Route = createFileRoute("/_authed/teams/$teamId/member/$userId")({
+export const Route = createFileRoute(
+  "/_authenticated/teams/$teamId/member/$userId",
+)({
   loader: ({ context, params }) => {
     const { trpc, queryClient } = context;
     void queryClient.prefetchQuery(

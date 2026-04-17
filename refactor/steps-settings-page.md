@@ -2,7 +2,7 @@
 
 ## Problem Statement
 
-The steps settings page (`routes/_authed/settings/steps.tsx`) is a single 362-line file containing three components (`StepsSettingsPage`, `AddStepDialog`, `EditStepDialog`), all mutation logic, and all query logic. The Add and Edit dialogs duplicate nearly identical form markup (name input, type radio buttons, dialog chrome). Data-fetching concerns are tangled into UI components, making them harder to read, reuse, and maintain independently.
+The steps settings page (`routes/_authenticated/settings/steps.tsx`) is a single 362-line file containing three components (`StepsSettingsPage`, `AddStepDialog`, `EditStepDialog`), all mutation logic, and all query logic. The Add and Edit dialogs duplicate nearly identical form markup (name input, type radio buttons, dialog chrome). Data-fetching concerns are tangled into UI components, making them harder to read, reuse, and maintain independently.
 
 ## Solution
 

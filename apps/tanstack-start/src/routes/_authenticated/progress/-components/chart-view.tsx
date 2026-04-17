@@ -1,6 +1,4 @@
 import { useMemo } from "react";
-import dayjs from "dayjs";
-import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
 import type { ChartConfig } from "@stepsnaps/ui/chart";
@@ -17,11 +15,8 @@ import {
   ChartTooltipContent,
 } from "@stepsnaps/ui/chart";
 
+import { dayjs, ISO_DATE_FORMAT } from "~/lib/date";
 import { useSnaps } from "../-hooks/use-snaps";
-
-const ISO_DATE_FORMAT = "YYYY-MM-DD";
-
-dayjs.extend(isSameOrBefore);
 
 export function ChartView(props: {
   journeyId: string;
