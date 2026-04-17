@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 
 import { Button } from "@stepsnaps/ui/button";
 
@@ -8,19 +8,20 @@ import { Logo } from "~/component/logo";
 import { PageLoader } from "~/component/page-loader";
 
 export const Route = createFileRoute("/")({
+  beforeLoad: async ({ context }) => {
+    const session = await context.queryClient.ensureQueryData(
+      context.trpc.auth.getSession.queryOptions(),
+    );
+    if (session) {
+      throw redirect({ to: "/dashboard" });
+    }
+  },
   component: RouteComponent,
+  pendingComponent: PageLoader,
 });
 
 function RouteComponent() {
-  const { data: session, isPending } = authClient.useSession();
   const navigate = useNavigate();
-
-  if (isPending) return <PageLoader />;
-
-  if (session) {
-    void navigate({ to: "/dashboard", replace: true });
-    return null;
-  }
 
   async function handleGoogleSignIn() {
     const res = await authClient.signIn.social({

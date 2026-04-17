@@ -45,6 +45,7 @@
     "@stepsnaps/tailwind-config": "workspace:*",
     "@stepsnaps/tsconfig": "workspace:*",
     "@tailwindcss/vite": "catalog:",
+    "@tanstack/eslint-plugin-router": "^1.161.6",
     "@types/node": "catalog:",
     "@types/react": "catalog:react19",
     "@types/react-dom": "catalog:react19",
