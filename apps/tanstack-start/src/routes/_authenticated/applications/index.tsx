@@ -63,8 +63,12 @@ import {
 } from "@stepsnaps/ui/tooltip";
 
 import { useTRPC } from "~/lib/trpc";
+import { ClosedReasonBadge } from "./-components/closed-reason-badge";
+import { EmptyState } from "./-components/empty-state";
+import { PaginationControls } from "./-components/pagination-controls";
+import { StatusBadge } from "./-components/status-badge";
 
-export const Route = createFileRoute("/_authenticated/applications")({
+export const Route = createFileRoute("/_authenticated/applications/")({
   loader: ({ context }) => {
     const { trpc, queryClient } = context;
     void queryClient.prefetchQuery(
@@ -262,20 +266,6 @@ function ApplicationsPage() {
   );
 }
 
-// --- Empty State ---
-
-function EmptyState(props: { onAdd: () => void }) {
-  return (
-    <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-16">
-      <h2 className="mb-2 text-xl font-semibold">No applications yet</h2>
-      <p className="text-muted-foreground mb-4">
-        Start tracking your job applications to stay organized.
-      </p>
-      <Button onClick={props.onAdd}>Add Your First Application</Button>
-    </div>
-  );
-}
-
 // --- Table ---
 
 interface ApplicationRow {
@@ -358,106 +348,6 @@ function createColumns(
       },
     }),
   ];
-}
-
-function StatusBadge(props: { status: string; closedReason?: string | null }) {
-  const labels: Record<string, string> = {
-    pending: "Pending",
-    interviewing: "Interviewing",
-    on_hold: "On Hold",
-    closed: "Closed",
-  };
-
-  // Color-coded: pending=gray, interviewing=blue, on_hold=yellow, closed=varies
-  const colorClasses: Record<string, string> = {
-    pending:
-      "border-transparent bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300",
-    interviewing:
-      "border-transparent bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300",
-    on_hold:
-      "border-transparent bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300",
-    closed:
-      "border-transparent bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300",
-  };
-
-  // Closed reason specific colors
-  const closedReasonColors: Record<string, string> = {
-    success:
-      "border-transparent bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300",
-    rejected:
-      "border-transparent bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300",
-    withdrawn:
-      "border-transparent bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300",
-    no_response:
-      "border-transparent bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400",
-  };
-
-  const className =
-    props.status === "closed" && props.closedReason
-      ? (closedReasonColors[props.closedReason] ?? colorClasses.closed)
-      : (colorClasses[props.status] ?? colorClasses.pending);
-
-  return (
-    <Badge className={className}>{labels[props.status] ?? props.status}</Badge>
-  );
-}
-
-const CLOSED_REASON_LABELS: Record<string, string> = {
-  rejected: "Rejected",
-  withdrawn: "Withdrawn",
-  no_response: "No Response",
-  success: "Success",
-};
-
-function ClosedReasonBadge(props: { reason: string | null }) {
-  if (!props.reason) return <span className="text-muted-foreground">—</span>;
-
-  const colorClasses: Record<string, string> = {
-    success:
-      "border-transparent bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300",
-    rejected:
-      "border-transparent bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300",
-    withdrawn:
-      "border-transparent bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300",
-    no_response:
-      "border-transparent bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400",
-  };
-
-  return (
-    <Badge className={colorClasses[props.reason] ?? ""}>
-      {CLOSED_REASON_LABELS[props.reason] ?? props.reason}
-    </Badge>
-  );
-}
-
-function PaginationControls(props: {
-  page: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
-}) {
-  return (
-    <div className="mt-4 flex items-center justify-center gap-2">
-      <Button
-        variant="outline"
-        size="sm"
-        disabled={props.page <= 1}
-        onClick={() => props.onPageChange(props.page - 1)}
-      >
-        Previous
-      </Button>
-      <span className="text-muted-foreground text-sm">
-        Page {props.page} of {props.totalPages}
-      </span>
-      <Button
-        variant="outline"
-        size="sm"
-        disabled={props.page >= props.totalPages}
-        onClick={() => props.onPageChange(props.page + 1)}
-      >
-        Next
-      </Button>
-    </div>
-  );
 }
 
 function ApplicationsTable(props: {
