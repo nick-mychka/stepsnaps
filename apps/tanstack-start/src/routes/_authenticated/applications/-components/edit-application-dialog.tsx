@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { Button } from "@stepsnaps/ui/button";
 import {
@@ -20,9 +19,9 @@ import {
   SelectValue,
 } from "@stepsnaps/ui/select";
 import { Spinner } from "@stepsnaps/ui/spinner";
-import { toast } from "@stepsnaps/ui/toast";
 
-import { useTRPC } from "~/lib/trpc";
+import { useApplication } from "../-hooks/use-application";
+import { useUpdateApplication } from "../-hooks/use-update-application";
 import { SourceTypeahead } from "./source-typeahead";
 import { StatusBadge } from "./status-badge";
 
@@ -33,14 +32,7 @@ interface EditApplicationDialogProps {
 }
 
 export function EditApplicationDialog(props: EditApplicationDialogProps) {
-  const trpc = useTRPC();
-
-  const { data: application } = useQuery(
-    trpc.jobApplication.byId.queryOptions(
-      { id: props.applicationId ?? "" },
-      { enabled: !!props.applicationId },
-    ),
-  );
+  const { data: application } = useApplication(props.applicationId);
 
   return (
     <Dialog open={!!props.applicationId} onOpenChange={props.onOpenChange}>
@@ -77,9 +69,6 @@ function EditApplicationForm(props: {
   onOpenChange: (open: boolean) => void;
   onClose: (id: string) => void;
 }) {
-  const trpc = useTRPC();
-  const queryClient = useQueryClient();
-
   const [companyName, setCompanyName] = useState(props.application.companyName);
   const [jobTitle, setJobTitle] = useState(props.application.jobTitle ?? "");
   const [salary, setSalary] = useState(props.application.salary ?? "");
@@ -89,19 +78,9 @@ function EditApplicationForm(props: {
     props.application.source?.name ?? "",
   );
 
-  const updateApplication = useMutation(
-    trpc.jobApplication.update.mutationOptions({
-      onSuccess: async () => {
-        await queryClient.invalidateQueries(trpc.jobApplication.pathFilter());
-        await queryClient.invalidateQueries(trpc.source.pathFilter());
-        props.onOpenChange(false);
-        toast.success("Application updated!");
-      },
-      onError: (err) => {
-        toast.error(err.message);
-      },
-    }),
-  );
+  const updateApplication = useUpdateApplication({
+    onSuccess: () => props.onOpenChange(false),
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

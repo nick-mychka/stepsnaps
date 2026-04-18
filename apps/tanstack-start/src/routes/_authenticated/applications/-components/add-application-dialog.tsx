@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { Button } from "@stepsnaps/ui/button";
 import {
@@ -20,9 +19,8 @@ import {
   SelectValue,
 } from "@stepsnaps/ui/select";
 import { Spinner } from "@stepsnaps/ui/spinner";
-import { toast } from "@stepsnaps/ui/toast";
 
-import { useTRPC } from "~/lib/trpc";
+import { useCreateApplication } from "../-hooks/use-create-application";
 import { SourceTypeahead } from "./source-typeahead";
 
 interface AddApplicationDialogProps {
@@ -31,9 +29,6 @@ interface AddApplicationDialogProps {
 }
 
 export function AddApplicationDialog(props: AddApplicationDialogProps) {
-  const trpc = useTRPC();
-  const queryClient = useQueryClient();
-
   const [companyName, setCompanyName] = useState("");
   const [jobTitle, setJobTitle] = useState("");
   const [salary, setSalary] = useState("");
@@ -43,21 +38,6 @@ export function AddApplicationDialog(props: AddApplicationDialogProps) {
   const [jobUrl, setJobUrl] = useState("");
   const [sourceName, setSourceName] = useState("");
 
-  const createApplication = useMutation(
-    trpc.jobApplication.create.mutationOptions({
-      onSuccess: async () => {
-        await queryClient.invalidateQueries(trpc.jobApplication.pathFilter());
-        await queryClient.invalidateQueries(trpc.source.pathFilter());
-        props.onOpenChange(false);
-        resetForm();
-        toast.success("Application added!");
-      },
-      onError: (err) => {
-        toast.error(err.message);
-      },
-    }),
-  );
-
   const resetForm = () => {
     setCompanyName("");
     setJobTitle("");
@@ -66,6 +46,13 @@ export function AddApplicationDialog(props: AddApplicationDialogProps) {
     setJobUrl("");
     setSourceName("");
   };
+
+  const createApplication = useCreateApplication({
+    onSuccess: () => {
+      props.onOpenChange(false);
+      resetForm();
+    },
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

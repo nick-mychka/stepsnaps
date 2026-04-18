@@ -1,5 +1,4 @@
 import { useRef, useState } from "react";
-import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
 import { Button } from "@stepsnaps/ui/button";
@@ -13,7 +12,6 @@ import {
 } from "@stepsnaps/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@stepsnaps/ui/tabs";
 
-import { useTRPC } from "~/lib/trpc";
 import { AddApplicationDialog } from "./-components/add-application-dialog";
 import { ApplicationsTable } from "./-components/applications-table";
 import { CloseApplicationDialog } from "./-components/close-application-dialog";
@@ -22,6 +20,8 @@ import { EmptyState } from "./-components/empty-state";
 import { HistoryTable } from "./-components/history-table";
 import { InterviewsDialog } from "./-components/interviews-dialog";
 import { PaginationControls } from "./-components/pagination-controls";
+import { useActiveApplications } from "./-hooks/use-active-applications";
+import { useClosedApplications } from "./-hooks/use-closed-applications";
 
 export const Route = createFileRoute("/_authenticated/applications/")({
   loader: ({ context }) => {
@@ -43,8 +43,6 @@ function ApplicationsPage() {
   const [editingAppId, setEditingAppId] = useState<string | null>(null);
   const [closingAppId, setClosingAppId] = useState<string | null>(null);
   const [interviewsAppId, setInterviewsAppId] = useState<string | null>(null);
-
-  const trpc = useTRPC();
 
   // Debounce search input
   const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -69,24 +67,18 @@ function ApplicationsPage() {
       : {}),
   };
 
-  const { data: activeData } = useSuspenseQuery(
-    trpc.jobApplication.list.queryOptions(activeListInput),
-  );
+  const { data: activeData } = useActiveApplications(activeListInput);
 
   // History tab query (lazy-loaded only when History tab is selected)
-  const { data: historyData } = useQuery(
-    trpc.jobApplication.list.queryOptions(
-      {
-        page: activeTab === "closed" ? page : 1,
-        tab: "closed" as const,
-        ...(activeTab === "closed" && debouncedSearch.trim()
-          ? { search: debouncedSearch.trim() }
-          : {}),
-      },
-      {
-        enabled: activeTab === "closed",
-      },
-    ),
+  const { data: historyData } = useClosedApplications(
+    {
+      page: activeTab === "closed" ? page : 1,
+      tab: "closed" as const,
+      ...(activeTab === "closed" && debouncedSearch.trim()
+        ? { search: debouncedSearch.trim() }
+        : {}),
+    },
+    { enabled: activeTab === "closed" },
   );
 
   const currentData = activeTab === "active" ? activeData : historyData;

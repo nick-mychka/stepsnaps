@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { Button } from "@stepsnaps/ui/button";
 import {
@@ -13,7 +12,6 @@ import {
 import { Label } from "@stepsnaps/ui/label";
 import { RadioGroup, RadioGroupItem } from "@stepsnaps/ui/radio-group";
 import { Spinner } from "@stepsnaps/ui/spinner";
-import { toast } from "@stepsnaps/ui/toast";
 import {
   Tooltip,
   TooltipContent,
@@ -21,7 +19,7 @@ import {
   TooltipTrigger,
 } from "@stepsnaps/ui/tooltip";
 
-import { useTRPC } from "~/lib/trpc";
+import { useCloseApplication } from "../-hooks/use-close-application";
 
 const CLOSED_REASONS = [
   {
@@ -54,26 +52,16 @@ interface CloseApplicationDialogProps {
 }
 
 export function CloseApplicationDialog(props: CloseApplicationDialogProps) {
-  const trpc = useTRPC();
-  const queryClient = useQueryClient();
-
   const [closedReason, setClosedReason] = useState<
     "rejected" | "withdrawn" | "no_response" | "success"
   >("no_response");
 
-  const closeApplication = useMutation(
-    trpc.jobApplication.close.mutationOptions({
-      onSuccess: async () => {
-        await queryClient.invalidateQueries(trpc.jobApplication.pathFilter());
-        props.onOpenChange(false);
-        setClosedReason("no_response");
-        toast.success("Application closed.");
-      },
-      onError: (err) => {
-        toast.error(err.message);
-      },
-    }),
-  );
+  const closeApplication = useCloseApplication({
+    onSuccess: () => {
+      props.onOpenChange(false);
+      setClosedReason("no_response");
+    },
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

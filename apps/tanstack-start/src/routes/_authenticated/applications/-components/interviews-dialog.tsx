@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { Badge } from "@stepsnaps/ui/badge";
 import { Button } from "@stepsnaps/ui/button";
@@ -21,9 +20,11 @@ import {
 import { Separator } from "@stepsnaps/ui/separator";
 import { Spinner } from "@stepsnaps/ui/spinner";
 import { Textarea } from "@stepsnaps/ui/textarea";
-import { toast } from "@stepsnaps/ui/toast";
 
-import { useTRPC } from "~/lib/trpc";
+import { useCreateInterview } from "../-hooks/use-create-interview";
+import { useDeleteInterview } from "../-hooks/use-delete-interview";
+import { useInterviews } from "../-hooks/use-interviews";
+import { useUpdateInterview } from "../-hooks/use-update-interview";
 
 const INTERVIEW_TYPE_LABELS: Record<string, string> = {
   phone_screen: "Phone Screen",
@@ -48,15 +49,9 @@ interface InterviewsDialogProps {
 }
 
 export function InterviewsDialog(props: InterviewsDialogProps) {
-  const trpc = useTRPC();
-  const queryClient = useQueryClient();
-
-  const { data: interviews } = useQuery(
-    trpc.interview.list.queryOptions(
-      { jobApplicationId: props.applicationId ?? "" },
-      { enabled: !!props.applicationId },
-    ),
-  );
+  const { data: interviews } = useInterviews(props.applicationId, {
+    enabled: !!props.applicationId,
+  });
 
   const [date, setDate] = useState("");
   const [type, setType] = useState<InterviewType>("phone_screen");
@@ -67,44 +62,19 @@ export function InterviewsDialog(props: InterviewsDialogProps) {
   const [editType, setEditType] = useState<InterviewType>("phone_screen");
   const [editNote, setEditNote] = useState("");
 
-  const invalidate = async () => {
-    await queryClient.invalidateQueries(trpc.interview.pathFilter());
-    await queryClient.invalidateQueries(trpc.jobApplication.pathFilter());
-  };
+  const createInterview = useCreateInterview({
+    onSuccess: () => {
+      setDate("");
+      setType("phone_screen");
+      setNote("");
+    },
+  });
 
-  const createInterview = useMutation(
-    trpc.interview.create.mutationOptions({
-      onSuccess: async () => {
-        await invalidate();
-        setDate("");
-        setType("phone_screen");
-        setNote("");
-        toast.success("Interview added!");
-      },
-      onError: (err) => toast.error(err.message),
-    }),
-  );
+  const updateInterview = useUpdateInterview({
+    onSuccess: () => setEditingId(null),
+  });
 
-  const updateInterview = useMutation(
-    trpc.interview.update.mutationOptions({
-      onSuccess: async () => {
-        await invalidate();
-        setEditingId(null);
-        toast.success("Interview updated!");
-      },
-      onError: (err) => toast.error(err.message),
-    }),
-  );
-
-  const deleteInterview = useMutation(
-    trpc.interview.delete.mutationOptions({
-      onSuccess: async () => {
-        await invalidate();
-        toast.success("Interview deleted.");
-      },
-      onError: (err) => toast.error(err.message),
-    }),
-  );
+  const deleteInterview = useDeleteInterview();
 
   const handleAdd = (e: React.FormEvent) => {
     e.preventDefault();

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 
 import { Button } from "@stepsnaps/ui/button";
 import {
@@ -12,7 +11,7 @@ import {
 } from "@stepsnaps/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@stepsnaps/ui/popover";
 
-import { useTRPC } from "~/lib/trpc";
+import { useSourceSearch } from "../-hooks/use-source-search";
 
 interface SourceTypeaheadProps {
   value: string;
@@ -22,11 +21,8 @@ interface SourceTypeaheadProps {
 export function SourceTypeahead(props: SourceTypeaheadProps) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const trpc = useTRPC();
 
-  const { data: sources } = useQuery(
-    trpc.source.search.queryOptions({ query: search }, { enabled: open }),
-  );
+  const { data: sources } = useSourceSearch(search, { enabled: open });
 
   const hasExactMatch = sources?.some(
     (s) => s.name.toLowerCase() === search.trim().toLowerCase(),
