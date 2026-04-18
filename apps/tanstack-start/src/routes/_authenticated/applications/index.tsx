@@ -6,23 +6,9 @@ import {
   useSuspenseQuery,
 } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import {
-  createColumnHelper,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
 
 import { Badge } from "@stepsnaps/ui/badge";
 import { Button } from "@stepsnaps/ui/button";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@stepsnaps/ui/command";
 import {
   Dialog,
   DialogContent,
@@ -33,7 +19,6 @@ import {
 } from "@stepsnaps/ui/dialog";
 import { Input } from "@stepsnaps/ui/input";
 import { Label } from "@stepsnaps/ui/label";
-import { Popover, PopoverContent, PopoverTrigger } from "@stepsnaps/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@stepsnaps/ui/radio-group";
 import {
   Select,
@@ -44,14 +29,6 @@ import {
 } from "@stepsnaps/ui/select";
 import { Separator } from "@stepsnaps/ui/separator";
 import { Spinner } from "@stepsnaps/ui/spinner";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@stepsnaps/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@stepsnaps/ui/tabs";
 import { Textarea } from "@stepsnaps/ui/textarea";
 import { toast } from "@stepsnaps/ui/toast";
@@ -63,9 +40,11 @@ import {
 } from "@stepsnaps/ui/tooltip";
 
 import { useTRPC } from "~/lib/trpc";
-import { ClosedReasonBadge } from "./-components/closed-reason-badge";
+import { ApplicationsTable } from "./-components/applications-table";
 import { EmptyState } from "./-components/empty-state";
+import { HistoryTable } from "./-components/history-table";
 import { PaginationControls } from "./-components/pagination-controls";
+import { SourceTypeahead } from "./-components/source-typeahead";
 import { StatusBadge } from "./-components/status-badge";
 
 export const Route = createFileRoute("/_authenticated/applications/")({
@@ -263,344 +242,6 @@ function ApplicationsPage() {
         }}
       />
     </main>
-  );
-}
-
-// --- Table ---
-
-interface ApplicationRow {
-  id: string;
-  companyName: string;
-  jobTitle: string | null;
-  salary: string | null;
-  workMode: "remote" | "onsite" | "hybrid";
-  source: { id: string; name: string } | null;
-  appliedAt: string;
-  status: "pending" | "interviewing" | "on_hold" | "closed";
-  interviews: { id: string }[];
-}
-
-const columnHelper = createColumnHelper<ApplicationRow>();
-
-function createColumns(
-  onEdit: (id: string) => void,
-  onInterviews: (id: string) => void,
-) {
-  return [
-    columnHelper.accessor("companyName", {
-      header: "Company",
-      cell: (info) => (
-        <button
-          type="button"
-          className="text-left font-medium underline-offset-4 hover:underline"
-          onClick={() => onEdit(info.row.original.id)}
-        >
-          {info.getValue()}
-        </button>
-      ),
-    }),
-    columnHelper.accessor("jobTitle", {
-      header: "Job Title",
-      cell: (info) => info.getValue() ?? "—",
-    }),
-    columnHelper.accessor("salary", {
-      header: "Salary",
-      cell: (info) => info.getValue() ?? "—",
-    }),
-    columnHelper.accessor("workMode", {
-      header: "Work Mode",
-      cell: (info) => {
-        const labels: Record<string, string> = {
-          remote: "Remote",
-          onsite: "Onsite",
-          hybrid: "Hybrid",
-        };
-        return labels[info.getValue()] ?? info.getValue();
-      },
-    }),
-    columnHelper.accessor("source", {
-      header: "Source",
-      cell: (info) => info.getValue()?.name ?? "—",
-    }),
-    columnHelper.accessor("appliedAt", {
-      header: "Applied",
-      cell: (info) => info.getValue(),
-    }),
-    columnHelper.accessor("status", {
-      header: "Status",
-      cell: (info) => <StatusBadge status={info.getValue()} />,
-    }),
-    columnHelper.accessor("interviews", {
-      header: "Interviews",
-      cell: (info) => {
-        const count = info.getValue().length;
-        return (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => onInterviews(info.row.original.id)}
-          >
-            {count > 0
-              ? `${count} interview${count > 1 ? "s" : ""}`
-              : "Set Interview"}
-          </Button>
-        );
-      },
-    }),
-  ];
-}
-
-function ApplicationsTable(props: {
-  data: ApplicationRow[];
-  onEdit: (id: string) => void;
-  onInterviews: (id: string) => void;
-}) {
-  const columns = createColumns(props.onEdit, props.onInterviews);
-  const table = useReactTable({
-    data: props.data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
-
-  return (
-    <div className="rounded-md border">
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <TableHead key={header.id}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext(),
-                      )}
-                </TableHead>
-              ))}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                No applications found.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </div>
-  );
-}
-
-// --- History Table ---
-
-interface HistoryRow {
-  id: string;
-  companyName: string;
-  jobTitle: string | null;
-  salary: string | null;
-  workMode: "remote" | "onsite" | "hybrid";
-  source: { id: string; name: string } | null;
-  appliedAt: string;
-  status: "pending" | "interviewing" | "on_hold" | "closed";
-  closedReason: string | null;
-  interviews: { id: string }[];
-}
-
-const historyColumnHelper = createColumnHelper<HistoryRow>();
-
-const historyColumns = [
-  historyColumnHelper.accessor("companyName", {
-    header: "Company",
-    cell: (info) => <span className="font-medium">{info.getValue()}</span>,
-  }),
-  historyColumnHelper.accessor("jobTitle", {
-    header: "Job Title",
-    cell: (info) => info.getValue() ?? "—",
-  }),
-  historyColumnHelper.accessor("salary", {
-    header: "Salary",
-    cell: (info) => info.getValue() ?? "—",
-  }),
-  historyColumnHelper.accessor("source", {
-    header: "Source",
-    cell: (info) => info.getValue()?.name ?? "—",
-  }),
-  historyColumnHelper.accessor("appliedAt", {
-    header: "Applied",
-    cell: (info) => info.getValue(),
-  }),
-  historyColumnHelper.accessor("closedReason", {
-    header: "Outcome",
-    cell: (info) => <ClosedReasonBadge reason={info.getValue()} />,
-  }),
-  historyColumnHelper.accessor("interviews", {
-    header: "Interviews",
-    cell: (info) => {
-      const count = info.getValue().length;
-      return count > 0 ? `${count}` : "—";
-    },
-  }),
-];
-
-function HistoryTable(props: { data: HistoryRow[] }) {
-  const table = useReactTable({
-    data: props.data,
-    columns: historyColumns,
-    getCoreRowModel: getCoreRowModel(),
-  });
-
-  return (
-    <div className="rounded-md border">
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <TableHead key={header.id}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext(),
-                      )}
-                </TableHead>
-              ))}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell
-                colSpan={historyColumns.length}
-                className="h-24 text-center"
-              >
-                No closed applications yet.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </div>
-  );
-}
-
-// --- Source Typeahead ---
-
-function SourceTypeahead(props: {
-  value: string;
-  onChange: (value: string) => void;
-}) {
-  const [open, setOpen] = useState(false);
-  const [search, setSearch] = useState("");
-  const trpc = useTRPC();
-
-  const { data: sources } = useQuery(
-    trpc.source.search.queryOptions({ query: search }, { enabled: open }),
-  );
-
-  const hasExactMatch = sources?.some(
-    (s) => s.name.toLowerCase() === search.trim().toLowerCase(),
-  );
-
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          className="w-full justify-between font-normal"
-          type="button"
-        >
-          {props.value || "Select source..."}
-          <span className="text-muted-foreground ml-2 text-xs">
-            {open ? "▲" : "▼"}
-          </span>
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent
-        className="w-[--radix-popover-trigger-width] p-0"
-        align="start"
-      >
-        <Command shouldFilter={false}>
-          <CommandInput
-            placeholder="Search sources..."
-            value={search}
-            onValueChange={setSearch}
-          />
-          <CommandList>
-            <CommandEmpty>
-              {search.trim() ? "No sources found." : "Type to search..."}
-            </CommandEmpty>
-            <CommandGroup>
-              {sources?.map((source) => (
-                <CommandItem
-                  key={source.id}
-                  value={source.name}
-                  onSelect={() => {
-                    props.onChange(source.name);
-                    setOpen(false);
-                    setSearch("");
-                  }}
-                >
-                  {source.name}
-                </CommandItem>
-              ))}
-              {search.trim() && !hasExactMatch && (
-                <CommandItem
-                  value={`create-${search}`}
-                  onSelect={() => {
-                    props.onChange(search.trim());
-                    setOpen(false);
-                    setSearch("");
-                  }}
-                >
-                  Create "{search.trim()}"
-                </CommandItem>
-              )}
-              {props.value && (
-                <CommandItem
-                  value="__clear__"
-                  onSelect={() => {
-                    props.onChange("");
-                    setOpen(false);
-                    setSearch("");
-                  }}
-                  className="text-muted-foreground"
-                >
-                  Clear selection
-                </CommandItem>
-              )}
-            </CommandGroup>
-          </CommandList>
-        </Command>
-      </PopoverContent>
-    </Popover>
   );
 }
 
