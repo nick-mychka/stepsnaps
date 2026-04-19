@@ -124,25 +124,31 @@ export function ApplicationsPage() {
         </div>
 
         <TabsContent value="active">
-          {activeData.total === 0 &&
-          !debouncedSearch &&
-          statusFilter === "all" ? (
-            <EmptyState onAdd={() => setShowAddDialog(true)} />
-          ) : (
-            <>
-              <ApplicationsTable
-                data={activeData.items}
-                onEdit={setEditingAppId}
-                onInterviews={setInterviewsAppId}
-              />
-              {totalPages > 1 && (
-                <PaginationControls
-                  page={page}
-                  totalPages={totalPages}
-                  onPageChange={setPage}
+          {activeData ? (
+            activeData.total === 0 &&
+            !debouncedSearch &&
+            statusFilter === "all" ? (
+              <EmptyState onAdd={() => setShowAddDialog(true)} />
+            ) : (
+              <>
+                <ApplicationsTable
+                  data={activeData.items}
+                  onEdit={setEditingAppId}
+                  onInterviews={setInterviewsAppId}
                 />
-              )}
-            </>
+                {totalPages > 1 && (
+                  <PaginationControls
+                    page={page}
+                    totalPages={totalPages}
+                    onPageChange={setPage}
+                  />
+                )}
+              </>
+            )
+          ) : (
+            <div className="flex items-center justify-center py-12">
+              <span className="text-muted-foreground text-sm">Loading...</span>
+            </div>
           )}
         </TabsContent>
 

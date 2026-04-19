@@ -16,7 +16,7 @@ import { useTRPC } from "~/lib/trpc";
 
 export const Route = createFileRoute("/_authenticated")({
   beforeLoad: async ({ context }) => {
-    const session = await context.queryClient.ensureQueryData(
+    const session = await context.queryClient.fetchQuery(
       context.trpc.auth.getSession.queryOptions(),
     );
     if (!session) {

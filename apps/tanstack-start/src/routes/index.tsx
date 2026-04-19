@@ -9,7 +9,7 @@ import { PageLoader } from "~/component/page-loader";
 
 export const Route = createFileRoute("/")({
   beforeLoad: async ({ context }) => {
-    const session = await context.queryClient.ensureQueryData(
+    const session = await context.queryClient.fetchQuery(
       context.trpc.auth.getSession.queryOptions(),
     );
     if (session) {

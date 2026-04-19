@@ -68,8 +68,7 @@ function TeamsPage() {
             </EmptyMedia>
             <EmptyTitle>No teams yet</EmptyTitle>
             <EmptyDescription>
-              You haven&apos;t created any teams yet. Get started by creating
-              your first team.
+              Create a team to start tracking progress with peers.
             </EmptyDescription>
           </EmptyHeader>
           <EmptyContent className="flex-row justify-center gap-2">

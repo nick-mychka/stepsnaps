@@ -1,4 +1,4 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 import type { RouterInputs } from "@stepsnaps/api";
 
@@ -10,5 +10,8 @@ type ActiveListInput = Omit<RouterInputs["jobApplication"]["list"], "tab"> & {
 
 export function useActiveApplications(input: ActiveListInput) {
   const trpc = useTRPC();
-  return useSuspenseQuery(trpc.jobApplication.list.queryOptions(input));
+  return useQuery({
+    ...trpc.jobApplication.list.queryOptions(input),
+    placeholderData: keepPreviousData,
+  });
 }

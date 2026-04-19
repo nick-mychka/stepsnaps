@@ -127,7 +127,10 @@ export function SidePanel({
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
                   <DropdownMenuGroup>
-                    <DropdownMenuItem variant="destructive" onClick={onSignOut}>
+                    <DropdownMenuItem
+                      variant="destructive"
+                      onSelect={onSignOut}
+                    >
                       <LogOut />
                       Log out
                     </DropdownMenuItem>
