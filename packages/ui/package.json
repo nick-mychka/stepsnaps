@@ -26,7 +26,8 @@
     "./popover": "./src/popover.tsx",
     "./command": "./src/command.tsx",
     "./spinner": "./src/spinner.tsx",
-    "./progress": "./src/progress.tsx"
+    "./progress": "./src/progress.tsx",
+    "./empty": "./src/empty.tsx"
   },
   "license": "MIT",
   "scripts": {
