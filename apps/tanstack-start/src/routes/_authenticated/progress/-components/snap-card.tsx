@@ -10,7 +10,7 @@ import {
 } from "@stepsnaps/ui/tooltip";
 
 import type { SnapWithValues } from "../-types";
-import { ActionsMenu } from "~/component/actions-menu";
+import { ActionsMenu } from "~/components/actions-menu";
 
 export function SnapCard(props: {
   snap: SnapWithValues;

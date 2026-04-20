@@ -312,7 +312,7 @@ function ReadOnlyChart(props: {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig} className="min-h-[300px] w-full">
+        <ChartContainer config={chartConfig} className="min-h-75 w-full">
           <BarChart accessibilityLayer data={chartData}>
             <CartesianGrid vertical={false} />
             <XAxis

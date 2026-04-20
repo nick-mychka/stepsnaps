@@ -33,7 +33,7 @@ import { Textarea } from "@stepsnaps/ui/textarea";
 import { toast } from "@stepsnaps/ui/toast";
 
 import { authClient } from "~/auth/client";
-import { ActionsMenu } from "~/component/actions-menu";
+import { ActionsMenu } from "~/components/actions-menu";
 import {
   BackgroundV1,
   BackgroundV2,
@@ -46,7 +46,7 @@ import {
   BackgroundV11,
   BackgroundV12,
   BackgroundV13,
-} from "~/component/journey-background";
+} from "~/components/journey-background";
 import { useTRPC } from "~/lib/trpc";
 
 function getGreeting(name: string): string {

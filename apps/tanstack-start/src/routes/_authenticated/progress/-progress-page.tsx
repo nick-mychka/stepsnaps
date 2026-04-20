@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from "@stepsnaps/ui/card";
 
-import { BackgroundV3 } from "~/component/journey-background";
+import { BackgroundV3 } from "~/components/journey-background";
 import { ChartView } from "./-components/chart-view";
 import { TimelineView } from "./-components/timeline-view";
 import { useActiveJourney } from "./-hooks/use-active-journey";

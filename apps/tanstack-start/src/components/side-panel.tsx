@@ -93,7 +93,7 @@ export function SidePanel({
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon" className="rounded-full">
-                    <Avatar className="size-7">
+                    <Avatar>
                       <AvatarImage
                         src={user.image ?? undefined}
                         alt={user.name}
