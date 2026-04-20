@@ -11,11 +11,12 @@ import { authClient } from "~/auth/client";
 import { Logo } from "~/component/logo";
 import { PageLoader } from "~/component/page-loader";
 import { SidePanel } from "~/component/side-panel";
+import { dayjs } from "~/lib/date";
 import { useTRPC } from "~/lib/trpc";
 
 export const Route = createFileRoute("/_authenticated")({
   beforeLoad: async ({ context }) => {
-    const session = await context.queryClient.ensureQueryData(
+    const session = await context.queryClient.fetchQuery(
       context.trpc.auth.getSession.queryOptions(),
     );
     if (!session) {
@@ -32,12 +33,6 @@ function AuthedLayout() {
   const navigate = useNavigate();
   const trpc = useTRPC();
   const { data: activeJourney } = useQuery(trpc.journey.active.queryOptions());
-  const full = new Date().toLocaleDateString("en-US", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
 
   async function handleSignOut() {
     await authClient.signOut();
@@ -54,7 +49,7 @@ function AuthedLayout() {
           </Link>
           <div className="border-primary border-l-2 pl-3">
             <p className="text-muted-foreground text-xs font-semibold tracking-widest uppercase">
-              {full}
+              {dayjs().format("dddd, MMMM D, YYYY")}
             </p>
           </div>
         </div>

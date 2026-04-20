@@ -5,6 +5,7 @@ import {
   useSuspenseQuery,
 } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { Users } from "lucide-react";
 
 import { Badge } from "@stepsnaps/ui/badge";
 import { Button } from "@stepsnaps/ui/button";
@@ -24,6 +25,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@stepsnaps/ui/dialog";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@stepsnaps/ui/empty";
 import { Input } from "@stepsnaps/ui/input";
 import { Label } from "@stepsnaps/ui/label";
 import { Spinner } from "@stepsnaps/ui/spinner";
@@ -48,18 +57,24 @@ function TeamsPage() {
     <main className="container mx-auto py-8">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-3xl font-bold">Teams</h1>
-        <CreateTeamDialog />
+        {teams.length > 0 && <CreateTeamDialog />}
       </div>
 
       {teams.length === 0 ? (
-        <Card className="max-w-lg">
-          <CardHeader>
-            <CardTitle>No teams yet</CardTitle>
-            <CardDescription>
+        <Empty>
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <Users />
+            </EmptyMedia>
+            <EmptyTitle>No teams yet</EmptyTitle>
+            <EmptyDescription>
               Create a team to start tracking progress with peers.
-            </CardDescription>
-          </CardHeader>
-        </Card>
+            </EmptyDescription>
+          </EmptyHeader>
+          <EmptyContent className="flex-row justify-center gap-2">
+            <CreateTeamDialog />
+          </EmptyContent>
+        </Empty>
       ) : (
         <div className="grid max-w-2xl gap-4">
           {teams.map((team) => (
