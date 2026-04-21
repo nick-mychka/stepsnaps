@@ -47,6 +47,7 @@ import {
   BackgroundV12,
   BackgroundV13,
 } from "~/components/journey-background";
+import { dayjs } from "~/lib/date";
 import { useTRPC } from "~/lib/trpc";
 
 function getGreeting(name: string): string {
@@ -163,19 +164,6 @@ function ActiveJourneyCard(props: {
   const navigate = useNavigate();
   const [showFinishDialog, setShowFinishDialog] = useState(false);
 
-  const startDate = new Date(journey.startDate);
-  const today = new Date();
-  const dayCount =
-    Math.floor(
-      (today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24),
-    ) + 1;
-
-  const formattedStartDate = startDate.toLocaleDateString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
-
   return (
     <>
       <Card className="max-w-lg">
@@ -184,7 +172,9 @@ function ActiveJourneyCard(props: {
             <Flame className="size-5 text-orange-400" />
             <CardTitle className="text-2xl font-bold">Active Journey</CardTitle>
           </div>
-          <CardDescription>Started {formattedStartDate}</CardDescription>
+          <CardDescription>
+            Started {dayjs(journey.startDate).format("MMMM D, YYYY")}
+          </CardDescription>
           <CardAction>
             <ActionsMenu>
               <DropdownMenuItem onSelect={() => setShowFinishDialog(true)}>
@@ -200,7 +190,10 @@ function ActiveJourneyCard(props: {
             Day
           </p>
           <p className="text-[7rem] leading-none font-black tracking-tight">
-            {dayCount}
+            {dayjs(dayjs().format("YYYY-MM-DD")).diff(
+              journey.startDate,
+              "day",
+            ) + 1}
           </p>
           <p className="text-muted-foreground text-sm">of your journey</p>
         </CardContent>
