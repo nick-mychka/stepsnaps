@@ -48,7 +48,7 @@ function AuthedLayout() {
           </Link>
           <div className="border-primary border-l-2 pl-3">
             <p className="text-muted-foreground text-xs font-semibold tracking-widest uppercase">
-              {dayjs().format("dddd, MMMM DD, YYYY")}
+              {dayjs().format("dddd, MMMM D, YYYY")}
             </p>
           </div>
         </div>
