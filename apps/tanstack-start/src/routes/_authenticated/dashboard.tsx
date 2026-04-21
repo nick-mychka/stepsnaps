@@ -190,10 +190,7 @@ function ActiveJourneyCard(props: {
             Day
           </p>
           <p className="text-[7rem] leading-none font-black tracking-tight">
-            {dayjs(dayjs().format("YYYY-MM-DD")).diff(
-              journey.startDate,
-              "day",
-            ) + 1}
+            {dayjs().diff(journey.startDate, "day") + 1}
           </p>
           <p className="text-muted-foreground text-sm">of your journey</p>
         </CardContent>
