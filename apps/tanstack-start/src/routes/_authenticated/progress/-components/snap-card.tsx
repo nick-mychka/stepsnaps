@@ -14,10 +14,11 @@ import { ActionsMenu } from "~/components/actions-menu";
 
 export function SnapCard(props: {
   snap: SnapWithValues;
-  onEdit: () => void;
-  onDelete: () => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
 }) {
   const { snap, onEdit, onDelete } = props;
+  const hasActions = !!onEdit && !!onDelete;
 
   const dateObj = new Date(snap.date + "T00:00:00");
   const formatted = dateObj.toLocaleDateString("en-US", {
@@ -42,16 +43,18 @@ export function SnapCard(props: {
         <div className="flex items-center justify-between">
           <CardTitle className="text-base">{formatted}</CardTitle>
           <div className="flex gap-1">
-            <ActionsMenu>
-              <DropdownMenuItem onSelect={onEdit}>
-                <SquarePen />
-                Edit
-              </DropdownMenuItem>
-              <DropdownMenuItem onSelect={onDelete}>
-                <Trash2 />
-                Delete
-              </DropdownMenuItem>
-            </ActionsMenu>
+            {hasActions && (
+              <ActionsMenu>
+                <DropdownMenuItem onSelect={onEdit}>
+                  <SquarePen />
+                  Edit
+                </DropdownMenuItem>
+                <DropdownMenuItem onSelect={onDelete}>
+                  <Trash2 />
+                  Delete
+                </DropdownMenuItem>
+              </ActionsMenu>
+            )}
           </div>
         </div>
       </CardHeader>
