@@ -15,10 +15,11 @@ import { dayjs } from "~/lib/date";
 
 export function SnapCard(props: {
   snap: SnapWithValues;
-  onEdit: () => void;
-  onDelete: () => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
 }) {
   const { snap, onEdit, onDelete } = props;
+  const hasActions = !!onEdit && !!onDelete;
 
   // Sort values by step definition sort order
   const sortedValues = [...snap.values].sort(
@@ -37,16 +38,18 @@ export function SnapCard(props: {
             {dayjs(snap.date).format("ddd, MMM D, YYYY")}
           </CardTitle>
           <div className="flex gap-1">
-            <ActionsMenu>
-              <DropdownMenuItem onSelect={onEdit}>
-                <SquarePen />
-                Edit
-              </DropdownMenuItem>
-              <DropdownMenuItem onSelect={onDelete}>
-                <Trash2 />
-                Delete
-              </DropdownMenuItem>
-            </ActionsMenu>
+            {hasActions && (
+              <ActionsMenu>
+                <DropdownMenuItem onSelect={onEdit}>
+                  <SquarePen />
+                  Edit
+                </DropdownMenuItem>
+                <DropdownMenuItem onSelect={onDelete}>
+                  <Trash2 />
+                  Delete
+                </DropdownMenuItem>
+              </ActionsMenu>
+            )}
           </div>
         </div>
       </CardHeader>
