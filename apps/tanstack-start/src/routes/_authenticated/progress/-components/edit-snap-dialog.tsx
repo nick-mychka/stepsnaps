@@ -16,6 +16,7 @@ import { Spinner } from "@stepsnaps/ui/spinner";
 import { Textarea } from "@stepsnaps/ui/textarea";
 
 import type { SnapWithValues } from "../-types";
+import { dayjs } from "~/lib/date";
 import { useTRPC } from "~/lib/trpc";
 import { useUpsertSnap } from "../-hooks/use-upsert-snap";
 
@@ -142,22 +143,14 @@ export function EditSnapDialog(props: {
 
   displaySteps.sort((a, b) => a.sortOrder - b.sortOrder);
 
-  const dateFormatted = new Date(snap.date + "T00:00:00").toLocaleDateString(
-    "en-US",
-    {
-      weekday: "short",
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    },
-  );
-
   return (
     <Dialog open={props.open} onOpenChange={props.onOpenChange}>
       <DialogContent className="max-h-[80vh] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>Edit Snap</DialogTitle>
-          <DialogDescription>{dateFormatted}</DialogDescription>
+          <DialogDescription>
+            {dayjs(snap.date).format("ddd, MMM D, YYYY")}
+          </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           {displaySteps.map((sd) => (

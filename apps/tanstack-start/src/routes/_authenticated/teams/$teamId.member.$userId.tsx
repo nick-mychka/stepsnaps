@@ -20,6 +20,7 @@ import {
   ChartTooltipContent,
 } from "@stepsnaps/ui/chart";
 
+import { dayjs } from "~/lib/date";
 import { useTRPC } from "~/lib/trpc";
 
 export const Route = createFileRoute(
@@ -140,14 +141,6 @@ function ReadOnlyTimeline(props: { snaps: SnapData[] }) {
   return (
     <div className="flex max-w-2xl flex-col gap-4">
       {sortedSnaps.map((snap) => {
-        const dateObj = new Date(snap.date + "T00:00:00");
-        const formatted = dateObj.toLocaleDateString("en-US", {
-          weekday: "short",
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-        });
-
         const sortedValues = [...snap.values].sort(
           (a, b) => a.stepDefinition.sortOrder - b.stepDefinition.sortOrder,
         );
@@ -159,7 +152,9 @@ function ReadOnlyTimeline(props: { snaps: SnapData[] }) {
         return (
           <Card key={snap.id}>
             <CardHeader className="pb-3">
-              <CardTitle className="text-base">{formatted}</CardTitle>
+              <CardTitle className="text-base">
+                {dayjs(snap.date).format("ddd, MMM D, YYYY")}
+              </CardTitle>
             </CardHeader>
             {hasValues && (
               <CardContent className="pt-0">
