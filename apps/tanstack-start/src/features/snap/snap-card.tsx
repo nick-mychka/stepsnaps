@@ -9,23 +9,17 @@ import {
   TooltipTrigger,
 } from "@stepsnaps/ui/tooltip";
 
-import type { SnapWithValues } from "../-types";
-import { ActionsMenu } from "~/component/actions-menu";
+import type { SnapWithValues } from "~/routes/_authenticated/progress/-types";
+import { ActionsMenu } from "~/components/actions-menu";
+import { dayjs } from "~/lib/date";
 
 export function SnapCard(props: {
   snap: SnapWithValues;
-  onEdit: () => void;
-  onDelete: () => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
 }) {
   const { snap, onEdit, onDelete } = props;
-
-  const dateObj = new Date(snap.date + "T00:00:00");
-  const formatted = dateObj.toLocaleDateString("en-US", {
-    weekday: "short",
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
+  const hasActions = !!onEdit && !!onDelete;
 
   // Sort values by step definition sort order
   const sortedValues = [...snap.values].sort(
@@ -40,18 +34,22 @@ export function SnapCard(props: {
     <Card>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base">{formatted}</CardTitle>
+          <CardTitle className="text-base">
+            {dayjs(snap.date).format("ddd, MMM D, YYYY")}
+          </CardTitle>
           <div className="flex gap-1">
-            <ActionsMenu>
-              <DropdownMenuItem onSelect={onEdit}>
-                <SquarePen />
-                Edit
-              </DropdownMenuItem>
-              <DropdownMenuItem onSelect={onDelete}>
-                <Trash2 />
-                Delete
-              </DropdownMenuItem>
-            </ActionsMenu>
+            {hasActions && (
+              <ActionsMenu>
+                <DropdownMenuItem onSelect={onEdit}>
+                  <SquarePen />
+                  Edit
+                </DropdownMenuItem>
+                <DropdownMenuItem onSelect={onDelete}>
+                  <Trash2 />
+                  Delete
+                </DropdownMenuItem>
+              </ActionsMenu>
+            )}
           </div>
         </div>
       </CardHeader>

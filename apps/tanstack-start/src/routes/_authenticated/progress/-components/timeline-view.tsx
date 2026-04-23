@@ -10,10 +10,10 @@ import {
 } from "@stepsnaps/ui/empty";
 
 import type { SnapWithValues } from "../-types";
+import { SnapCard } from "~/features/snap/snap-card";
 import { useSnaps } from "../-hooks/use-snaps";
 import { DeleteSnapDialog } from "./delete-snap-dialog";
 import { EditSnapDialog } from "./edit-snap-dialog";
-import { SnapCard } from "./snap-card";
 
 export function TimelineView(props: { journeyId: string }) {
   const { journeyId } = props;

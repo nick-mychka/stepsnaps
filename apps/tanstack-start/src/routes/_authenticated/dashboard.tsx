@@ -7,6 +7,7 @@ import {
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { CalendarDays, CheckCircle2, Flame } from "lucide-react";
 
+import { cn } from "@stepsnaps/ui";
 import { Button } from "@stepsnaps/ui/button";
 import {
   Card,
@@ -33,7 +34,7 @@ import { Textarea } from "@stepsnaps/ui/textarea";
 import { toast } from "@stepsnaps/ui/toast";
 
 import { authClient } from "~/auth/client";
-import { ActionsMenu } from "~/component/actions-menu";
+import { ActionsMenu } from "~/components/actions-menu";
 import {
   BackgroundV1,
   BackgroundV2,
@@ -46,7 +47,9 @@ import {
   BackgroundV11,
   BackgroundV12,
   BackgroundV13,
-} from "~/component/journey-background";
+} from "~/components/journey-background";
+import { dayjs } from "~/lib/date";
+import { computeStreak } from "~/lib/streak";
 import { useTRPC } from "~/lib/trpc";
 
 function getGreeting(name: string): string {
@@ -56,14 +59,6 @@ function getGreeting(name: string): string {
   if (hour >= 5 && hour < 12) return `Good Morning, ${firstName} 🌤️`;
   if (hour >= 12 && hour < 18) return `Good Afternoon, ${firstName} ☀️`;
   return `Good Evening, ${firstName} 🌙`;
-}
-
-function GreetingBlock({ greeting }: { greeting: string }) {
-  return (
-    <div className="mb-16">
-      <h1 className="text-3xl font-bold">{greeting}</h1>
-    </div>
-  );
 }
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
@@ -108,7 +103,15 @@ function DashboardPage() {
     <>
       <ActiveBg />
       <main className="px-8 py-12">
-        <GreetingBlock greeting={greeting} />
+        <div
+          className={cn(
+            "flex justify-between",
+            activeJourney ? "mb-4" : "mb-16",
+          )}
+        >
+          <h1 className="text-3xl font-bold">{greeting}</h1>
+          {activeJourney && <StatsRow journeyId={activeJourney.id} />}
+        </div>
         {activeJourney ? (
           <ActiveJourneyCard journey={activeJourney} />
         ) : (
@@ -148,6 +151,36 @@ function DashboardPage() {
   );
 }
 
+// ─── Stats Row ────────────────────────────────────────────────────────────────
+
+function StatsRow({ journeyId }: { journeyId: string }) {
+  const trpc = useTRPC();
+  const { data: snaps } = useSuspenseQuery(
+    trpc.snap.list.queryOptions({ journeyId }),
+  );
+  const streak = computeStreak(snaps.map((s) => s.date));
+
+  return <StreakCard days={streak} />;
+}
+
+function StreakCard({ days }: { days: number }) {
+  return (
+    <Card className="w-fit py-4">
+      <CardContent className="flex items-center gap-4 px-5">
+        <span className="text-3xl" aria-hidden>
+          🔥
+        </span>
+        <div className="flex flex-col">
+          <span className="text-3xl leading-none font-bold text-orange-400">
+            {days}
+          </span>
+          <span className="text-muted-foreground text-sm">day streak</span>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
 // ─── Active Journey Card ──────────────────────────────────────────────────────
 
 function ActiveJourneyCard(props: {
@@ -163,19 +196,6 @@ function ActiveJourneyCard(props: {
   const navigate = useNavigate();
   const [showFinishDialog, setShowFinishDialog] = useState(false);
 
-  const startDate = new Date(journey.startDate);
-  const today = new Date();
-  const dayCount =
-    Math.floor(
-      (today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24),
-    ) + 1;
-
-  const formattedStartDate = startDate.toLocaleDateString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
-
   return (
     <>
       <Card className="max-w-lg">
@@ -184,7 +204,9 @@ function ActiveJourneyCard(props: {
             <Flame className="size-5 text-orange-400" />
             <CardTitle className="text-2xl font-bold">Active Journey</CardTitle>
           </div>
-          <CardDescription>Started {formattedStartDate}</CardDescription>
+          <CardDescription>
+            Started {dayjs(journey.startDate).format("MMMM D, YYYY")}
+          </CardDescription>
           <CardAction>
             <ActionsMenu>
               <DropdownMenuItem onSelect={() => setShowFinishDialog(true)}>
@@ -200,7 +222,7 @@ function ActiveJourneyCard(props: {
             Day
           </p>
           <p className="text-[7rem] leading-none font-black tracking-tight">
-            {dayCount}
+            {dayjs().diff(journey.startDate, "day") + 1}
           </p>
           <p className="text-muted-foreground text-sm">of your journey</p>
         </CardContent>

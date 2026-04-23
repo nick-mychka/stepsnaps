@@ -8,9 +8,9 @@ import {
 } from "@tanstack/react-router";
 
 import { authClient } from "~/auth/client";
-import { Logo } from "~/component/logo";
-import { PageLoader } from "~/component/page-loader";
-import { SidePanel } from "~/component/side-panel";
+import { Logo } from "~/components/logo";
+import { PageLoader } from "~/components/page-loader";
+import { SidePanel } from "~/components/side-panel";
 import { dayjs } from "~/lib/date";
 import { useTRPC } from "~/lib/trpc";
 
@@ -41,11 +41,10 @@ function AuthedLayout() {
 
   return (
     <div className="flex h-screen flex-col">
-      {/* Header — full width */}
       <header className="border-b">
         <div className="flex h-16 items-center justify-between px-6">
-          <Link to="/dashboard" className="text-xl font-bold tracking-tight">
-            <Logo />
+          <Link to="/dashboard">
+            <Logo className="text-xl font-bold tracking-tight" />
           </Link>
           <div className="border-primary border-l-2 pl-3">
             <p className="text-muted-foreground text-xs font-semibold tracking-widest uppercase">
@@ -55,7 +54,6 @@ function AuthedLayout() {
         </div>
       </header>
 
-      {/* Body — sidebar + content */}
       <div className="flex flex-1 overflow-hidden">
         <SidePanel
           user={session.user}

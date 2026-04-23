@@ -3,9 +3,9 @@ import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { Button } from "@stepsnaps/ui/button";
 
 import { authClient } from "~/auth/client";
-import { BackgroundV9 } from "~/component/journey-background";
-import { Logo } from "~/component/logo";
-import { PageLoader } from "~/component/page-loader";
+import { BackgroundV9 } from "~/components/journey-background";
+import { Logo } from "~/components/logo";
+import { PageLoader } from "~/components/page-loader";
 
 export const Route = createFileRoute("/")({
   beforeLoad: async ({ context }) => {

@@ -20,6 +20,8 @@ import {
   ChartTooltipContent,
 } from "@stepsnaps/ui/chart";
 
+import type { SnapWithValues } from "../progress/-types";
+import { SnapCard } from "~/features/snap/snap-card";
 import { useTRPC } from "~/lib/trpc";
 
 export const Route = createFileRoute(
@@ -104,24 +106,7 @@ function MemberProgressPage() {
   );
 }
 
-interface SnapData {
-  id: string;
-  date: string;
-  values: {
-    id: string;
-    stepDefinitionId: string;
-    numericValue: string | null;
-    textValue: string | null;
-    stepDefinition: {
-      id: string;
-      name: string;
-      type: "numeric" | "text";
-      sortOrder: number;
-    };
-  }[];
-}
-
-function ReadOnlyTimeline(props: { snaps: SnapData[] }) {
+function ReadOnlyTimeline(props: { snaps: SnapWithValues[] }) {
   const sortedSnaps = [...props.snaps].reverse();
 
   if (sortedSnaps.length === 0) {
@@ -139,61 +124,9 @@ function ReadOnlyTimeline(props: { snaps: SnapData[] }) {
 
   return (
     <div className="flex max-w-2xl flex-col gap-4">
-      {sortedSnaps.map((snap) => {
-        const dateObj = new Date(snap.date + "T00:00:00");
-        const formatted = dateObj.toLocaleDateString("en-US", {
-          weekday: "short",
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-        });
-
-        const sortedValues = [...snap.values].sort(
-          (a, b) => a.stepDefinition.sortOrder - b.stepDefinition.sortOrder,
-        );
-
-        const hasValues = sortedValues.some(
-          (v) => v.numericValue !== null || v.textValue !== null,
-        );
-
-        return (
-          <Card key={snap.id}>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base">{formatted}</CardTitle>
-            </CardHeader>
-            {hasValues && (
-              <CardContent className="pt-0">
-                <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
-                  {sortedValues.map((sv) => {
-                    const value =
-                      sv.stepDefinition.type === "numeric"
-                        ? sv.numericValue
-                        : sv.textValue;
-                    if (value === null || value === "") return null;
-
-                    return (
-                      <div key={sv.id} className="flex justify-between gap-2">
-                        <span className="text-muted-foreground">
-                          {sv.stepDefinition.name}
-                        </span>
-                        <span className="font-medium">
-                          {sv.stepDefinition.type === "numeric" ? (
-                            value
-                          ) : (
-                            <span className="max-w-50 truncate" title={value}>
-                              {value}
-                            </span>
-                          )}
-                        </span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </CardContent>
-            )}
-          </Card>
-        );
-      })}
+      {sortedSnaps.map((snap) => (
+        <SnapCard key={snap.id} snap={snap} />
+      ))}
     </div>
   );
 }
@@ -207,7 +140,7 @@ const CHART_COLORS = [
 ];
 
 function ReadOnlyChart(props: {
-  snaps: SnapData[];
+  snaps: SnapWithValues[];
   startDate: string;
   endDate: string | null;
 }) {
@@ -312,7 +245,7 @@ function ReadOnlyChart(props: {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig} className="min-h-[300px] w-full">
+        <ChartContainer config={chartConfig} className="min-h-75 w-full">
           <BarChart accessibilityLayer data={chartData}>
             <CartesianGrid vertical={false} />
             <XAxis
