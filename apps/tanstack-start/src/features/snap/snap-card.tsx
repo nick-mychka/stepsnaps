@@ -9,7 +9,7 @@ import {
   TooltipTrigger,
 } from "@stepsnaps/ui/tooltip";
 
-import type { SnapWithValues } from "../-types";
+import type { SnapWithValues } from "~/routes/_authenticated/progress/-types";
 import { ActionsMenu } from "~/components/actions-menu";
 import { dayjs } from "~/lib/date";
 
