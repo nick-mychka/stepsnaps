@@ -82,10 +82,7 @@ export function SidePanel({
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="rounded-full">
                 <Avatar>
-                  <AvatarImage
-                    src={user.image ?? undefined}
-                    alt={user.name}
-                  />
+                  <AvatarImage src={user.image ?? undefined} alt={user.name} />
                   <AvatarFallback className="text-xs">
                     {user.name[0]}
                   </AvatarFallback>
@@ -115,10 +112,7 @@ export function SidePanel({
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuItem
-                  variant="destructive"
-                  onSelect={onSignOut}
-                >
+                <DropdownMenuItem variant="destructive" onSelect={onSignOut}>
                   <LogOut />
                   Log out
                 </DropdownMenuItem>

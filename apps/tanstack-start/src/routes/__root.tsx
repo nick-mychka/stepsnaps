@@ -43,9 +43,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           <HeadContent />
         </head>
         <body className="bg-background text-foreground min-h-screen font-sans antialiased">
-          <TooltipProvider>
-            {children}
-          </TooltipProvider>
+          <TooltipProvider>{children}</TooltipProvider>
           <Toaster />
           <TanStackRouterDevtools position="bottom-right" />
           <Scripts />

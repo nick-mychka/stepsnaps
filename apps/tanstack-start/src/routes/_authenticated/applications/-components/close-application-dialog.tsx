@@ -12,8 +12,9 @@ import {
 import { Label } from "@stepsnaps/ui/label";
 import { RadioGroup, RadioGroupItem } from "@stepsnaps/ui/radio-group";
 import { Spinner } from "@stepsnaps/ui/spinner";
-import { useCloseApplication } from "../-hooks/use-close-application";
+
 import { SimpleTooltip } from "~/components/simple-tooltip";
+import { useCloseApplication } from "../-hooks/use-close-application";
 
 const CLOSED_REASONS = [
   {

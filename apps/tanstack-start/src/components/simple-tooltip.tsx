@@ -1,9 +1,6 @@
 import type * as React from "react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@stepsnaps/ui/tooltip";
+
+import { Tooltip, TooltipContent, TooltipTrigger } from "@stepsnaps/ui/tooltip";
 
 interface SimpleTooltipProps {
   content?: React.ReactNode;
