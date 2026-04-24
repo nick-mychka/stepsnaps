@@ -13,12 +13,13 @@ import type { SnapWithValues } from "../types";
 import { ActionsMenu } from "~/components/actions-menu";
 import { dayjs } from "~/lib/date";
 
-export function SnapCard(props: {
+interface Props {
   snap: SnapWithValues;
   onEdit?: () => void;
   onDelete?: () => void;
-}) {
-  const { snap, onEdit, onDelete } = props;
+}
+
+export function SnapCard({ snap, onEdit, onDelete }: Props) {
   const hasActions = !!onEdit && !!onDelete;
 
   // Sort values by step definition sort order
