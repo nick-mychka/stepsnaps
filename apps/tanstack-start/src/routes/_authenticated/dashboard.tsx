@@ -48,7 +48,7 @@ import {
   BackgroundV12,
   BackgroundV13,
 } from "~/components/journey-background";
-import { dayjs } from "~/lib/date";
+import { dayjs, today } from "~/lib/date";
 import { computeStreak } from "~/lib/streak";
 import { useTRPC } from "~/lib/trpc";
 
@@ -274,8 +274,7 @@ function StartJourneyCard() {
       <CardContent>
         <Button
           onClick={() => {
-            const today = new Date().toISOString().slice(0, 10);
-            startJourney.mutate({ startDate: today });
+            startJourney.mutate({ startDate: today() });
           }}
           disabled={startJourney.isPending}
         >
