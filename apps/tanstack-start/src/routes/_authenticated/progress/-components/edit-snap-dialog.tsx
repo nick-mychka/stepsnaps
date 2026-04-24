@@ -15,7 +15,7 @@ import { Label } from "@stepsnaps/ui/label";
 import { Spinner } from "@stepsnaps/ui/spinner";
 import { Textarea } from "@stepsnaps/ui/textarea";
 
-import type { SnapWithValues } from "../-types";
+import type { SnapWithValues } from "~/features/snap";
 import { dayjs } from "~/lib/date";
 import { useTRPC } from "~/lib/trpc";
 import { useUpsertSnap } from "../-hooks/use-upsert-snap";

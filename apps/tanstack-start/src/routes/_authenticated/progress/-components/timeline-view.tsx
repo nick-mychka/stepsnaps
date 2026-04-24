@@ -9,8 +9,8 @@ import {
   EmptyTitle,
 } from "@stepsnaps/ui/empty";
 
-import type { SnapWithValues } from "../-types";
-import { SnapCard } from "~/features/snap/snap-card";
+import type { SnapWithValues } from "~/features/snap";
+import { SnapCard } from "~/features/snap";
 import { useSnaps } from "../-hooks/use-snaps";
 import { DeleteSnapDialog } from "./delete-snap-dialog";
 import { EditSnapDialog } from "./edit-snap-dialog";
