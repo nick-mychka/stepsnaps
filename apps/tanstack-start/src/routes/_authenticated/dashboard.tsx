@@ -7,6 +7,7 @@ import {
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { CalendarDays, CheckCircle2, Flame } from "lucide-react";
 
+import { cn } from "@stepsnaps/ui";
 import { Button } from "@stepsnaps/ui/button";
 import {
   Card,
@@ -48,6 +49,7 @@ import {
   BackgroundV13,
 } from "~/components/journey-background";
 import { dayjs } from "~/lib/date";
+import { computeStreak } from "~/lib/streak";
 import { useTRPC } from "~/lib/trpc";
 
 function getGreeting(name: string): string {
@@ -57,14 +59,6 @@ function getGreeting(name: string): string {
   if (hour >= 5 && hour < 12) return `Good Morning, ${firstName} 🌤️`;
   if (hour >= 12 && hour < 18) return `Good Afternoon, ${firstName} ☀️`;
   return `Good Evening, ${firstName} 🌙`;
-}
-
-function GreetingBlock({ greeting }: { greeting: string }) {
-  return (
-    <div className="mb-16">
-      <h1 className="text-3xl font-bold">{greeting}</h1>
-    </div>
-  );
 }
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
@@ -109,7 +103,15 @@ function DashboardPage() {
     <>
       <ActiveBg />
       <main className="px-8 py-12">
-        <GreetingBlock greeting={greeting} />
+        <div
+          className={cn(
+            "flex justify-between",
+            activeJourney ? "mb-4" : "mb-16",
+          )}
+        >
+          <h1 className="text-3xl font-bold">{greeting}</h1>
+          {activeJourney && <StatsRow journeyId={activeJourney.id} />}
+        </div>
         {activeJourney ? (
           <ActiveJourneyCard journey={activeJourney} />
         ) : (
@@ -146,6 +148,36 @@ function DashboardPage() {
         </div>
       </main>
     </>
+  );
+}
+
+// ─── Stats Row ────────────────────────────────────────────────────────────────
+
+function StatsRow({ journeyId }: { journeyId: string }) {
+  const trpc = useTRPC();
+  const { data: snaps } = useSuspenseQuery(
+    trpc.snap.list.queryOptions({ journeyId }),
+  );
+  const streak = computeStreak(snaps.map((s) => s.date));
+
+  return <StreakCard days={streak} />;
+}
+
+function StreakCard({ days }: { days: number }) {
+  return (
+    <Card className="w-fit py-4">
+      <CardContent className="flex items-center gap-4 px-5">
+        <span className="text-3xl" aria-hidden>
+          🔥
+        </span>
+        <div className="flex flex-col">
+          <span className="text-3xl leading-none font-bold text-orange-400">
+            {days}
+          </span>
+          <span className="text-muted-foreground text-sm">day streak</span>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 

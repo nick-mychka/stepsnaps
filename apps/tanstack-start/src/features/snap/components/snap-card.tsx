@@ -2,17 +2,18 @@ import { BookCheck, SquarePen, Trash2 } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@stepsnaps/ui/card";
 import { DropdownMenuItem } from "@stepsnaps/ui/dropdown-menu";
-import type { SnapWithValues } from "../-types";
+import type { SnapWithValues } from "../types";
 import { ActionsMenu } from "~/components/actions-menu";
 import { SimpleTooltip } from "~/components/simple-tooltip";
 import { dayjs } from "~/lib/date";
 
-export function SnapCard(props: {
+interface Props {
   snap: SnapWithValues;
   onEdit?: () => void;
   onDelete?: () => void;
-}) {
-  const { snap, onEdit, onDelete } = props;
+}
+
+export function SnapCard({ snap, onEdit, onDelete }: Props) {
   const hasActions = !!onEdit && !!onDelete;
 
   // Sort values by step definition sort order
