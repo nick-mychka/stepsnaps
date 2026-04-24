@@ -2,15 +2,9 @@ import { BookCheck, SquarePen, Trash2 } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@stepsnaps/ui/card";
 import { DropdownMenuItem } from "@stepsnaps/ui/dropdown-menu";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@stepsnaps/ui/tooltip";
-
 import type { SnapWithValues } from "../-types";
 import { ActionsMenu } from "~/components/actions-menu";
+import { SimpleTooltip } from "~/components/simple-tooltip";
 import { dayjs } from "~/lib/date";
 
 export function SnapCard(props: {
@@ -72,16 +66,9 @@ export function SnapCard(props: {
                     {sv.stepDefinition.type === "numeric" ? (
                       value
                     ) : (
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <BookCheck className="text-muted-foreground" />
-                          </TooltipTrigger>
-                          <TooltipContent className="max-w-100">
-                            {value}
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
+                      <SimpleTooltip content={value} contentClassName="max-w-100">
+                        <BookCheck className="text-muted-foreground" />
+                      </SimpleTooltip>
                     )}
                   </span>
                 </div>
