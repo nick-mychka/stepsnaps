@@ -46,13 +46,19 @@ function NavIcon({
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <Button variant="ghost" size="icon" className="group" asChild>
+        <Button
+          variant="ghost"
+          className="group h-auto w-13 flex-col gap-1 px-2 py-1"
+          asChild
+        >
           <Link to={to} activeProps={{ className: "[&>svg]:text-primary" }}>
             <Icon className="group-hover:text-primary size-5 transition-colors" />
+            <span className="text-muted-foreground group-hover:text-primary text-[10px] transition-colors">
+              {label}
+            </span>
           </Link>
         </Button>
       </TooltipTrigger>
-      <TooltipContent side="right">{label}</TooltipContent>
     </Tooltip>
   );
 }
@@ -67,16 +73,12 @@ export function SidePanel({
       <aside className="border-border bg-background flex w-16 flex-col items-center border-r py-8">
         {/* Top — nav icons */}
         <div className="flex flex-col items-center gap-3">
-          <NavIcon to="/dashboard" label="Dashboard" icon={LayoutDashboard} />
+          <NavIcon to="/dashboard" label="Home" icon={LayoutDashboard} />
           <NavIcon to="/snap/new" label="Snap" icon={Camera} />
           {hasActiveJourney && (
-            <NavIcon
-              to="/applications"
-              label="Applications"
-              icon={NotebookText}
-            />
+            <NavIcon to="/applications" label="Jobs" icon={NotebookText} />
           )}
-          <NavIcon to="/progress" label="Progress" icon={ChartSpline} />
+          <NavIcon to="/progress" label="Stats" icon={ChartSpline} />
         </div>
 
         {/* Bottom — theme + account */}
