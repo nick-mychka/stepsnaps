@@ -22,6 +22,7 @@ import { Spinner } from "@stepsnaps/ui/spinner";
 import { Textarea } from "@stepsnaps/ui/textarea";
 import { toast } from "@stepsnaps/ui/toast";
 
+import { today } from "~/lib/date";
 import { useTRPC } from "~/lib/trpc";
 
 export const Route = createFileRoute("/_authenticated/snap/new")({
@@ -69,14 +70,12 @@ function SnapForm(props: { journeyId: string }) {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  const today = new Date().toISOString().slice(0, 10);
-
   const { data: stepDefinitions = [] } = useSuspenseQuery(
     trpc.stepDefinition.active.queryOptions(),
   );
 
   const { data: existingSnap, isLoading: isLoadingSnap } = useQuery(
-    trpc.snap.byDate.queryOptions({ journeyId, date: today }),
+    trpc.snap.byDate.queryOptions({ journeyId, date: today() }),
   );
 
   const [values, setValues] = useState<Record<string, string>>({});
@@ -132,7 +131,7 @@ function SnapForm(props: { journeyId: string }) {
 
     upsertSnap.mutate({
       journeyId,
-      date: today,
+      date: today(),
       values: snapValues,
     });
   };
@@ -153,7 +152,7 @@ function SnapForm(props: { journeyId: string }) {
             {existingSnap ? "Edit Today's Snap" : "New Snap"}
           </CardTitle>
           <CardDescription>
-            {today} — Record what you accomplished today.
+            {today()} — Record what you accomplished today.
           </CardDescription>
         </CardHeader>
         <CardContent>
