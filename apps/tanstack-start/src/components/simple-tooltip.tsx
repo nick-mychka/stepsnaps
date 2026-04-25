@@ -15,7 +15,7 @@ export function SimpleTooltip({
   side,
   contentClassName,
 }: SimpleTooltipProps) {
-  if (!content) return children;
+  if (content == null) return children;
   return (
     <Tooltip>
       <TooltipTrigger asChild>{children}</TooltipTrigger>
