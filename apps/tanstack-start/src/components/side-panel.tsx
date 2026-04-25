@@ -44,22 +44,18 @@ function NavIcon({
   icon: React.ElementType;
 }) {
   return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <Button
-          variant="ghost"
-          className="group h-auto w-13 flex-col gap-1 px-2 py-1"
-          asChild
-        >
-          <Link to={to} activeProps={{ className: "[&>svg]:text-primary" }}>
-            <Icon className="group-hover:text-primary size-5 transition-colors" />
-            <span className="text-muted-foreground group-hover:text-primary text-[10px] transition-colors">
-              {label}
-            </span>
-          </Link>
-        </Button>
-      </TooltipTrigger>
-    </Tooltip>
+    <Button
+      variant="ghost"
+      className="group h-auto w-13 flex-col gap-1 px-2 py-1"
+      asChild
+    >
+      <Link to={to} activeProps={{ className: "[&>svg]:text-primary" }}>
+        <Icon className="group-hover:text-primary size-5 transition-colors" />
+        <span className="text-muted-foreground group-hover:text-primary text-[10px] transition-colors">
+          {label}
+        </span>
+      </Link>
+    </Button>
   );
 }
 
