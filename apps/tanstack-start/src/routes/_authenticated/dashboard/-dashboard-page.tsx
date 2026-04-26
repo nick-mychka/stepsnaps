@@ -16,7 +16,7 @@ export function DashboardPage() {
   const [activeBg, setActiveBg] =
     useState<(typeof BG_VARIANTS)[number]["id"]>(10);
 
-  const greeting = getGreeting(session?.user.name ?? "");
+  const greeting = getGreeting(session?.user.name ?? "", session?.user.id);
 
   const ActiveBg =
     BG_VARIANTS.find((v) => v.id === activeBg)?.Component ??
