@@ -12,13 +12,8 @@ import {
 import { Label } from "@stepsnaps/ui/label";
 import { RadioGroup, RadioGroupItem } from "@stepsnaps/ui/radio-group";
 import { Spinner } from "@stepsnaps/ui/spinner";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@stepsnaps/ui/tooltip";
 
+import { SimpleTooltip } from "~/components/simple-tooltip";
 import { useCloseApplication } from "../-hooks/use-close-application";
 
 const CLOSED_REASONS = [
@@ -84,38 +79,35 @@ export function CloseApplicationDialog(props: CloseApplicationDialogProps) {
             </DialogDescription>
           </DialogHeader>
           <div className="py-4">
-            <TooltipProvider>
-              <RadioGroup
-                value={closedReason}
-                onValueChange={(v) =>
-                  setClosedReason(
-                    v as "rejected" | "withdrawn" | "no_response" | "success",
-                  )
-                }
-              >
-                {CLOSED_REASONS.map((reason) => (
-                  <div key={reason.value} className="flex items-center gap-3">
-                    <RadioGroupItem
-                      value={reason.value}
-                      id={`reason-${reason.value}`}
-                    />
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Label
-                          htmlFor={`reason-${reason.value}`}
-                          className="cursor-pointer"
-                        >
-                          {reason.label}
-                        </Label>
-                      </TooltipTrigger>
-                      <TooltipContent side="right" className="max-w-xs">
-                        {reason.description}
-                      </TooltipContent>
-                    </Tooltip>
-                  </div>
-                ))}
-              </RadioGroup>
-            </TooltipProvider>
+            <RadioGroup
+              value={closedReason}
+              onValueChange={(v) =>
+                setClosedReason(
+                  v as "rejected" | "withdrawn" | "no_response" | "success",
+                )
+              }
+            >
+              {CLOSED_REASONS.map((reason) => (
+                <div key={reason.value} className="flex items-center gap-3">
+                  <RadioGroupItem
+                    value={reason.value}
+                    id={`reason-${reason.value}`}
+                  />
+                  <SimpleTooltip
+                    content={reason.description}
+                    side="right"
+                    contentClassName="max-w-xs"
+                  >
+                    <Label
+                      htmlFor={`reason-${reason.value}`}
+                      className="cursor-pointer"
+                    >
+                      {reason.label}
+                    </Label>
+                  </SimpleTooltip>
+                </div>
+              ))}
+            </RadioGroup>
           </div>
           <DialogFooter>
             <Button

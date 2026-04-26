@@ -13,6 +13,7 @@ import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import type { AppRouter } from "@stepsnaps/api";
 import { ThemeProvider } from "@stepsnaps/ui/theme";
 import { Toaster } from "@stepsnaps/ui/toast";
+import { TooltipProvider } from "@stepsnaps/ui/tooltip";
 
 import appCss from "~/styles.css?url";
 
@@ -41,8 +42,8 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <head>
           <HeadContent />
         </head>
-        <body className="bg-background text-foreground min-h-screen font-sans antialiased">
-          {children}
+        <body className="bg-muted dark:bg-background text-foreground min-h-screen font-sans antialiased">
+          <TooltipProvider delayDuration={200}>{children}</TooltipProvider>
           <Toaster />
           <TanStackRouterDevtools position="bottom-right" />
           <Scripts />
