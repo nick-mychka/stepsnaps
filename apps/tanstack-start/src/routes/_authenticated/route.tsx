@@ -41,7 +41,7 @@ function AuthedLayout() {
 
   return (
     <div className="flex h-screen flex-col">
-      <header className="border-b">
+      <header className="bg-background border-b dark:bg-transparent">
         <div className="flex h-16 items-center justify-between px-6">
           <Link to="/dashboard">
             <Logo className="text-xl font-bold tracking-tight" />

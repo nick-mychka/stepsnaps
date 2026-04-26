@@ -42,7 +42,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <head>
           <HeadContent />
         </head>
-        <body className="bg-background text-foreground min-h-screen font-sans antialiased">
+        <body className="bg-muted dark:bg-background text-foreground min-h-screen font-sans antialiased">
           <TooltipProvider delayDuration={200}>{children}</TooltipProvider>
           <Toaster />
           <TanStackRouterDevtools position="bottom-right" />
