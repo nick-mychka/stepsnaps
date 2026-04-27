@@ -1,6 +1,12 @@
 import { BookCheck, SquarePen, Trash2 } from "lucide-react";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@stepsnaps/ui/card";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@stepsnaps/ui/card";
 import { DropdownMenuItem } from "@stepsnaps/ui/dropdown-menu";
 
 import type { SnapWithValues } from "../types";
@@ -28,29 +34,27 @@ export function SnapCard({ snap, onEdit, onDelete }: Props) {
 
   return (
     <Card>
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-base">
-            {dayjs(snap.date).format("ddd, MMM D, YYYY")}
-          </CardTitle>
-          <div className="flex gap-1">
-            {hasActions && (
-              <ActionsMenu>
-                <DropdownMenuItem onSelect={onEdit}>
-                  <SquarePen />
-                  Edit
-                </DropdownMenuItem>
-                <DropdownMenuItem onSelect={onDelete}>
-                  <Trash2 />
-                  Delete
-                </DropdownMenuItem>
-              </ActionsMenu>
-            )}
-          </div>
-        </div>
+      <CardHeader>
+        <CardTitle className="text-base">
+          {dayjs(snap.date).format("ddd, MMM D, YYYY")}
+        </CardTitle>
+        <CardAction>
+          {hasActions && (
+            <ActionsMenu>
+              <DropdownMenuItem onSelect={onEdit}>
+                <SquarePen />
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={onDelete}>
+                <Trash2 />
+                Delete
+              </DropdownMenuItem>
+            </ActionsMenu>
+          )}
+        </CardAction>
       </CardHeader>
       {hasValues && (
-        <CardContent className="pt-0">
+        <CardContent>
           <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
             {sortedValues.map((sv) => {
               const value =
