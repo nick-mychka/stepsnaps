@@ -2,15 +2,9 @@ import { useState } from "react";
 import { ChartSpline } from "lucide-react";
 
 import { Button } from "@stepsnaps/ui/button";
-import {
-  Empty,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-} from "@stepsnaps/ui/empty";
 
 import type { SnapWithValues } from "~/features/snap";
+import { SimpleEmpty } from "~/components/simple-empth";
 import { SnapCard } from "~/features/snap";
 import { dayjs } from "~/lib/date";
 import { useSnaps } from "../-hooks/use-snaps";
@@ -122,17 +116,11 @@ export function TimelineView(props: { journeyId: string }) {
       </div>
 
       {isEmpty ? (
-        <Empty>
-          <EmptyHeader>
-            <EmptyMedia variant="icon">
-              <ChartSpline />
-            </EmptyMedia>
-            <EmptyTitle>No snaps yet</EmptyTitle>
-            <EmptyDescription>
-              Start logging daily snaps to see your progress here.
-            </EmptyDescription>
-          </EmptyHeader>
-        </Empty>
+        <SimpleEmpty
+          icon={<ChartSpline />}
+          title="No snaps yet"
+          description="Start logging daily snaps to see your progress here."
+        />
       ) : granularity === "daily" ? (
         <div className="flex max-w-2xl flex-col gap-4">
           {dailySnaps.map((snap) => (

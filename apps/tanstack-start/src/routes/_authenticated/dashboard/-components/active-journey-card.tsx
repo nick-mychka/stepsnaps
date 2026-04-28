@@ -35,10 +35,10 @@ export function ActiveJourneyCard(props: {
     <>
       <Card className="max-w-lg">
         <CardHeader>
-          <div className="flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2 text-2xl font-bold">
             <Flame className="size-5 text-orange-400" />
-            <CardTitle className="text-2xl font-bold">Active Journey</CardTitle>
-          </div>
+            Active Journey
+          </CardTitle>
           <CardDescription>
             Started {dayjs(journey.startDate).format("MMMM D, YYYY")}
           </CardDescription>

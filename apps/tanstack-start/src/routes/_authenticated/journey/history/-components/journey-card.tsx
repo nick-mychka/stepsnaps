@@ -32,16 +32,14 @@ export function JourneyCard({ journey, onEdit }: Props) {
   return (
     <Card className="max-w-lg">
       <CardHeader>
-        <div className="flex items-center gap-2">
-          <CardTitle className="text-lg">
-            {journey.companyName ?? "Journey"}
-          </CardTitle>
+        <CardTitle className="flex items-center gap-2 text-lg">
+          {journey.companyName ?? "Journey"}
           <Badge
             variant={journey.status === "active" ? "default" : "secondary"}
           >
             {journey.status}
           </Badge>
-        </div>
+        </CardTitle>
         <CardDescription>
           {journey.startDate} &mdash; {journey.endDate ?? "present"} &middot;{" "}
           {duration} day
