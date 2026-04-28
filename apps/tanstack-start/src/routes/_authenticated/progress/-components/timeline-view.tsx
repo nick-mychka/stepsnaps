@@ -1,15 +1,8 @@
 import { useState } from "react";
 import { ChartSpline } from "lucide-react";
 
-import {
-  Empty,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-} from "@stepsnaps/ui/empty";
-
 import type { SnapWithValues } from "~/features/snap";
+import { SimpleEmpty } from "~/components/simple-empth";
 import { SnapCard } from "~/features/snap";
 import { useSnaps } from "../-hooks/use-snaps";
 import { DeleteSnapDialog } from "./delete-snap-dialog";
@@ -29,17 +22,11 @@ export function TimelineView(props: { journeyId: string }) {
   return (
     <>
       {sortedSnaps.length === 0 ? (
-        <Empty>
-          <EmptyHeader>
-            <EmptyMedia variant="icon">
-              <ChartSpline />
-            </EmptyMedia>
-            <EmptyTitle>No snaps yet</EmptyTitle>
-            <EmptyDescription>
-              Start logging daily snaps to see your progress here.
-            </EmptyDescription>
-          </EmptyHeader>
-        </Empty>
+        <SimpleEmpty
+          icon={<ChartSpline />}
+          title="No snaps yet"
+          description="Start logging daily snaps to see your progress here."
+        />
       ) : (
         <div className="flex max-w-2xl flex-col gap-4">
           {sortedSnaps.map((snap) => (
