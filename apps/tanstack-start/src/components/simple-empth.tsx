@@ -10,9 +10,9 @@ import {
 } from "@stepsnaps/ui/empty";
 
 interface SimpleEmptyProps {
-  icon: React.ReactElement;
-  title: string;
-  description: string;
+  icon?: React.ReactElement;
+  title: React.ReactNode;
+  description?: React.ReactNode;
   contentClassName?: string;
   children?: React.ReactNode;
 }
@@ -27,9 +27,9 @@ export function SimpleEmpty({
   return (
     <Empty>
       <EmptyHeader>
-        <EmptyMedia variant="icon">{icon}</EmptyMedia>
+        {icon && <EmptyMedia variant="icon">{icon}</EmptyMedia>}
         <EmptyTitle>{title}</EmptyTitle>
-        <EmptyDescription>{description}</EmptyDescription>
+        {description && <EmptyDescription>{description}</EmptyDescription>}
       </EmptyHeader>
       {children && (
         <EmptyContent className={contentClassName}>{children}</EmptyContent>
