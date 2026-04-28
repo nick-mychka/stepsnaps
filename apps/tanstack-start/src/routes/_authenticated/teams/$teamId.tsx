@@ -16,6 +16,7 @@ import { Badge } from "@stepsnaps/ui/badge";
 import { Button } from "@stepsnaps/ui/button";
 import {
   Card,
+  CardAction,
   CardContent,
   CardDescription,
   CardHeader,
@@ -194,13 +195,11 @@ function InviteSection(props: { teamId: string }) {
   return (
     <Card>
       <CardHeader>
-        <div className="flex items-center justify-between">
-          <div>
-            <CardTitle>Invite Links</CardTitle>
-            <CardDescription>
-              Generate links to invite people to your team.
-            </CardDescription>
-          </div>
+        <CardTitle>Invite Links</CardTitle>
+        <CardDescription>
+          Generate links to invite people to your team.
+        </CardDescription>
+        <CardAction>
           <Button
             size="sm"
             onClick={() => createInvite.mutate({ teamId })}
@@ -209,7 +208,7 @@ function InviteSection(props: { teamId: string }) {
             {createInvite.isPending && <Spinner />}
             Generate Link
           </Button>
-        </div>
+        </CardAction>
       </CardHeader>
       <CardContent>
         {showLink && (
