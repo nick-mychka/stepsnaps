@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { Button } from "@stepsnaps/ui/button";
 import {
@@ -34,7 +34,6 @@ type ViewMode = "timeline" | "chart";
 function MemberProgressPage() {
   const { teamId, userId } = Route.useParams();
   const trpc = useTRPC();
-  const navigate = useNavigate();
   const [view, setView] = useState<ViewMode>("timeline");
 
   const { data } = useSuspenseQuery(
@@ -43,13 +42,10 @@ function MemberProgressPage() {
 
   return (
     <main className="container mx-auto py-8">
-      <Button
-        variant="ghost"
-        size="sm"
-        className="mb-4"
-        onClick={() => navigate({ to: "/teams/$teamId", params: { teamId } })}
-      >
-        &larr; Back to Team
+      <Button variant="ghost" size="sm" className="mb-4" asChild>
+        <Link to="/teams/$teamId" params={{ teamId }}>
+          &larr; Back to Team
+        </Link>
       </Button>
 
       <div className="mb-6 flex items-center justify-between">

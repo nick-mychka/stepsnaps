@@ -7,9 +7,9 @@ import {
 } from "@tanstack/react-query";
 import {
   createFileRoute,
+  Link,
   Outlet,
   useMatch,
-  useNavigate,
 } from "@tanstack/react-router";
 
 import { Badge } from "@stepsnaps/ui/badge";
@@ -53,7 +53,6 @@ function TeamDetailLayout() {
 function TeamDetailPage() {
   const { teamId } = Route.useParams();
   const trpc = useTRPC();
-  const navigate = useNavigate();
   const { data: team } = useSuspenseQuery(
     trpc.team.byId.queryOptions({ id: teamId }),
   );
@@ -63,13 +62,8 @@ function TeamDetailPage() {
 
   return (
     <main className="container mx-auto py-8">
-      <Button
-        variant="ghost"
-        size="sm"
-        className="mb-4"
-        onClick={() => navigate({ to: "/teams" })}
-      >
-        &larr; Back to Teams
+      <Button variant="ghost" size="sm" className="mb-4" asChild>
+        <Link to="/teams">&larr; Back to Teams</Link>
       </Button>
 
       <div className="mb-6 flex items-center gap-3">
@@ -114,17 +108,13 @@ function TeamDetailPage() {
                       <Badge variant="outline">Admin</Badge>
                     )}
                     {team.isAdmin && member.userId !== team.creatorId && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() =>
-                          navigate({
-                            to: "/teams/$teamId/member/$userId",
-                            params: { teamId, userId: member.userId },
-                          })
-                        }
-                      >
-                        View Progress
+                      <Button variant="ghost" size="sm" asChild>
+                        <Link
+                          to="/teams/$teamId/member/$userId"
+                          params={{ teamId, userId: member.userId }}
+                        >
+                          View Progress
+                        </Link>
                       </Button>
                     )}
                   </div>
