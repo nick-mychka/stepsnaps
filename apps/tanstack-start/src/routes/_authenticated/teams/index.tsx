@@ -11,6 +11,7 @@ import { Badge } from "@stepsnaps/ui/badge";
 import { Button } from "@stepsnaps/ui/button";
 import {
   Card,
+  CardAction,
   CardDescription,
   CardHeader,
   CardTitle,
@@ -86,14 +87,14 @@ function TeamsPage() {
               }
             >
               <CardHeader className="pb-2">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-lg">{team.name}</CardTitle>
-                  {team.isAdmin && <Badge variant="secondary">Admin</Badge>}
-                </div>
+                <CardTitle className="text-lg">{team.name}</CardTitle>
                 <CardDescription>
                   Created by {team.creatorName} &middot; {team.memberCount}{" "}
                   {team.memberCount === 1 ? "member" : "members"}
                 </CardDescription>
+                <CardAction>
+                  {team.isAdmin && <Badge variant="secondary">Admin</Badge>}
+                </CardAction>
               </CardHeader>
             </Card>
           ))}
