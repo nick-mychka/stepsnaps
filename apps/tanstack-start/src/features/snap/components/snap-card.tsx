@@ -10,11 +10,12 @@ import { dayjs } from "~/lib/date";
 
 interface Props {
   snap: SnapWithValues;
+  label?: string;
   onEdit?: () => void;
   onDelete?: () => void;
 }
 
-export function SnapCard({ snap, onEdit, onDelete }: Props) {
+export function SnapCard({ snap, label, onEdit, onDelete }: Props) {
   const hasActions = !!onEdit && !!onDelete;
 
   // Sort values by step definition sort order
@@ -31,7 +32,7 @@ export function SnapCard({ snap, onEdit, onDelete }: Props) {
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <CardTitle className="text-base">
-            {dayjs(snap.date).format("ddd, MMM D, YYYY")}
+            {label ?? dayjs(snap.date).format("ddd, MMM D, YYYY")}
           </CardTitle>
           <div className="flex gap-1">
             {hasActions && (
