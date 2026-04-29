@@ -43,7 +43,7 @@ function SnapFormPage() {
 
   if (!activeJourney) {
     return (
-      <main className="container mx-auto max-w-lg py-8">
+      <main className="container mx-auto py-8">
         <SimpleEmpty
           title="No Active Journey"
           description="Start a journey from the dashboard to begin logging snaps."
