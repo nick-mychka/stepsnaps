@@ -11,6 +11,7 @@ import { Badge } from "@stepsnaps/ui/badge";
 import { Button } from "@stepsnaps/ui/button";
 import {
   Card,
+  CardAction,
   CardDescription,
   CardHeader,
   CardTitle,
@@ -25,19 +26,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@stepsnaps/ui/dialog";
-import {
-  Empty,
-  EmptyContent,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-} from "@stepsnaps/ui/empty";
 import { Input } from "@stepsnaps/ui/input";
 import { Label } from "@stepsnaps/ui/label";
 import { Spinner } from "@stepsnaps/ui/spinner";
 import { toast } from "@stepsnaps/ui/toast";
 
+import { SimpleEmpty } from "~/components/simple-empth";
 import { useTRPC } from "~/lib/trpc";
 
 export const Route = createFileRoute("/_authenticated/teams/")({
@@ -61,20 +55,14 @@ function TeamsPage() {
       </div>
 
       {teams.length === 0 ? (
-        <Empty>
-          <EmptyHeader>
-            <EmptyMedia variant="icon">
-              <Users />
-            </EmptyMedia>
-            <EmptyTitle>No teams yet</EmptyTitle>
-            <EmptyDescription>
-              Create a team to start tracking progress with peers.
-            </EmptyDescription>
-          </EmptyHeader>
-          <EmptyContent className="flex-row justify-center gap-2">
-            <CreateTeamDialog />
-          </EmptyContent>
-        </Empty>
+        <SimpleEmpty
+          icon={<Users />}
+          title="No teams yet"
+          description="Create a team to start tracking progress with peers."
+          contentClassName="flex-row justify-center gap-2"
+        >
+          <CreateTeamDialog />
+        </SimpleEmpty>
       ) : (
         <div className="grid max-w-2xl gap-4">
           {teams.map((team) => (
@@ -86,14 +74,14 @@ function TeamsPage() {
               }
             >
               <CardHeader className="pb-2">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-lg">{team.name}</CardTitle>
-                  {team.isAdmin && <Badge variant="secondary">Admin</Badge>}
-                </div>
+                <CardTitle className="text-lg">{team.name}</CardTitle>
                 <CardDescription>
                   Created by {team.creatorName} &middot; {team.memberCount}{" "}
                   {team.memberCount === 1 ? "member" : "members"}
                 </CardDescription>
+                <CardAction>
+                  {team.isAdmin && <Badge variant="secondary">Admin</Badge>}
+                </CardAction>
               </CardHeader>
             </Card>
           ))}

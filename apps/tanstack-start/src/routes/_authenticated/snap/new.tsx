@@ -5,7 +5,7 @@ import {
   useQueryClient,
   useSuspenseQuery,
 } from "@tanstack/react-query";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 
 import { Button } from "@stepsnaps/ui/button";
 import {
@@ -39,7 +39,6 @@ function SnapFormPage() {
   const { data: activeJourney } = useSuspenseQuery(
     trpc.journey.active.queryOptions(),
   );
-  const navigate = useNavigate();
 
   if (!activeJourney) {
     return (
@@ -52,8 +51,8 @@ function SnapFormPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button onClick={() => navigate({ to: "/dashboard" })}>
-              Go to Dashboard
+            <Button asChild>
+              <Link to="/dashboard">Go to Dashboard</Link>
             </Button>
           </CardContent>
         </Card>

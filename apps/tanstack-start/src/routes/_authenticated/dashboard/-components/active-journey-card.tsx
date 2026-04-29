@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { CalendarDays, CheckCircle2, Flame } from "lucide-react";
 
 import { Button } from "@stepsnaps/ui/button";
@@ -28,17 +28,16 @@ export function ActiveJourneyCard(props: {
   };
 }) {
   const { journey } = props;
-  const navigate = useNavigate();
   const [showFinishDialog, setShowFinishDialog] = useState(false);
 
   return (
     <>
       <Card className="max-w-lg">
         <CardHeader>
-          <div className="flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2 text-2xl font-bold">
             <Flame className="size-5 text-orange-400" />
-            <CardTitle className="text-2xl font-bold">Active Journey</CardTitle>
-          </div>
+            Active Journey
+          </CardTitle>
           <CardDescription>
             Started {dayjs(journey.startDate).format("MMMM D, YYYY")}
           </CardDescription>
@@ -62,12 +61,8 @@ export function ActiveJourneyCard(props: {
           <p className="text-muted-foreground text-sm">of your journey</p>
         </CardContent>
         <CardFooter className="pt-4 pb-6">
-          <Button
-            size="lg"
-            className="w-full"
-            onClick={() => void navigate({ to: "/snap/new" })}
-          >
-            Log Today's Snap
+          <Button size="lg" className="w-full" asChild>
+            <Link to="/snap/new">Log Today's Snap</Link>
           </Button>
         </CardFooter>
       </Card>
