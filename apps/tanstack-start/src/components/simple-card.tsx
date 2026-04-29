@@ -13,12 +13,9 @@ import {
 interface SimpleCardProps {
   title?: React.ReactNode;
   description?: React.ReactNode;
-  action?: React.ReactNode;
-
-  children?: React.ReactNode;
-
+  actionSlot?: React.ReactNode;
+  children: React.ReactNode;
   footer?: React.ReactNode;
-
   className?: string;
   headerClassName?: string;
   titleClassName?: string;
@@ -30,7 +27,7 @@ interface SimpleCardProps {
 export function SimpleCard({
   title,
   description,
-  action,
+  actionSlot,
   children,
   footer,
   className,
@@ -40,31 +37,26 @@ export function SimpleCard({
   contentClassName,
   footerClassName,
 }: SimpleCardProps) {
-  const hasHeader = title != null || description != null || action != null;
+  const hasHeader =
+    Boolean(title) || Boolean(description) || Boolean(actionSlot);
 
   return (
     <Card className={className}>
       {hasHeader && (
         <CardHeader className={headerClassName}>
-          {title != null && (
-            <CardTitle className={titleClassName}>{title}</CardTitle>
-          )}
-          {description != null && (
+          {title && <CardTitle className={titleClassName}>{title}</CardTitle>}
+          {description && (
             <CardDescription className={descriptionClassName}>
               {description}
             </CardDescription>
           )}
-          {action != null && <CardAction>{action}</CardAction>}
+          {actionSlot && <CardAction>{actionSlot}</CardAction>}
         </CardHeader>
       )}
 
-      {children != null && (
-        <CardContent className={contentClassName}>{children}</CardContent>
-      )}
+      <CardContent className={contentClassName}>{children}</CardContent>
 
-      {footer != null && (
-        <CardFooter className={footerClassName}>{footer}</CardFooter>
-      )}
+      {footer && <CardFooter className={footerClassName}>{footer}</CardFooter>}
     </Card>
   );
 }
