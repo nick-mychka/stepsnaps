@@ -117,12 +117,14 @@ function ReadOnlyTimeline(props: { snaps: SnapWithValues[] }) {
   );
 }
 
-function ReadOnlyChart(props: {
+function ReadOnlyChart({
+  snaps,
+  startDate,
+  endDate,
+}: {
   snaps: SnapWithValues[];
   startDate: string;
   endDate: string | null;
 }) {
-  const { snaps, startDate, endDate } = props;
-
   return <SnapCharts snaps={snaps} startDate={startDate} endDate={endDate} />;
 }

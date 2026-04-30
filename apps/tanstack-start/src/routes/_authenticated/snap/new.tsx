@@ -63,8 +63,7 @@ function SnapFormPage() {
   return <SnapForm journeyId={activeJourney.id} />;
 }
 
-function SnapForm(props: { journeyId: string }) {
-  const { journeyId } = props;
+function SnapForm({ journeyId }: { journeyId: string }) {
   const trpc = useTRPC();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
