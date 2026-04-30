@@ -10,8 +10,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@stepsnaps/ui/dialog";
+import { Field, FieldLabel } from "@stepsnaps/ui/field";
 import { Input } from "@stepsnaps/ui/input";
-import { Label } from "@stepsnaps/ui/label";
 import { Spinner } from "@stepsnaps/ui/spinner";
 import { Textarea } from "@stepsnaps/ui/textarea";
 
@@ -154,8 +154,8 @@ export function EditSnapDialog(props: {
         </DialogHeader>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           {displaySteps.map((sd) => (
-            <div key={sd.id} className="flex flex-col gap-1.5">
-              <Label htmlFor={`edit-${sd.id}`}>{sd.name}</Label>
+            <Field key={sd.id} className="flex flex-col gap-1.5">
+              <FieldLabel htmlFor={`edit-${sd.id}`}>{sd.name}</FieldLabel>
               {sd.type === "numeric" ? (
                 <Input
                   id={`edit-${sd.id}`}
@@ -184,7 +184,7 @@ export function EditSnapDialog(props: {
                   }
                 />
               )}
-            </div>
+            </Field>
           ))}
           <DialogFooter>
             <Button

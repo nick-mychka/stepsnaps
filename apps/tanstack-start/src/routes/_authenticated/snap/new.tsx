@@ -15,8 +15,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@stepsnaps/ui/card";
+import { Field, FieldLabel } from "@stepsnaps/ui/field";
 import { Input } from "@stepsnaps/ui/input";
-import { Label } from "@stepsnaps/ui/label";
 import { Progress } from "@stepsnaps/ui/progress";
 import { Spinner } from "@stepsnaps/ui/spinner";
 import { Textarea } from "@stepsnaps/ui/textarea";
@@ -173,8 +173,8 @@ function SnapForm(props: { journeyId: string }) {
                 const numericVal = Number(values[sd.id] ?? 0) || 0;
 
                 return (
-                  <div key={sd.id} className="flex flex-col gap-1.5">
-                    <Label htmlFor={sd.id}>{sd.name}</Label>
+                  <Field key={sd.id} className="flex flex-col gap-1.5">
+                    <FieldLabel htmlFor={sd.id}>{sd.name}</FieldLabel>
                     {sd.type === "numeric" ? (
                       <>
                         <Input
@@ -216,7 +216,7 @@ function SnapForm(props: { journeyId: string }) {
                         }
                       />
                     )}
-                  </div>
+                  </Field>
                 );
               })}
 

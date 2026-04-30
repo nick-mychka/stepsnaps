@@ -26,8 +26,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@stepsnaps/ui/dialog";
+import { Field, FieldLabel } from "@stepsnaps/ui/field";
 import { Input } from "@stepsnaps/ui/input";
-import { Label } from "@stepsnaps/ui/label";
 import { Spinner } from "@stepsnaps/ui/spinner";
 import { toast } from "@stepsnaps/ui/toast";
 
@@ -130,8 +130,8 @@ function CreateTeamDialog() {
               Create a new team to track progress with peers.
             </DialogDescription>
           </DialogHeader>
-          <div className="py-4">
-            <Label htmlFor="team-name">Team Name</Label>
+          <Field className="py-4">
+            <FieldLabel htmlFor="team-name">Team Name</FieldLabel>
             <Input
               id="team-name"
               value={name}
@@ -140,7 +140,7 @@ function CreateTeamDialog() {
               maxLength={256}
               className="mt-1.5"
             />
-          </div>
+          </Field>
           <DialogFooter>
             <DialogClose asChild>
               <Button variant="outline" type="button">
