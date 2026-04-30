@@ -79,9 +79,7 @@ function groupSnapsByWeek(
   });
 }
 
-export function TimelineView(props: { journeyId: string }) {
-  const { journeyId } = props;
-
+export function TimelineView({ journeyId }: { journeyId: string }) {
   const { data: snaps = [] } = useSnaps(journeyId);
 
   const [granularity, setGranularity] = useState<Granularity>("daily");

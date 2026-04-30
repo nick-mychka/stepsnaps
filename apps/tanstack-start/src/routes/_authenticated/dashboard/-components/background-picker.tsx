@@ -30,11 +30,13 @@ export const BG_VARIANTS = [
 
 export type BgVariantId = (typeof BG_VARIANTS)[number]["id"];
 
-export function BackgroundPicker(props: {
+export function BackgroundPicker({
+  activeBg,
+  onChange,
+}: {
   activeBg: BgVariantId;
   onChange: (id: BgVariantId) => void;
 }) {
-  const { activeBg, onChange } = props;
   return (
     <div className="mt-10 max-w-xl">
       <p className="text-muted-foreground mb-3 text-xs font-semibold tracking-widest uppercase">

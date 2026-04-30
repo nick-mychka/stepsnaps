@@ -156,8 +156,7 @@ function TeamDetailPage() {
   );
 }
 
-function InviteSection(props: { teamId: string }) {
-  const { teamId } = props;
+function InviteSection({ teamId }: { teamId: string }) {
   const trpc = useTRPC();
   const queryClient = useQueryClient();
   const [showLink, setShowLink] = useState<string | null>(null);
