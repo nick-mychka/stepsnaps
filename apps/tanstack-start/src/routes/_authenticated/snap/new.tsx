@@ -22,6 +22,7 @@ import { Spinner } from "@stepsnaps/ui/spinner";
 import { Textarea } from "@stepsnaps/ui/textarea";
 import { toast } from "@stepsnaps/ui/toast";
 
+import { SimpleEmpty } from "~/components/simple-empth";
 import { today } from "~/lib/date";
 import { useTRPC } from "~/lib/trpc";
 
@@ -43,19 +44,14 @@ function SnapFormPage() {
   if (!activeJourney) {
     return (
       <main className="container mx-auto py-8">
-        <Card className="max-w-lg">
-          <CardHeader>
-            <CardTitle>No Active Journey</CardTitle>
-            <CardDescription>
-              Start a journey from the dashboard to begin logging snaps.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button asChild>
-              <Link to="/dashboard">Go to Dashboard</Link>
-            </Button>
-          </CardContent>
-        </Card>
+        <SimpleEmpty
+          title="No Active Journey"
+          description="Start a journey from the dashboard to begin logging snaps."
+        >
+          <Button asChild>
+            <Link to="/dashboard">Go to Dashboard</Link>
+          </Button>
+        </SimpleEmpty>
       </main>
     );
   }
