@@ -18,7 +18,9 @@ import { ActionsMenu } from "~/components/actions-menu";
 import { dayjs } from "~/lib/date";
 import { FinishJourneyDialog } from "./finish-journey-dialog";
 
-export function ActiveJourneyCard(props: {
+export function ActiveJourneyCard({
+  journey,
+}: {
   journey: {
     id: string;
     startDate: string;
@@ -27,7 +29,6 @@ export function ActiveJourneyCard(props: {
     offerDetails: string | null;
   };
 }) {
-  const { journey } = props;
   const [showFinishDialog, setShowFinishDialog] = useState(false);
 
   return (

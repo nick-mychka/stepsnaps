@@ -10,8 +10,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@stepsnaps/ui/dialog";
+import { Field, FieldLabel } from "@stepsnaps/ui/field";
 import { Input } from "@stepsnaps/ui/input";
-import { Label } from "@stepsnaps/ui/label";
 import { Spinner } from "@stepsnaps/ui/spinner";
 import { Textarea } from "@stepsnaps/ui/textarea";
 
@@ -20,13 +20,17 @@ import { dayjs } from "~/lib/date";
 import { useTRPC } from "~/lib/trpc";
 import { useUpsertSnap } from "../-hooks/use-upsert-snap";
 
-export function EditSnapDialog(props: {
+export function EditSnapDialog({
+  journeyId,
+  snap,
+  open,
+  onOpenChange,
+}: {
   journeyId: string;
   snap: SnapWithValues;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
-  const { journeyId, snap } = props;
   const trpc = useTRPC();
 
   // Load all step definitions (including ones that may not be in this snap)
@@ -48,7 +52,7 @@ export function EditSnapDialog(props: {
   });
 
   const upsertSnap = useUpsertSnap({
-    onSuccess: () => props.onOpenChange(false),
+    onSuccess: () => onOpenChange(false),
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -144,7 +148,7 @@ export function EditSnapDialog(props: {
   displaySteps.sort((a, b) => a.sortOrder - b.sortOrder);
 
   return (
-    <Dialog open={props.open} onOpenChange={props.onOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[80vh] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>Edit Snap</DialogTitle>
@@ -154,8 +158,8 @@ export function EditSnapDialog(props: {
         </DialogHeader>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           {displaySteps.map((sd) => (
-            <div key={sd.id} className="flex flex-col gap-1.5">
-              <Label htmlFor={`edit-${sd.id}`}>{sd.name}</Label>
+            <Field key={sd.id} className="flex flex-col gap-1.5">
+              <FieldLabel htmlFor={`edit-${sd.id}`}>{sd.name}</FieldLabel>
               {sd.type === "numeric" ? (
                 <Input
                   id={`edit-${sd.id}`}
@@ -184,13 +188,13 @@ export function EditSnapDialog(props: {
                   }
                 />
               )}
-            </div>
+            </Field>
           ))}
           <DialogFooter>
             <Button
               type="button"
               variant="outline"
-              onClick={() => props.onOpenChange(false)}
+              onClick={() => onOpenChange(false)}
             >
               Cancel
             </Button>

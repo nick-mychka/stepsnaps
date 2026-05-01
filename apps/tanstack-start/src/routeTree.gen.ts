@@ -19,7 +19,7 @@ import { Route as AuthenticatedApplicationsIndexRouteImport } from './routes/_au
 import { Route as ApiTrpcSplatRouteImport } from './routes/api/trpc.$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth.$'
 import { Route as AuthenticatedTeamsTeamIdRouteImport } from './routes/_authenticated/teams/$teamId'
-import { Route as AuthenticatedSnapNewRouteImport } from './routes/_authenticated/snap/new'
+import { Route as AuthenticatedSnapNewIndexRouteImport } from './routes/_authenticated/snap/new/index'
 import { Route as AuthenticatedSettingsStepsIndexRouteImport } from './routes/_authenticated/settings/steps/index'
 import { Route as AuthenticatedJourneyHistoryIndexRouteImport } from './routes/_authenticated/journey/history/index'
 import { Route as AuthenticatedTeamsTeamIdMemberUserIdRouteImport } from './routes/_authenticated/teams/$teamId.member.$userId'
@@ -77,11 +77,12 @@ const AuthenticatedTeamsTeamIdRoute =
     path: '/teams/$teamId',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedSnapNewRoute = AuthenticatedSnapNewRouteImport.update({
-  id: '/snap/new',
-  path: '/snap/new',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
+const AuthenticatedSnapNewIndexRoute =
+  AuthenticatedSnapNewIndexRouteImport.update({
+    id: '/snap/new/',
+    path: '/snap/new/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedSettingsStepsIndexRoute =
   AuthenticatedSettingsStepsIndexRouteImport.update({
     id: '/settings/steps/',
@@ -104,7 +105,6 @@ const AuthenticatedTeamsTeamIdMemberUserIdRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/invite/$token': typeof InviteTokenRoute
-  '/snap/new': typeof AuthenticatedSnapNewRoute
   '/teams/$teamId': typeof AuthenticatedTeamsTeamIdRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
@@ -114,12 +114,12 @@ export interface FileRoutesByFullPath {
   '/teams/': typeof AuthenticatedTeamsIndexRoute
   '/journey/history/': typeof AuthenticatedJourneyHistoryIndexRoute
   '/settings/steps/': typeof AuthenticatedSettingsStepsIndexRoute
+  '/snap/new/': typeof AuthenticatedSnapNewIndexRoute
   '/teams/$teamId/member/$userId': typeof AuthenticatedTeamsTeamIdMemberUserIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/invite/$token': typeof InviteTokenRoute
-  '/snap/new': typeof AuthenticatedSnapNewRoute
   '/teams/$teamId': typeof AuthenticatedTeamsTeamIdRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
@@ -129,6 +129,7 @@ export interface FileRoutesByTo {
   '/teams': typeof AuthenticatedTeamsIndexRoute
   '/journey/history': typeof AuthenticatedJourneyHistoryIndexRoute
   '/settings/steps': typeof AuthenticatedSettingsStepsIndexRoute
+  '/snap/new': typeof AuthenticatedSnapNewIndexRoute
   '/teams/$teamId/member/$userId': typeof AuthenticatedTeamsTeamIdMemberUserIdRoute
 }
 export interface FileRoutesById {
@@ -136,7 +137,6 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/invite/$token': typeof InviteTokenRoute
-  '/_authenticated/snap/new': typeof AuthenticatedSnapNewRoute
   '/_authenticated/teams/$teamId': typeof AuthenticatedTeamsTeamIdRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
@@ -146,6 +146,7 @@ export interface FileRoutesById {
   '/_authenticated/teams/': typeof AuthenticatedTeamsIndexRoute
   '/_authenticated/journey/history/': typeof AuthenticatedJourneyHistoryIndexRoute
   '/_authenticated/settings/steps/': typeof AuthenticatedSettingsStepsIndexRoute
+  '/_authenticated/snap/new/': typeof AuthenticatedSnapNewIndexRoute
   '/_authenticated/teams/$teamId/member/$userId': typeof AuthenticatedTeamsTeamIdMemberUserIdRoute
 }
 export interface FileRouteTypes {
@@ -153,7 +154,6 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/invite/$token'
-    | '/snap/new'
     | '/teams/$teamId'
     | '/api/auth/$'
     | '/api/trpc/$'
@@ -163,12 +163,12 @@ export interface FileRouteTypes {
     | '/teams/'
     | '/journey/history/'
     | '/settings/steps/'
+    | '/snap/new/'
     | '/teams/$teamId/member/$userId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/invite/$token'
-    | '/snap/new'
     | '/teams/$teamId'
     | '/api/auth/$'
     | '/api/trpc/$'
@@ -178,13 +178,13 @@ export interface FileRouteTypes {
     | '/teams'
     | '/journey/history'
     | '/settings/steps'
+    | '/snap/new'
     | '/teams/$teamId/member/$userId'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/invite/$token'
-    | '/_authenticated/snap/new'
     | '/_authenticated/teams/$teamId'
     | '/api/auth/$'
     | '/api/trpc/$'
@@ -194,6 +194,7 @@ export interface FileRouteTypes {
     | '/_authenticated/teams/'
     | '/_authenticated/journey/history/'
     | '/_authenticated/settings/steps/'
+    | '/_authenticated/snap/new/'
     | '/_authenticated/teams/$teamId/member/$userId'
   fileRoutesById: FileRoutesById
 }
@@ -277,11 +278,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTeamsTeamIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/snap/new': {
-      id: '/_authenticated/snap/new'
+    '/_authenticated/snap/new/': {
+      id: '/_authenticated/snap/new/'
       path: '/snap/new'
-      fullPath: '/snap/new'
-      preLoaderRoute: typeof AuthenticatedSnapNewRouteImport
+      fullPath: '/snap/new/'
+      preLoaderRoute: typeof AuthenticatedSnapNewIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/settings/steps/': {
@@ -324,7 +325,6 @@ const AuthenticatedTeamsTeamIdRouteWithChildren =
   )
 
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedSnapNewRoute: typeof AuthenticatedSnapNewRoute
   AuthenticatedTeamsTeamIdRoute: typeof AuthenticatedTeamsTeamIdRouteWithChildren
   AuthenticatedApplicationsIndexRoute: typeof AuthenticatedApplicationsIndexRoute
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
@@ -332,10 +332,10 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedTeamsIndexRoute: typeof AuthenticatedTeamsIndexRoute
   AuthenticatedJourneyHistoryIndexRoute: typeof AuthenticatedJourneyHistoryIndexRoute
   AuthenticatedSettingsStepsIndexRoute: typeof AuthenticatedSettingsStepsIndexRoute
+  AuthenticatedSnapNewIndexRoute: typeof AuthenticatedSnapNewIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedSnapNewRoute: AuthenticatedSnapNewRoute,
   AuthenticatedTeamsTeamIdRoute: AuthenticatedTeamsTeamIdRouteWithChildren,
   AuthenticatedApplicationsIndexRoute: AuthenticatedApplicationsIndexRoute,
   AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
@@ -343,6 +343,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedTeamsIndexRoute: AuthenticatedTeamsIndexRoute,
   AuthenticatedJourneyHistoryIndexRoute: AuthenticatedJourneyHistoryIndexRoute,
   AuthenticatedSettingsStepsIndexRoute: AuthenticatedSettingsStepsIndexRoute,
+  AuthenticatedSnapNewIndexRoute: AuthenticatedSnapNewIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

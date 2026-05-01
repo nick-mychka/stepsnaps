@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 
 import { Button } from "@stepsnaps/ui/button";
 import {
@@ -19,7 +19,7 @@ type ViewMode = "timeline" | "chart";
 
 export function ProgressPage() {
   const { data: activeJourney } = useActiveJourney();
-  const navigate = useNavigate();
+
   const [view, setView] = useState<ViewMode>("timeline");
 
   if (!activeJourney) {
@@ -33,8 +33,8 @@ export function ProgressPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button onClick={() => navigate({ to: "/dashboard" })}>
-              Go to Dashboard
+            <Button asChild>
+              <Link to="/dashboard">Go to Dashboard</Link>
             </Button>
           </CardContent>
         </Card>

@@ -18,13 +18,15 @@ import {
 import type { SnapWithValues } from "../types";
 import { dayjs, ISO_DATE_FORMAT } from "~/lib/date";
 
-export function SnapCharts(props: {
+export function SnapCharts({
+  snaps,
+  startDate,
+  endDate,
+}: {
   snaps: SnapWithValues[];
   startDate: string;
   endDate: string | null;
 }) {
-  const { snaps, startDate, endDate } = props;
-
   // Build chart data: one entry per day from startDate to endDate (or today)
   const { chartData, chartConfig, stepKeys } = useMemo(() => {
     // Collect all unique step definitions across all snaps
