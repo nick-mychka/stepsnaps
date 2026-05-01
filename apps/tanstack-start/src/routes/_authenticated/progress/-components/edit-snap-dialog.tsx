@@ -15,7 +15,7 @@ import { Input } from "@stepsnaps/ui/input";
 import { Spinner } from "@stepsnaps/ui/spinner";
 import { Textarea } from "@stepsnaps/ui/textarea";
 
-import type { SnapWithValues } from "~/features/snap";
+import type { SnapByDate } from "~/features/snap";
 import { dayjs } from "~/lib/date";
 import { useTRPC } from "~/lib/trpc";
 import { useUpsertSnap } from "../-hooks/use-upsert-snap";
@@ -27,7 +27,7 @@ export function EditSnapDialog({
   onOpenChange,
 }: {
   journeyId: string;
-  snap: SnapWithValues;
+  snap: SnapByDate;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {

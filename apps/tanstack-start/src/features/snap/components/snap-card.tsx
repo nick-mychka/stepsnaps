@@ -9,13 +9,13 @@ import {
 } from "@stepsnaps/ui/card";
 import { DropdownMenuItem } from "@stepsnaps/ui/dropdown-menu";
 
-import type { SnapWithValues } from "../types";
+import type { SnapByDate } from "../types";
 import { ActionsMenu } from "~/components/actions-menu";
 import { SimpleTooltip } from "~/components/simple-tooltip";
 import { dayjs } from "~/lib/date";
 
 interface Props {
-  snap: SnapWithValues;
+  snap: SnapByDate;
   label?: string;
   onEdit?: () => void;
   onDelete?: () => void;

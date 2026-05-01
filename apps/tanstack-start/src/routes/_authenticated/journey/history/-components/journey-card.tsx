@@ -1,3 +1,4 @@
+import type { RouterOutputs } from "@stepsnaps/api";
 import { Badge } from "@stepsnaps/ui/badge";
 import { Button } from "@stepsnaps/ui/button";
 import {
@@ -9,14 +10,7 @@ import {
   CardTitle,
 } from "@stepsnaps/ui/card";
 
-export interface JourneyData {
-  id: string;
-  startDate: string;
-  endDate: string | null;
-  status: "active" | "completed";
-  companyName: string | null;
-  offerDetails: string | null;
-}
+export type JourneyData = RouterOutputs["journey"]["list"][number];
 
 interface Props {
   journey: JourneyData;

@@ -15,7 +15,7 @@ import {
   ChartTooltipContent,
 } from "@stepsnaps/ui/chart";
 
-import type { SnapWithValues } from "../types";
+import type { SnapByDate } from "../types";
 import { dayjs, ISO_DATE_FORMAT } from "~/lib/date";
 
 export function SnapCharts({
@@ -23,7 +23,7 @@ export function SnapCharts({
   startDate,
   endDate,
 }: {
-  snaps: SnapWithValues[];
+  snaps: SnapByDate[];
   startDate: string;
   endDate: string | null;
 }) {

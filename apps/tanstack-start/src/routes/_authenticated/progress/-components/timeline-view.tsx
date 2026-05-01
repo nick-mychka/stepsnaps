@@ -3,7 +3,7 @@ import { ChartSpline } from "lucide-react";
 
 import { Button } from "@stepsnaps/ui/button";
 
-import type { SnapWithValues } from "~/features/snap";
+import type { SnapByDate } from "~/features/snap";
 import { SimpleEmpty } from "~/components/simple-empth";
 import { SnapCard } from "~/features/snap";
 import { dayjs } from "~/lib/date";
@@ -14,9 +14,9 @@ import { EditSnapDialog } from "./edit-snap-dialog";
 type Granularity = "daily" | "weekly";
 
 function groupSnapsByWeek(
-  snaps: SnapWithValues[],
-): { snap: SnapWithValues; label: string }[] {
-  const weekMap = new Map<string, SnapWithValues[]>();
+  snaps: SnapByDate[],
+): { snap: SnapByDate; label: string }[] {
+  const weekMap = new Map<string, SnapByDate[]>();
   for (const snap of snaps) {
     const key = dayjs(snap.date).startOf("week").format("YYYY-MM-DD");
     const group = weekMap.get(key) ?? [];
@@ -25,7 +25,7 @@ function groupSnapsByWeek(
   }
 
   return Array.from(weekMap.entries()).map(([weekStart, weekSnaps]) => {
-    const valueAgg = new Map<string, SnapWithValues["values"][number]>();
+    const valueAgg = new Map<string, SnapByDate["values"][number]>();
     let journeyId = "";
     let firstCreatedAt: Date | undefined;
     let lastUpdatedAt: Date | null = null;
@@ -74,7 +74,7 @@ function groupSnapsByWeek(
         createdAt: firstCreatedAt ?? new Date(weekStart),
         updatedAt: lastUpdatedAt,
         values: Array.from(valueAgg.values()),
-      } as SnapWithValues,
+      } as SnapByDate,
     };
   });
 }
@@ -83,7 +83,7 @@ export function TimelineView({ journeyId }: { journeyId: string }) {
   const { data: snaps = [] } = useSnaps(journeyId);
 
   const [granularity, setGranularity] = useState<Granularity>("daily");
-  const [editingSnap, setEditingSnap] = useState<SnapWithValues | null>(null);
+  const [editingSnap, setEditingSnap] = useState<SnapByDate | null>(null);
   const [deletingSnapId, setDeletingSnapId] = useState<string | null>(null);
 
   const dailySnaps = [...snaps].reverse();

@@ -5,6 +5,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
+import type { RouterOutputs } from "@stepsnaps/api";
 import {
   Table,
   TableBody,
@@ -16,18 +17,7 @@ import {
 
 import { ClosedReasonBadge } from "./closed-reason-badge";
 
-interface HistoryRow {
-  id: string;
-  companyName: string;
-  jobTitle: string | null;
-  salary: string | null;
-  workMode: "remote" | "onsite" | "hybrid";
-  source: { id: string; name: string } | null;
-  appliedAt: string;
-  status: "pending" | "interviewing" | "on_hold" | "closed";
-  closedReason: string | null;
-  interviews: { id: string }[];
-}
+type HistoryRow = RouterOutputs["jobApplication"]["list"]["items"][number];
 
 const historyColumnHelper = createColumnHelper<HistoryRow>();
 

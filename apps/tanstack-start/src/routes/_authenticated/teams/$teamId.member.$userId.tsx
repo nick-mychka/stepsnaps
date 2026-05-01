@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from "@stepsnaps/ui/card";
 
-import type { SnapWithValues } from "~/features/snap";
+import type { SnapByDate } from "~/features/snap";
 import { SnapCard, SnapCharts } from "~/features/snap";
 import { useTRPC } from "~/lib/trpc";
 
@@ -92,7 +92,7 @@ function MemberProgressPage() {
   );
 }
 
-function ReadOnlyTimeline(props: { snaps: SnapWithValues[] }) {
+function ReadOnlyTimeline(props: { snaps: SnapByDate[] }) {
   const sortedSnaps = [...props.snaps].reverse();
 
   if (sortedSnaps.length === 0) {
@@ -122,7 +122,7 @@ function ReadOnlyChart({
   startDate,
   endDate,
 }: {
-  snaps: SnapWithValues[];
+  snaps: SnapByDate[];
   startDate: string;
   endDate: string | null;
 }) {
