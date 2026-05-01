@@ -1,15 +1,9 @@
 import { useNavigate } from "@tanstack/react-router";
 
 import { Button } from "@stepsnaps/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@stepsnaps/ui/card";
 import { Spinner } from "@stepsnaps/ui/spinner";
 
+import { SimpleCard } from "~/components/simple-card";
 import { today } from "~/lib/date";
 import { useActiveStepDefinitions } from "../-hooks/use-active-step-definitions";
 import { useExistingSnap } from "../-hooks/use-existing-snap";
@@ -71,49 +65,43 @@ export function SnapForm({ journeyId }: { journeyId: string }) {
 
   return (
     <main className="container mx-auto py-8">
-      <Card className="max-w-lg">
-        <CardHeader>
-          <CardTitle>
-            {existingSnap ? "Edit Today's Snap" : "New Snap"}
-          </CardTitle>
-          <CardDescription>
-            {today()} — Record what you accomplished today.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {stepDefinitions.length === 0 ? (
-            <p className="text-muted-foreground text-sm">
-              No step definitions configured. Start a journey to get predefined
-              steps.
-            </p>
-          ) : (
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-              {stepDefinitions.map((sd) => {
-                const snapGoalValue = existingSnap?.values.find(
-                  (sv) => sv.stepDefinitionId === sd.id,
-                )?.goalValue;
+      <SimpleCard
+        className="max-w-lg"
+        title={existingSnap ? "Edit Today's Snap" : "New Snap"}
+        description={<>{today()} — Record what you accomplished today.</>}
+      >
+        {stepDefinitions.length === 0 ? (
+          <p className="text-muted-foreground text-sm">
+            No step definitions configured. Start a journey to get predefined
+            steps.
+          </p>
+        ) : (
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            {stepDefinitions.map((sd) => {
+              const snapGoalValue = existingSnap?.values.find(
+                (sv) => sv.stepDefinitionId === sd.id,
+              )?.goalValue;
 
-                return (
-                  <SnapFormField
-                    key={sd.id}
-                    stepDefinition={sd}
-                    value={values[sd.id] ?? ""}
-                    snapGoalValue={snapGoalValue}
-                    onChange={(next) =>
-                      setValues((prev) => ({ ...prev, [sd.id]: next }))
-                    }
-                  />
-                );
-              })}
+              return (
+                <SnapFormField
+                  key={sd.id}
+                  stepDefinition={sd}
+                  value={values[sd.id] ?? ""}
+                  snapGoalValue={snapGoalValue}
+                  onChange={(next) =>
+                    setValues((prev) => ({ ...prev, [sd.id]: next }))
+                  }
+                />
+              );
+            })}
 
-              <Button type="submit" disabled={upsertSnap.isPending}>
-                {upsertSnap.isPending && <Spinner />}
-                {existingSnap ? "Update Snap" : "Save Snap"}
-              </Button>
-            </form>
-          )}
-        </CardContent>
-      </Card>
+            <Button type="submit" disabled={upsertSnap.isPending}>
+              {upsertSnap.isPending && <Spinner />}
+              {existingSnap ? "Update Snap" : "Save Snap"}
+            </Button>
+          </form>
+        )}
+      </SimpleCard>
     </main>
   );
 }
