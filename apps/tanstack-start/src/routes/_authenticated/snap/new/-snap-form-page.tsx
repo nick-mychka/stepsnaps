@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 
 import { Button } from "@stepsnaps/ui/button";
 
-import { SimpleEmpty } from "~/components/simple-empth";
+import { SimpleEmpty } from "~/components/simple-empty";
 import { SnapForm } from "./-components/snap-form";
 import { useActiveJourney } from "./-hooks/use-active-journey";
 
