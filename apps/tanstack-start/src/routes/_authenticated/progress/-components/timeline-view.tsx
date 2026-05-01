@@ -4,7 +4,7 @@ import { ChartSpline } from "lucide-react";
 import { Button } from "@stepsnaps/ui/button";
 
 import type { SnapByDate } from "~/features/snap";
-import { SimpleEmpty } from "~/components/simple-empth";
+import { SimpleEmpty } from "~/components/simple-empty";
 import { SnapCard } from "~/features/snap";
 import { dayjs } from "~/lib/date";
 import { useSnaps } from "../-hooks/use-snaps";

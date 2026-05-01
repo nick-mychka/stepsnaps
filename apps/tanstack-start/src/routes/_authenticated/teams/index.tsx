@@ -25,7 +25,7 @@ import { Spinner } from "@stepsnaps/ui/spinner";
 import { toast } from "@stepsnaps/ui/toast";
 
 import { SimpleCard } from "~/components/simple-card";
-import { SimpleEmpty } from "~/components/simple-empth";
+import { SimpleEmpty } from "~/components/simple-empty";
 import { useTRPC } from "~/lib/trpc";
 
 export const Route = createFileRoute("/_authenticated/teams/")({
