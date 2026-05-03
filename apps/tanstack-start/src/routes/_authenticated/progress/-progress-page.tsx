@@ -2,15 +2,9 @@ import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 
 import { Button } from "@stepsnaps/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@stepsnaps/ui/card";
 
 import { BackgroundV3 } from "~/components/journey-background";
+import { SimpleCard } from "~/components/simple-card";
 import { ChartView } from "./-components/chart-view";
 import { TimelineView } from "./-components/timeline-view";
 import { useActiveJourney } from "./-hooks/use-active-journey";
@@ -25,19 +19,15 @@ export function ProgressPage() {
   if (!activeJourney) {
     return (
       <main className="container mx-auto py-8">
-        <Card className="max-w-lg">
-          <CardHeader>
-            <CardTitle>No Active Journey</CardTitle>
-            <CardDescription>
-              Start a journey from the dashboard to view your progress.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button asChild>
-              <Link to="/dashboard">Go to Dashboard</Link>
-            </Button>
-          </CardContent>
-        </Card>
+        <SimpleCard
+          className="max-w-lg"
+          title="No Active Journey"
+          description="Start a journey from the dashboard to view your progress."
+        >
+          <Button asChild>
+            <Link to="/dashboard">Go to Dashboard</Link>
+          </Button>
+        </SimpleCard>
       </main>
     );
   }
