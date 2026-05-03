@@ -22,7 +22,7 @@ interface SimpleCardProps {
   descriptionClassName?: string;
   contentClassName?: string;
   footerClassName?: string;
-  onClick?: () => void;
+  onClick?: React.ComponentPropsWithoutRef<"div">["onClick"];
 }
 
 export function SimpleCard({
