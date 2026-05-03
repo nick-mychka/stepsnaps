@@ -9,8 +9,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@stepsnaps/ui/dialog";
+import { Field, FieldGroup, FieldLabel } from "@stepsnaps/ui/field";
 import { Input } from "@stepsnaps/ui/input";
-import { Label } from "@stepsnaps/ui/label";
 import {
   Select,
   SelectContent,
@@ -122,34 +122,34 @@ function EditApplicationForm(props: {
           Update the details of this application.
         </DialogDescription>
       </DialogHeader>
-      <div className="flex flex-col gap-4 py-4">
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="edit-companyName">Company Name *</Label>
+      <FieldGroup className="flex flex-col gap-4 py-4">
+        <Field>
+          <FieldLabel htmlFor="edit-companyName">Company Name *</FieldLabel>
           <Input
             id="edit-companyName"
             value={companyName}
             onChange={(e) => setCompanyName(e.target.value)}
             required
           />
-        </div>
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="edit-jobTitle">Job Title</Label>
+        </Field>
+        <Field>
+          <FieldLabel htmlFor="edit-jobTitle">Job Title</FieldLabel>
           <Input
             id="edit-jobTitle"
             value={jobTitle}
             onChange={(e) => setJobTitle(e.target.value)}
           />
-        </div>
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="edit-salary">Salary</Label>
+        </Field>
+        <Field>
+          <FieldLabel htmlFor="edit-salary">Salary</FieldLabel>
           <Input
             id="edit-salary"
             value={salary}
             onChange={(e) => setSalary(e.target.value)}
           />
-        </div>
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="edit-workMode">Work Mode</Label>
+        </Field>
+        <Field>
+          <FieldLabel htmlFor="edit-workMode">Work Mode</FieldLabel>
           <Select
             value={workMode}
             onValueChange={(v) =>
@@ -165,13 +165,13 @@ function EditApplicationForm(props: {
               <SelectItem value="hybrid">Hybrid</SelectItem>
             </SelectContent>
           </Select>
-        </div>
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="edit-sourceName">Source</Label>
+        </Field>
+        <Field>
+          <FieldLabel htmlFor="edit-sourceName">Source</FieldLabel>
           <SourceTypeahead value={sourceName} onChange={setSourceName} />
-        </div>
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="edit-jobUrl">Job URL</Label>
+        </Field>
+        <Field>
+          <FieldLabel htmlFor="edit-jobUrl">Job URL</FieldLabel>
           <Input
             id="edit-jobUrl"
             type="url"
@@ -179,13 +179,13 @@ function EditApplicationForm(props: {
             value={jobUrl}
             onChange={(e) => setJobUrl(e.target.value)}
           />
-        </div>
+        </Field>
 
         {/* Status actions */}
-        <div className="border-t pt-4">
-          <Label className="text-muted-foreground mb-2 block text-sm">
+        <Field>
+          <FieldLabel className="text-muted-foreground mb-2 block text-sm">
             Status: <StatusBadge status={status} />
-          </Label>
+          </FieldLabel>
           <div className="flex gap-2">
             {canPutOnHold && (
               <Button
@@ -220,8 +220,8 @@ function EditApplicationForm(props: {
               </Button>
             )}
           </div>
-        </div>
-      </div>
+        </Field>
+      </FieldGroup>
       <DialogFooter>
         <Button
           type="button"

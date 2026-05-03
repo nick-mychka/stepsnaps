@@ -9,8 +9,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@stepsnaps/ui/dialog";
+import { Field, FieldGroup, FieldLabel } from "@stepsnaps/ui/field";
 import { Input } from "@stepsnaps/ui/input";
-import { Label } from "@stepsnaps/ui/label";
 import {
   Select,
   SelectContent,
@@ -82,9 +82,9 @@ export function AddApplicationDialog(props: AddApplicationDialogProps) {
               Track a new job application in your pipeline.
             </DialogDescription>
           </DialogHeader>
-          <div className="flex flex-col gap-4 py-4">
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="companyName">Company Name *</Label>
+          <FieldGroup className="flex flex-col gap-4 py-4">
+            <Field>
+              <FieldLabel htmlFor="companyName">Company Name *</FieldLabel>
               <Input
                 id="companyName"
                 placeholder="e.g. Acme Corp"
@@ -92,27 +92,27 @@ export function AddApplicationDialog(props: AddApplicationDialogProps) {
                 onChange={(e) => setCompanyName(e.target.value)}
                 required
               />
-            </div>
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="jobTitle">Job Title</Label>
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="jobTitle">Job Title</FieldLabel>
               <Input
                 id="jobTitle"
                 placeholder="e.g. Senior Engineer"
                 value={jobTitle}
                 onChange={(e) => setJobTitle(e.target.value)}
               />
-            </div>
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="salary">Salary</Label>
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="salary">Salary</FieldLabel>
               <Input
                 id="salary"
                 placeholder="e.g. $150k"
                 value={salary}
                 onChange={(e) => setSalary(e.target.value)}
               />
-            </div>
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="workMode">Work Mode</Label>
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="workMode">Work Mode</FieldLabel>
               <Select
                 value={workMode}
                 onValueChange={(v) =>
@@ -128,13 +128,13 @@ export function AddApplicationDialog(props: AddApplicationDialogProps) {
                   <SelectItem value="hybrid">Hybrid</SelectItem>
                 </SelectContent>
               </Select>
-            </div>
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="sourceName">Source</Label>
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="sourceName">Source</FieldLabel>
               <SourceTypeahead value={sourceName} onChange={setSourceName} />
-            </div>
-            <div className="flex flex-col gap-2">
-              <Label htmlFor="jobUrl">Job URL</Label>
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="jobUrl">Job URL</FieldLabel>
               <Input
                 id="jobUrl"
                 type="url"
@@ -142,8 +142,8 @@ export function AddApplicationDialog(props: AddApplicationDialogProps) {
                 value={jobUrl}
                 onChange={(e) => setJobUrl(e.target.value)}
               />
-            </div>
-          </div>
+            </Field>
+          </FieldGroup>
           <DialogFooter>
             <Button
               type="button"
