@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { ISO_DATE_REGEX } from "~/lib/date";
+import { dayjs, ISO_DATE_FORMAT } from "~/lib/date";
 import { SnapFormPage } from "./-snap-form-page";
 
 interface SnapNewSearch {
@@ -10,7 +10,10 @@ interface SnapNewSearch {
 export const Route = createFileRoute("/_authenticated/snap/new/")({
   validateSearch: (search: Record<string, unknown>): SnapNewSearch => {
     const raw = search.date;
-    if (typeof raw === "string" && ISO_DATE_REGEX.test(raw)) {
+    if (
+      typeof raw === "string" &&
+      dayjs(raw, ISO_DATE_FORMAT, true).isValid()
+    ) {
       return { date: raw };
     }
     return {};
