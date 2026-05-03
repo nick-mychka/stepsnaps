@@ -3,14 +3,9 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { Button } from "@stepsnaps/ui/button";
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@stepsnaps/ui/card";
 
-import type { SnapWithValues } from "~/features/snap";
+import type { SnapByDate } from "~/features/snap";
+import { SimpleCard } from "~/components/simple-card";
 import { SnapCard, SnapCharts } from "~/features/snap";
 import { useTRPC } from "~/lib/trpc";
 
@@ -71,14 +66,13 @@ function MemberProgressPage() {
       </div>
 
       {!data.journey ? (
-        <Card className="max-w-lg">
-          <CardHeader>
-            <CardTitle>No Active Journey</CardTitle>
-            <CardDescription>
-              {data.memberName} doesn't have an active journey right now.
-            </CardDescription>
-          </CardHeader>
-        </Card>
+        <SimpleCard
+          className="max-w-lg"
+          title="No Active Journey"
+          description={
+            <>{data.memberName} doesn't have an active journey right now.</>
+          }
+        />
       ) : view === "timeline" ? (
         <ReadOnlyTimeline snaps={data.snaps} />
       ) : (
@@ -92,19 +86,16 @@ function MemberProgressPage() {
   );
 }
 
-function ReadOnlyTimeline(props: { snaps: SnapWithValues[] }) {
+function ReadOnlyTimeline(props: { snaps: SnapByDate[] }) {
   const sortedSnaps = [...props.snaps].reverse();
 
   if (sortedSnaps.length === 0) {
     return (
-      <Card className="max-w-lg">
-        <CardHeader>
-          <CardTitle>No snaps yet</CardTitle>
-          <CardDescription>
-            No daily snaps have been logged yet.
-          </CardDescription>
-        </CardHeader>
-      </Card>
+      <SimpleCard
+        className="max-w-lg"
+        title="No snaps yet"
+        description="No daily snaps have been logged yet."
+      />
     );
   }
 
@@ -122,7 +113,7 @@ function ReadOnlyChart({
   startDate,
   endDate,
 }: {
-  snaps: SnapWithValues[];
+  snaps: SnapByDate[];
   startDate: string;
   endDate: string | null;
 }) {

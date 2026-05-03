@@ -10,13 +10,6 @@ import { Users } from "lucide-react";
 import { Badge } from "@stepsnaps/ui/badge";
 import { Button } from "@stepsnaps/ui/button";
 import {
-  Card,
-  CardAction,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@stepsnaps/ui/card";
-import {
   Dialog,
   DialogClose,
   DialogContent,
@@ -31,7 +24,8 @@ import { Input } from "@stepsnaps/ui/input";
 import { Spinner } from "@stepsnaps/ui/spinner";
 import { toast } from "@stepsnaps/ui/toast";
 
-import { SimpleEmpty } from "~/components/simple-empth";
+import { SimpleCard } from "~/components/simple-card";
+import { SimpleEmpty } from "~/components/simple-empty";
 import { useTRPC } from "~/lib/trpc";
 
 export const Route = createFileRoute("/_authenticated/teams/")({
@@ -66,24 +60,25 @@ function TeamsPage() {
       ) : (
         <div className="grid max-w-2xl gap-4">
           {teams.map((team) => (
-            <Card
+            <SimpleCard
               key={team.id}
-              className="hover:bg-muted/50 cursor-pointer transition-colors"
               onClick={() =>
                 navigate({ to: "/teams/$teamId", params: { teamId: team.id } })
               }
-            >
-              <CardHeader className="pb-2">
-                <CardTitle className="text-lg">{team.name}</CardTitle>
-                <CardDescription>
+              description={
+                <>
                   Created by {team.creatorName} &middot; {team.memberCount}{" "}
                   {team.memberCount === 1 ? "member" : "members"}
-                </CardDescription>
-                <CardAction>
-                  {team.isAdmin && <Badge variant="secondary">Admin</Badge>}
-                </CardAction>
-              </CardHeader>
-            </Card>
+                </>
+              }
+              actionSlot={
+                team.isAdmin && <Badge variant="secondary">Admin</Badge>
+              }
+              title={team.name}
+              className="hover:bg-muted/50 cursor-pointer transition-colors"
+              headerClassName="pb-2"
+              titleClassName="text-lg"
+            />
           ))}
         </div>
       )}

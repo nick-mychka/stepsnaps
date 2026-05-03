@@ -5,6 +5,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
+import type { RouterOutputs } from "@stepsnaps/api";
 import { Button } from "@stepsnaps/ui/button";
 import {
   Table,
@@ -17,17 +18,7 @@ import {
 
 import { StatusBadge } from "./status-badge";
 
-interface ApplicationRow {
-  id: string;
-  companyName: string;
-  jobTitle: string | null;
-  salary: string | null;
-  workMode: "remote" | "onsite" | "hybrid";
-  source: { id: string; name: string } | null;
-  appliedAt: string;
-  status: "pending" | "interviewing" | "on_hold" | "closed";
-  interviews: { id: string }[];
-}
+type ApplicationRow = RouterOutputs["jobApplication"]["list"]["items"][number];
 
 const columnHelper = createColumnHelper<ApplicationRow>();
 

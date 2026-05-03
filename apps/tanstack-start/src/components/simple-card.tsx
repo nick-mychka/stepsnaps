@@ -14,7 +14,7 @@ interface SimpleCardProps {
   title?: React.ReactNode;
   description?: React.ReactNode;
   actionSlot?: React.ReactNode;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   footer?: React.ReactNode;
   className?: string;
   headerClassName?: string;
@@ -22,6 +22,7 @@ interface SimpleCardProps {
   descriptionClassName?: string;
   contentClassName?: string;
   footerClassName?: string;
+  onClick?: React.ComponentPropsWithoutRef<"div">["onClick"];
 }
 
 export function SimpleCard({
@@ -36,12 +37,13 @@ export function SimpleCard({
   descriptionClassName,
   contentClassName,
   footerClassName,
+  onClick,
 }: SimpleCardProps) {
   const hasHeader =
     Boolean(title) || Boolean(description) || Boolean(actionSlot);
 
   return (
-    <Card className={className}>
+    <Card className={className} onClick={onClick}>
       {hasHeader && (
         <CardHeader className={headerClassName}>
           {title && <CardTitle className={titleClassName}>{title}</CardTitle>}
@@ -54,7 +56,9 @@ export function SimpleCard({
         </CardHeader>
       )}
 
-      <CardContent className={contentClassName}>{children}</CardContent>
+      {children && (
+        <CardContent className={contentClassName}>{children}</CardContent>
+      )}
 
       {footer && <CardFooter className={footerClassName}>{footer}</CardFooter>}
     </Card>

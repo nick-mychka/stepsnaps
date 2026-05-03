@@ -12,9 +12,9 @@ Restructure the file following the same TanStack Router-idiomatic pattern used f
 
 ### Phase 1: Extract shared types
 
-**Commit 1 — Extract `SnapWithValues` type into `-types.ts`**
+**Commit 1 — Extract `SnapByDate` type into `-types.ts`**
 
-Create `progress/-types.ts` containing the `SnapWithValues` interface (currently defined inline around line 136). Update `index.tsx` to import from `./-types`. Verify compilation.
+Create `progress/-types.ts` containing the `SnapByDate` interface (currently defined inline around line 136). Update `index.tsx` to import from `./-types`. Verify compilation.
 
 ### Phase 2: Extract data hooks
 
@@ -38,11 +38,11 @@ Create the hook wrapping the `snap.delete` mutation with its `onSuccess` (invali
 
 **Commit 6 — Extract `SnapCard` into `-components/snap-card.tsx`**
 
-Move the `SnapCard` component verbatim into its own file. It imports `SnapWithValues` from `../-types`. Update the parent to import it. Verify compilation.
+Move the `SnapCard` component verbatim into its own file. It imports `SnapByDate` from `../-types`. Update the parent to import it. Verify compilation.
 
 **Commit 7 — Extract `EditSnapDialog` into `-components/edit-snap-dialog.tsx`**
 
-Move the `EditSnapDialog` component into its own file. It imports `SnapWithValues` from `../-types` and `useUpsertSnap` from `../-hooks/use-upsert-snap`. Update the parent to import it. Verify compilation.
+Move the `EditSnapDialog` component into its own file. It imports `SnapByDate` from `../-types` and `useUpsertSnap` from `../-hooks/use-upsert-snap`. Update the parent to import it. Verify compilation.
 
 **Commit 8 — Extract `DeleteSnapDialog` into `-components/delete-snap-dialog.tsx`**
 
@@ -77,7 +77,7 @@ Create `-progress-page.tsx` containing the `ProgressPage` component. It imports 
 - **Directory structure**: Same pattern as the steps settings refactor — TanStack Router `-` prefix convention. Route file is `progress/index.tsx`. Supporting files go in `progress/-components/`, `progress/-hooks/`, and `progress/-types.ts`.
 - **Component granularity**: One component per file (`snap-card.tsx`, `edit-snap-dialog.tsx`, `delete-snap-dialog.tsx`, `timeline-view.tsx`, `funnel-tooltip.tsx`, `application-trend-chart.tsx`, `chart-view.tsx`).
 - **Hook granularity**: One hook per query/mutation (`use-active-journey.ts`, `use-snaps.ts`, `use-upsert-snap.ts`, `use-delete-snap.ts`).
-- **Types colocated**: `SnapWithValues` lives in `progress/-types.ts`. It is imported by components that need it (`snap-card.tsx`, `edit-snap-dialog.tsx`, `timeline-view.tsx`).
+- **Types colocated**: `SnapByDate` lives in `progress/-types.ts`. It is imported by components that need it (`snap-card.tsx`, `edit-snap-dialog.tsx`, `timeline-view.tsx`).
 - **Chart constants stay with their components**: `CHART_COLORS` moves into `chart-view.tsx`, `FUNNEL_LABELS` and `FUNNEL_COLORS` move into `application-trend-chart.tsx`. These are hardcoded for now and will change when chart features are reworked.
 - **Chart data transformation stays in `ChartView`**: The `useMemo` block that builds chart data is tightly coupled to the chart rendering. Extracting it into a hook would create artificial separation without real benefit. It stays inline.
 - **Hook callback pattern**: Mutation hooks accept an `onSuccess` callback parameter for caller-specific side effects (closing dialogs), same pattern as the steps settings refactor.

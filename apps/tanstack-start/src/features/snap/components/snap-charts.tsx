@@ -3,19 +3,13 @@ import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
 import type { ChartConfig } from "@stepsnaps/ui/chart";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@stepsnaps/ui/card";
-import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@stepsnaps/ui/chart";
 
-import type { SnapWithValues } from "../types";
+import type { SnapByDate } from "../types";
+import { SimpleCard } from "~/components/simple-card";
 import { dayjs, ISO_DATE_FORMAT } from "~/lib/date";
 
 export function SnapCharts({
@@ -23,7 +17,7 @@ export function SnapCharts({
   startDate,
   endDate,
 }: {
-  snaps: SnapWithValues[];
+  snaps: SnapByDate[];
   startDate: string;
   endDate: string | null;
 }) {
@@ -110,14 +104,11 @@ export function SnapCharts({
 
   if (stepKeys.length === 0) {
     return (
-      <Card className="max-w-lg">
-        <CardHeader>
-          <CardTitle>No data yet</CardTitle>
-          <CardDescription>
-            Log some snaps to see your chart here.
-          </CardDescription>
-        </CardHeader>
-      </Card>
+      <SimpleCard
+        className="max-w-lg"
+        title="No data yet"
+        description="Log some snaps to see your chart here."
+      />
     );
   }
 
@@ -132,27 +123,22 @@ export function SnapCharts({
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
         {stepKeys.map(({ key }) => (
-          <Card key={key}>
-            <CardHeader>
-              <CardTitle>{chartConfig[key]?.label}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ChartContainer config={chartConfig} className="min-h-40 w-full">
-                <LineChart data={chartData}>
-                  <CartesianGrid vertical={false} />
-                  <XAxis
-                    dataKey="label"
-                    tickLine={false}
-                    axisLine={false}
-                    tickMargin={8}
-                  />
-                  <YAxis tickLine={false} axisLine={false} width={30} />
-                  <ChartTooltip content={<ChartTooltipContent />} />
-                  <Line dataKey={key} stroke="var(--chart-1)" strokeWidth={2} />
-                </LineChart>
-              </ChartContainer>
-            </CardContent>
-          </Card>
+          <SimpleCard key={key} title={chartConfig[key]?.label}>
+            <ChartContainer config={chartConfig} className="min-h-40 w-full">
+              <LineChart data={chartData}>
+                <CartesianGrid vertical={false} />
+                <XAxis
+                  dataKey="label"
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={8}
+                />
+                <YAxis tickLine={false} axisLine={false} width={30} />
+                <ChartTooltip content={<ChartTooltipContent />} />
+                <Line dataKey={key} stroke="var(--chart-1)" strokeWidth={2} />
+              </LineChart>
+            </ChartContainer>
+          </SimpleCard>
         ))}
       </div>
     </div>
