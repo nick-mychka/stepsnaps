@@ -7,7 +7,8 @@ import { DropdownMenuItem } from "@stepsnaps/ui/dropdown-menu";
 
 import { ActionsMenu } from "~/components/actions-menu";
 import { SimpleCard } from "~/components/simple-card";
-import { dayjs } from "~/lib/date";
+import { dayjs, yesterday } from "~/lib/date";
+import { useJourneySnaps } from "../-hooks/use-journey-snaps";
 import { FinishJourneyDialog } from "./finish-journey-dialog";
 
 export function ActiveJourneyCard({
@@ -22,6 +23,14 @@ export function ActiveJourneyCard({
   };
 }) {
   const [showFinishDialog, setShowFinishDialog] = useState(false);
+  const { data: snaps } = useJourneySnaps(journey.id);
+
+  const yesterdayInJourney = dayjs(journey.startDate).isSameOrBefore(
+    yesterday(),
+    "day",
+  );
+  const yesterdaySnapped = snaps.some((s) => s.date === yesterday());
+  const showYesterdayLink = yesterdayInJourney && !yesterdaySnapped;
 
   return (
     <>
@@ -44,9 +53,20 @@ export function ActiveJourneyCard({
           </ActionsMenu>
         }
         footer={
-          <Button size="lg" className="w-full" asChild>
-            <Link to="/snap/new">Log Today's Snap</Link>
-          </Button>
+          <div className="flex w-full flex-col gap-3">
+            <Button size="lg" className="w-full" asChild>
+              <Link to="/snap/new">Log Today's Snap</Link>
+            </Button>
+            {showYesterdayLink && (
+              <Link
+                to="/snap/new"
+                search={{ date: yesterday() }}
+                className="text-muted-foreground hover:text-foreground text-center text-sm hover:underline"
+              >
+                Forgot to take a snap of yesterday's progress?
+              </Link>
+            )}
+          </div>
         }
         className="max-w-lg"
         titleClassName="flex items-center gap-2 text-2xl font-bold"
