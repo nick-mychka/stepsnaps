@@ -5,7 +5,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@stepsnaps/ui/button";
 
 import type { SnapByDate } from "~/features/snap";
-import { SimpleCard } from "~/components/simple-card";
+import { SimpleEmpty } from "~/components/simple-empty";
 import { SnapCard, SnapCharts } from "~/features/snap";
 import { useTRPC } from "~/lib/trpc";
 
@@ -66,8 +66,7 @@ function MemberProgressPage() {
       </div>
 
       {!data.journey ? (
-        <SimpleCard
-          className="max-w-lg"
+        <SimpleEmpty
           title="No Active Journey"
           description={
             <>{data.memberName} doesn't have an active journey right now.</>
@@ -91,8 +90,7 @@ function ReadOnlyTimeline(props: { snaps: SnapByDate[] }) {
 
   if (sortedSnaps.length === 0) {
     return (
-      <SimpleCard
-        className="max-w-lg"
+      <SimpleEmpty
         title="No snaps yet"
         description="No daily snaps have been logged yet."
       />
