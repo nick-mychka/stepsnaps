@@ -6,7 +6,7 @@ import { Button } from "@stepsnaps/ui/button";
 import type { ViewMode } from "~/features/snap/types";
 import { BackgroundV3 } from "~/components/journey-background";
 import { SimpleCard } from "~/components/simple-card";
-import { ViewToggle } from "~/components/view-toggle";
+import { ViewToggle } from "~/features/snap/components/view-toggle";
 import { ChartView } from "./-components/chart-view";
 import { TimelineView } from "./-components/timeline-view";
 import { useActiveJourney } from "./-hooks/use-active-journey";
@@ -38,9 +38,7 @@ export function ProgressPage() {
       <main className="container mx-auto py-8">
         <div className="mb-6 flex items-center justify-between">
           <h1 className="text-3xl font-bold">Progress</h1>
-          <div className="flex gap-1 rounded-lg border p-1">
-            <ViewToggle view={view} onChange={setView} />
-          </div>
+          <ViewToggle view={view} onChange={setView} />
         </div>
 
         {view === "timeline" ? (

@@ -9,7 +9,7 @@ interface ViewToggleProps {
 
 export function ViewToggle({ view, onChange }: ViewToggleProps) {
   return (
-    <>
+    <div className="flex gap-1 rounded-lg border p-1">
       <Button
         variant={view === "timeline" ? "default" : "ghost"}
         size="sm"
@@ -24,6 +24,6 @@ export function ViewToggle({ view, onChange }: ViewToggleProps) {
       >
         Chart
       </Button>
-    </>
+    </div>
   );
 }
