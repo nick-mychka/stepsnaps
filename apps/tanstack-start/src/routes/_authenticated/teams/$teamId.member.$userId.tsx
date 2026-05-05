@@ -5,6 +5,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@stepsnaps/ui/button";
 
 import type { SnapByDate } from "~/features/snap";
+import type { ViewMode } from "~/features/snap/types";
 import { SimpleEmpty } from "~/components/simple-empty";
 import { SnapCard, SnapCharts } from "~/features/snap";
 import { useTRPC } from "~/lib/trpc";
@@ -23,8 +24,6 @@ export const Route = createFileRoute(
   },
   component: MemberProgressPage,
 });
-
-type ViewMode = "timeline" | "chart";
 
 function MemberProgressPage() {
   const { teamId, userId } = Route.useParams();
