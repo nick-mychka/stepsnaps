@@ -8,6 +8,7 @@ import type { SnapByDate } from "~/features/snap";
 import type { ViewMode } from "~/features/snap/types";
 import { SimpleEmpty } from "~/components/simple-empty";
 import { SnapCard, SnapCharts } from "~/features/snap";
+import { ViewToggle } from "~/features/snap/components/view-toggle";
 import { useTRPC } from "~/lib/trpc";
 
 export const Route = createFileRoute(
@@ -44,24 +45,7 @@ function MemberProgressPage() {
 
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-3xl font-bold">{data.memberName}'s Progress</h1>
-        {data.journey && (
-          <div className="flex gap-1 rounded-lg border p-1">
-            <Button
-              variant={view === "timeline" ? "default" : "ghost"}
-              size="sm"
-              onClick={() => setView("timeline")}
-            >
-              Timeline
-            </Button>
-            <Button
-              variant={view === "chart" ? "default" : "ghost"}
-              size="sm"
-              onClick={() => setView("chart")}
-            >
-              Chart
-            </Button>
-          </div>
-        )}
+        {data.journey && <ViewToggle view={view} onChange={setView} />}
       </div>
 
       {!data.journey ? (
