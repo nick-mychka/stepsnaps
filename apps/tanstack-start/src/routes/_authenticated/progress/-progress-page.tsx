@@ -3,13 +3,12 @@ import { Link } from "@tanstack/react-router";
 
 import { Button } from "@stepsnaps/ui/button";
 
+import type { ViewMode } from "~/features/snap/types";
 import { BackgroundV3 } from "~/components/journey-background";
 import { SimpleCard } from "~/components/simple-card";
 import { ChartView } from "./-components/chart-view";
 import { TimelineView } from "./-components/timeline-view";
 import { useActiveJourney } from "./-hooks/use-active-journey";
-
-type ViewMode = "timeline" | "chart";
 
 export function ProgressPage() {
   const { data: activeJourney } = useActiveJourney();
