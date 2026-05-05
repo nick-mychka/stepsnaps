@@ -75,7 +75,7 @@ function MemberProgressPage() {
       ) : view === "timeline" ? (
         <ReadOnlyTimeline snaps={data.snaps} />
       ) : (
-        <ReadOnlyChart
+        <SnapCharts
           snaps={data.snaps}
           startDate={data.journey.startDate}
           endDate={data.journey.endDate}
@@ -104,16 +104,4 @@ function ReadOnlyTimeline(props: { snaps: SnapByDate[] }) {
       ))}
     </div>
   );
-}
-
-function ReadOnlyChart({
-  snaps,
-  startDate,
-  endDate,
-}: {
-  snaps: SnapByDate[];
-  startDate: string;
-  endDate: string | null;
-}) {
-  return <SnapCharts snaps={snaps} startDate={startDate} endDate={endDate} />;
 }
