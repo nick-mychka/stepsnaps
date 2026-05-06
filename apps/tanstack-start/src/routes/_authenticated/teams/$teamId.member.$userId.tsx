@@ -5,8 +5,10 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@stepsnaps/ui/button";
 
 import type { SnapByDate } from "~/features/snap";
-import { SimpleCard } from "~/components/simple-card";
+import type { ViewMode } from "~/features/snap/types";
+import { SimpleEmpty } from "~/components/simple-empty";
 import { SnapCard, SnapCharts } from "~/features/snap";
+import { ViewToggle } from "~/features/snap/components/view-toggle";
 import { useTRPC } from "~/lib/trpc";
 
 export const Route = createFileRoute(
@@ -23,8 +25,6 @@ export const Route = createFileRoute(
   },
   component: MemberProgressPage,
 });
-
-type ViewMode = "timeline" | "chart";
 
 function MemberProgressPage() {
   const { teamId, userId } = Route.useParams();
@@ -45,29 +45,11 @@ function MemberProgressPage() {
 
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-3xl font-bold">{data.memberName}'s Progress</h1>
-        {data.journey && (
-          <div className="flex gap-1 rounded-lg border p-1">
-            <Button
-              variant={view === "timeline" ? "default" : "ghost"}
-              size="sm"
-              onClick={() => setView("timeline")}
-            >
-              Timeline
-            </Button>
-            <Button
-              variant={view === "chart" ? "default" : "ghost"}
-              size="sm"
-              onClick={() => setView("chart")}
-            >
-              Chart
-            </Button>
-          </div>
-        )}
+        {data.journey && <ViewToggle view={view} onChange={setView} />}
       </div>
 
       {!data.journey ? (
-        <SimpleCard
-          className="max-w-lg"
+        <SimpleEmpty
           title="No Active Journey"
           description={
             <>{data.memberName} doesn't have an active journey right now.</>
@@ -76,7 +58,7 @@ function MemberProgressPage() {
       ) : view === "timeline" ? (
         <ReadOnlyTimeline snaps={data.snaps} />
       ) : (
-        <ReadOnlyChart
+        <SnapCharts
           snaps={data.snaps}
           startDate={data.journey.startDate}
           endDate={data.journey.endDate}
@@ -91,8 +73,7 @@ function ReadOnlyTimeline(props: { snaps: SnapByDate[] }) {
 
   if (sortedSnaps.length === 0) {
     return (
-      <SimpleCard
-        className="max-w-lg"
+      <SimpleEmpty
         title="No snaps yet"
         description="No daily snaps have been logged yet."
       />
@@ -106,16 +87,4 @@ function ReadOnlyTimeline(props: { snaps: SnapByDate[] }) {
       ))}
     </div>
   );
-}
-
-function ReadOnlyChart({
-  snaps,
-  startDate,
-  endDate,
-}: {
-  snaps: SnapByDate[];
-  startDate: string;
-  endDate: string | null;
-}) {
-  return <SnapCharts snaps={snaps} startDate={startDate} endDate={endDate} />;
 }

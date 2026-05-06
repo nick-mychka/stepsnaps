@@ -1,13 +1,10 @@
 import { useState } from "react";
-import { ChartSpline } from "lucide-react";
 
 import { Button } from "@stepsnaps/ui/button";
 
 import type { SnapByDate } from "~/features/snap";
-import { SimpleEmpty } from "~/components/simple-empty";
 import { SnapCard } from "~/features/snap";
 import { dayjs } from "~/lib/date";
-import { useSnaps } from "../-hooks/use-snaps";
 import { DeleteSnapDialog } from "./delete-snap-dialog";
 import { EditSnapDialog } from "./edit-snap-dialog";
 
@@ -79,20 +76,19 @@ function groupSnapsByWeek(
   });
 }
 
-export function TimelineView({ journeyId }: { journeyId: string }) {
-  const { data: snaps = [] } = useSnaps(journeyId);
-
+export function TimelineView({
+  snaps,
+  journeyId,
+}: {
+  snaps: SnapByDate[];
+  journeyId: string;
+}) {
   const [granularity, setGranularity] = useState<Granularity>("daily");
   const [editingSnap, setEditingSnap] = useState<SnapByDate | null>(null);
   const [deletingSnapId, setDeletingSnapId] = useState<string | null>(null);
 
   const dailySnaps = [...snaps].reverse();
   const weeklyItems = groupSnapsByWeek(snaps).reverse();
-
-  const isEmpty =
-    granularity === "daily"
-      ? dailySnaps.length === 0
-      : weeklyItems.length === 0;
 
   return (
     <>
@@ -113,13 +109,7 @@ export function TimelineView({ journeyId }: { journeyId: string }) {
         </Button>
       </div>
 
-      {isEmpty ? (
-        <SimpleEmpty
-          icon={<ChartSpline />}
-          title="No snaps yet"
-          description="Start logging daily snaps to see your progress here."
-        />
-      ) : granularity === "daily" ? (
+      {granularity === "daily" ? (
         <div className="flex max-w-2xl flex-col gap-4">
           {dailySnaps.map((snap) => (
             <SnapCard

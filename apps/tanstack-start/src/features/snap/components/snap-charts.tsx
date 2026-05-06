@@ -102,16 +102,6 @@ export function SnapCharts({
     return { chartData: data, chartConfig: config, stepKeys: keys };
   }, [snaps, startDate, endDate]);
 
-  if (stepKeys.length === 0) {
-    return (
-      <SimpleCard
-        className="max-w-lg"
-        title="No data yet"
-        description="Log some snaps to see your chart here."
-      />
-    );
-  }
-
   return (
     <div className="flex flex-col gap-6">
       <div>
