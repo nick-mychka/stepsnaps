@@ -25,7 +25,7 @@ export function SimpleEmpty({
   children,
 }: SimpleEmptyProps) {
   return (
-    <Empty>
+    <Empty className="bg-background/25 border border-dashed backdrop-blur-sm">
       <EmptyHeader>
         {icon && <EmptyMedia variant="icon">{icon}</EmptyMedia>}
         <EmptyTitle>{title}</EmptyTitle>

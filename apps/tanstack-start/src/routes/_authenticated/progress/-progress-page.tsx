@@ -7,8 +7,7 @@ import type { ViewMode } from "~/features/snap/types";
 import { BackgroundV3 } from "~/components/journey-background";
 import { SimpleCard } from "~/components/simple-card";
 import { ViewToggle } from "~/features/snap/components/view-toggle";
-import { ChartView } from "./-components/chart-view";
-import { TimelineView } from "./-components/timeline-view";
+import { ProgressView } from "./-components/progress-view";
 import { useActiveJourney } from "./-hooks/use-active-journey";
 
 export function ProgressPage() {
@@ -16,39 +15,27 @@ export function ProgressPage() {
 
   const [view, setView] = useState<ViewMode>("timeline");
 
-  if (!activeJourney) {
-    return (
-      <main className="container mx-auto py-8">
-        <SimpleCard
-          className="max-w-lg"
-          title="No Active Journey"
-          description="Start a journey from the dashboard to view your progress."
-        >
-          <Button asChild>
-            <Link to="/dashboard">Go to Dashboard</Link>
-          </Button>
-        </SimpleCard>
-      </main>
-    );
-  }
-
   return (
     <>
       <BackgroundV3 />
-      <main className="container mx-auto py-8">
+      <main className="container mx-auto px-3 py-8">
         <div className="mb-6 flex items-center justify-between">
-          <h1 className="text-3xl font-bold">Progress</h1>
+          <h1 className="text-2xl font-bold">Progress</h1>
           <ViewToggle view={view} onChange={setView} />
         </div>
 
-        {view === "timeline" ? (
-          <TimelineView journeyId={activeJourney.id} />
+        {!activeJourney ? (
+          <SimpleCard
+            className="max-w-lg"
+            title="No Active Journey"
+            description="Start a journey from the dashboard to view your progress."
+          >
+            <Button asChild>
+              <Link to="/dashboard">Go to Dashboard</Link>
+            </Button>
+          </SimpleCard>
         ) : (
-          <ChartView
-            journeyId={activeJourney.id}
-            startDate={activeJourney.startDate}
-            endDate={activeJourney.endDate}
-          />
+          <ProgressView activeJourney={activeJourney} view={view} />
         )}
       </main>
     </>
