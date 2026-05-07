@@ -2,10 +2,10 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 
 import { Button } from "@stepsnaps/ui/button";
-import { Spinner } from "@stepsnaps/ui/spinner";
 import { toast } from "@stepsnaps/ui/toast";
 
 import { authClient } from "~/auth/client";
+import { LoadingButton } from "~/components/loading-button";
 import { SimpleCard } from "~/components/simple-card";
 import { useTRPC } from "~/lib/trpc";
 
@@ -115,14 +115,14 @@ function InvitePage() {
         description="You've been invited to join this team. Choose how you'd like to proceed."
         contentClassName="flex flex-col gap-3"
       >
-        <Button
+        <LoadingButton
           className="w-full"
           onClick={() => acceptInvite.mutate({ token })}
           disabled={acceptInvite.isPending}
+          loading={acceptInvite.isPending}
         >
-          {acceptInvite.isPending && <Spinner />}
           Join Team
-        </Button>
+        </LoadingButton>
         <Button
           variant="outline"
           className="w-full"
@@ -130,15 +130,15 @@ function InvitePage() {
         >
           Private Tracking (No Team)
         </Button>
-        <Button
+        <LoadingButton
           variant="ghost"
           className="w-full"
           onClick={() => declineInvite.mutate({ token })}
           disabled={declineInvite.isPending}
+          loading={declineInvite.isPending}
         >
-          {declineInvite.isPending && <Spinner />}
           Decline
-        </Button>
+        </LoadingButton>
       </SimpleCard>
     </main>
   );

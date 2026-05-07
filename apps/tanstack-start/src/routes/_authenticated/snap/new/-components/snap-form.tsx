@@ -1,8 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
 
-import { Button } from "@stepsnaps/ui/button";
-import { Spinner } from "@stepsnaps/ui/spinner";
-
+import { LoadingButton } from "~/components/loading-button";
 import { SimpleCard } from "~/components/simple-card";
 import { dayjs, today, yesterday } from "~/lib/date";
 import { useActiveStepDefinitions } from "../-hooks/use-active-step-definitions";
@@ -127,11 +125,13 @@ export function SnapForm({
                 />
               );
             })}
-
-            <Button type="submit" disabled={upsertSnap.isPending}>
-              {upsertSnap.isPending && <Spinner />}
+            <LoadingButton
+              type="submit"
+              disabled={upsertSnap.isPending}
+              loading={upsertSnap.isPending}
+            >
               {existingSnap ? "Update Snap" : "Save Snap"}
-            </Button>
+            </LoadingButton>
           </form>
         )}
       </SimpleCard>

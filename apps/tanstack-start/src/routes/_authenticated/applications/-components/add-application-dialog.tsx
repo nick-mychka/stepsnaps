@@ -18,8 +18,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@stepsnaps/ui/select";
-import { Spinner } from "@stepsnaps/ui/spinner";
 
+import { LoadingButton } from "~/components/loading-button";
 import { useCreateApplication } from "../-hooks/use-create-application";
 import { SourceTypeahead } from "./source-typeahead";
 
@@ -152,10 +152,13 @@ export function AddApplicationDialog(props: AddApplicationDialogProps) {
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={createApplication.isPending}>
-              {createApplication.isPending && <Spinner />}
+            <LoadingButton
+              type="submit"
+              disabled={createApplication.isPending}
+              loading={createApplication.isPending}
+            >
               Add Application
-            </Button>
+            </LoadingButton>
           </DialogFooter>
         </form>
       </DialogContent>

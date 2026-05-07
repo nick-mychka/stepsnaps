@@ -21,9 +21,9 @@ import {
 } from "@stepsnaps/ui/dialog";
 import { Field, FieldLabel } from "@stepsnaps/ui/field";
 import { Input } from "@stepsnaps/ui/input";
-import { Spinner } from "@stepsnaps/ui/spinner";
 import { toast } from "@stepsnaps/ui/toast";
 
+import { LoadingButton } from "~/components/loading-button";
 import { SimpleCard } from "~/components/simple-card";
 import { SimpleEmpty } from "~/components/simple-empty";
 import { useTRPC } from "~/lib/trpc";
@@ -142,10 +142,13 @@ function CreateTeamDialog() {
                 Cancel
               </Button>
             </DialogClose>
-            <Button type="submit" disabled={create.isPending || !name.trim()}>
-              {create.isPending && <Spinner />}
+            <LoadingButton
+              type="submit"
+              disabled={create.isPending || !name.trim()}
+              loading={create.isPending}
+            >
               Create
-            </Button>
+            </LoadingButton>
           </DialogFooter>
         </form>
       </DialogContent>
