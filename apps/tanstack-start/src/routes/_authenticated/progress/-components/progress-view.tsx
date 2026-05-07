@@ -2,7 +2,7 @@ import { ChartSpline } from "lucide-react";
 
 import type { RouterOutputs } from "@stepsnaps/api";
 
-import type { ViewMode } from "~/features/snap/types";
+import type { ViewMode } from "~/features/snap";
 import { SimpleEmpty } from "~/components/simple-empty";
 import { SnapCharts } from "~/features/snap";
 import { useSnaps } from "../-hooks/use-snaps";

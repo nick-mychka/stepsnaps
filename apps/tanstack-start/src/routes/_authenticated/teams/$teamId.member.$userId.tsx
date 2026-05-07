@@ -3,12 +3,17 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { Button } from "@stepsnaps/ui/button";
+import { Separator } from "@stepsnaps/ui/separator";
 
-import type { SnapByDate } from "~/features/snap";
-import type { ViewMode } from "~/features/snap/types";
+import type { Granularity, SnapByDate, ViewMode } from "~/features/snap";
 import { SimpleEmpty } from "~/components/simple-empty";
-import { SnapCard, SnapCharts } from "~/features/snap";
-import { ViewToggle } from "~/features/snap/components/view-toggle";
+import {
+  GranularityToggle,
+  SnapCard,
+  SnapCharts,
+  useGroupedSnaps,
+  ViewToggle,
+} from "~/features/snap";
 import { useTRPC } from "~/lib/trpc";
 
 export const Route = createFileRoute(
@@ -30,13 +35,14 @@ function MemberProgressPage() {
   const { teamId, userId } = Route.useParams();
   const trpc = useTRPC();
   const [view, setView] = useState<ViewMode>("timeline");
+  const [granularity, setGranularity] = useState<Granularity>("daily");
 
   const { data } = useSuspenseQuery(
     trpc.team.memberProgress.queryOptions({ teamId, userId }),
   );
 
   return (
-    <main className="container mx-auto py-8">
+    <main className="container mx-auto px-3 py-8">
       <Button variant="ghost" size="sm" className="mb-4" asChild>
         <Link to="/teams/$teamId" params={{ teamId }}>
           &larr; Back to Team
@@ -44,8 +50,21 @@ function MemberProgressPage() {
       </Button>
 
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-3xl font-bold">{data.memberName}'s Progress</h1>
-        {data.journey && <ViewToggle view={view} onChange={setView} />}
+        <h1 className="text-2xl font-bold">{data.memberName}'s Progress</h1>
+        {data.journey && (
+          <div className="flex items-center gap-4">
+            {view === "timeline" && (
+              <>
+                <GranularityToggle
+                  granularity={granularity}
+                  onChange={setGranularity}
+                />
+                <Separator orientation="vertical" />
+              </>
+            )}
+            <ViewToggle view={view} onChange={setView} />
+          </div>
+        )}
       </div>
 
       {!data.journey ? (
@@ -56,7 +75,7 @@ function MemberProgressPage() {
           }
         />
       ) : view === "timeline" ? (
-        <ReadOnlyTimeline snaps={data.snaps} />
+        <ReadOnlyTimeline snaps={data.snaps} granularity={granularity} />
       ) : (
         <SnapCharts
           snaps={data.snaps}
@@ -68,10 +87,13 @@ function MemberProgressPage() {
   );
 }
 
-function ReadOnlyTimeline(props: { snaps: SnapByDate[] }) {
-  const sortedSnaps = [...props.snaps].reverse();
+function ReadOnlyTimeline(props: {
+  snaps: SnapByDate[];
+  granularity: Granularity;
+}) {
+  const items = useGroupedSnaps(props.snaps, props.granularity);
 
-  if (sortedSnaps.length === 0) {
+  if (items.length === 0) {
     return (
       <SimpleEmpty
         title="No snaps yet"
@@ -82,8 +104,8 @@ function ReadOnlyTimeline(props: { snaps: SnapByDate[] }) {
 
   return (
     <div className="flex max-w-2xl flex-col gap-4">
-      {sortedSnaps.map((snap) => (
-        <SnapCard key={snap.id} snap={snap} />
+      {items.map(({ snap, label }) => (
+        <SnapCard key={snap.id} snap={snap} label={label} />
       ))}
     </div>
   );
