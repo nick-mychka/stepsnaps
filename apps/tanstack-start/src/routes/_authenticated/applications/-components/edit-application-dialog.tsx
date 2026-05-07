@@ -18,8 +18,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@stepsnaps/ui/select";
-import { Spinner } from "@stepsnaps/ui/spinner";
 
+import { LoadingButton } from "~/components/loading-button";
 import { useApplication } from "../-hooks/use-application";
 import { useUpdateApplication } from "../-hooks/use-update-application";
 import { SourceTypeahead } from "./source-typeahead";
@@ -230,10 +230,9 @@ function EditApplicationForm(props: {
         >
           Cancel
         </Button>
-        <Button type="submit" disabled={updateApplication.isPending}>
-          {updateApplication.isPending && <Spinner />}
+        <LoadingButton type="submit" disabled={updateApplication.isPending}>
           Save Changes
-        </Button>
+        </LoadingButton>
       </DialogFooter>
     </form>
   );

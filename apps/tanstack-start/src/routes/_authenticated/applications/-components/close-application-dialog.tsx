@@ -11,8 +11,8 @@ import {
 } from "@stepsnaps/ui/dialog";
 import { Label } from "@stepsnaps/ui/label";
 import { RadioGroup, RadioGroupItem } from "@stepsnaps/ui/radio-group";
-import { Spinner } from "@stepsnaps/ui/spinner";
 
+import { LoadingButton } from "~/components/loading-button";
 import { SimpleTooltip } from "~/components/simple-tooltip";
 import { useCloseApplication } from "../-hooks/use-close-application";
 
@@ -117,14 +117,13 @@ export function CloseApplicationDialog(props: CloseApplicationDialogProps) {
             >
               Cancel
             </Button>
-            <Button
+            <LoadingButton
               type="submit"
               variant="destructive"
               disabled={closeApplication.isPending}
             >
-              {closeApplication.isPending && <Spinner />}
               Close Application
-            </Button>
+            </LoadingButton>
           </DialogFooter>
         </form>
       </DialogContent>

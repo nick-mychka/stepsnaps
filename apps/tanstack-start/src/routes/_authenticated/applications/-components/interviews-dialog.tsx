@@ -18,9 +18,9 @@ import {
   SelectValue,
 } from "@stepsnaps/ui/select";
 import { Separator } from "@stepsnaps/ui/separator";
-import { Spinner } from "@stepsnaps/ui/spinner";
 import { Textarea } from "@stepsnaps/ui/textarea";
 
+import { LoadingButton } from "~/components/loading-button";
 import { useCreateInterview } from "../-hooks/use-create-interview";
 import { useDeleteInterview } from "../-hooks/use-delete-interview";
 import { useInterviews } from "../-hooks/use-interviews";
@@ -274,10 +274,9 @@ export function InterviewsDialog(props: InterviewsDialogProps) {
             value={note}
             onChange={(e) => setNote(e.target.value)}
           />
-          <Button type="submit" disabled={createInterview.isPending}>
-            {createInterview.isPending && <Spinner />}
+          <LoadingButton type="submit" disabled={createInterview.isPending}>
             Add Interview
-          </Button>
+          </LoadingButton>
         </form>
       </DialogContent>
     </Dialog>

@@ -11,10 +11,10 @@ import {
 } from "@stepsnaps/ui/dialog";
 import { Field, FieldGroup, FieldLabel } from "@stepsnaps/ui/field";
 import { Input } from "@stepsnaps/ui/input";
-import { Spinner } from "@stepsnaps/ui/spinner";
 import { Textarea } from "@stepsnaps/ui/textarea";
 
 import type { JourneyData } from "./journey-card";
+import { LoadingButton } from "~/components/loading-button";
 import { useUpdateJourneyDetails } from "../-hooks/use-update-journey-details";
 
 interface ContentProps {
@@ -85,10 +85,9 @@ function EditDetailsDialogContent({ journey, onOpenChange }: ContentProps) {
         <Button variant="outline" onClick={() => onOpenChange(false)}>
           Cancel
         </Button>
-        <Button onClick={handleSave} disabled={updateDetails.isPending}>
-          {updateDetails.isPending && <Spinner />}
+        <LoadingButton onClick={handleSave} disabled={updateDetails.isPending}>
           Save
-        </Button>
+        </LoadingButton>
       </DialogFooter>
     </>
   );

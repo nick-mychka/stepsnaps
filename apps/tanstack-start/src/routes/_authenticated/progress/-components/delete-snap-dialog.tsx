@@ -7,8 +7,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@stepsnaps/ui/dialog";
-import { Spinner } from "@stepsnaps/ui/spinner";
 
+import { LoadingButton } from "~/components/loading-button";
 import { useDeleteSnap } from "../-hooks/use-delete-snap";
 
 export function DeleteSnapDialog(props: {
@@ -34,14 +34,13 @@ export function DeleteSnapDialog(props: {
           <Button variant="outline" onClick={() => props.onOpenChange(false)}>
             Cancel
           </Button>
-          <Button
+          <LoadingButton
             variant="destructive"
             onClick={() => deleteSnap.mutate({ id: props.snapId })}
             disabled={deleteSnap.isPending}
           >
-            {deleteSnap.isPending && <Spinner />}
             Delete
-          </Button>
+          </LoadingButton>
         </DialogFooter>
       </DialogContent>
     </Dialog>
