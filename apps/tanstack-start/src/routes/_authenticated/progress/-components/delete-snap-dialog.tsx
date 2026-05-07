@@ -38,6 +38,7 @@ export function DeleteSnapDialog(props: {
             variant="destructive"
             onClick={() => deleteSnap.mutate({ id: props.snapId })}
             disabled={deleteSnap.isPending}
+            loading={deleteSnap.isPending}
           >
             Delete
           </LoadingButton>

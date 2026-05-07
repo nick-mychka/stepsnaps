@@ -145,6 +145,7 @@ function CreateTeamDialog() {
             <LoadingButton
               type="submit"
               disabled={create.isPending || !name.trim()}
+              loading={create.isPending}
             >
               Create
             </LoadingButton>

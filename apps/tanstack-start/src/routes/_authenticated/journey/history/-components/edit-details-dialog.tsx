@@ -85,7 +85,11 @@ function EditDetailsDialogContent({ journey, onOpenChange }: ContentProps) {
         <Button variant="outline" onClick={() => onOpenChange(false)}>
           Cancel
         </Button>
-        <LoadingButton onClick={handleSave} disabled={updateDetails.isPending}>
+        <LoadingButton
+          onClick={handleSave}
+          disabled={updateDetails.isPending}
+          loading={updateDetails.isPending}
+        >
           Save
         </LoadingButton>
       </DialogFooter>

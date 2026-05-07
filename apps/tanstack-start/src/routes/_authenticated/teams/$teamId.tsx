@@ -180,6 +180,7 @@ function InviteSection({ teamId }: { teamId: string }) {
           size="sm"
           onClick={() => createInvite.mutate({ teamId })}
           disabled={createInvite.isPending}
+          loading={createInvite.isPending}
         >
           Generate Link
         </LoadingButton>

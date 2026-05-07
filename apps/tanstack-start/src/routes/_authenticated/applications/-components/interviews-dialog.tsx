@@ -274,7 +274,11 @@ export function InterviewsDialog(props: InterviewsDialogProps) {
             value={note}
             onChange={(e) => setNote(e.target.value)}
           />
-          <LoadingButton type="submit" disabled={createInterview.isPending}>
+          <LoadingButton
+            type="submit"
+            disabled={createInterview.isPending}
+            loading={createInterview.isPending}
+          >
             Add Interview
           </LoadingButton>
         </form>

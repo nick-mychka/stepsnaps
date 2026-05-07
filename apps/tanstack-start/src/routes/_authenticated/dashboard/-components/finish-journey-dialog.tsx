@@ -70,6 +70,7 @@ export function FinishJourneyDialog(props: {
           <LoadingButton
             onClick={handleSubmit}
             disabled={finishJourney.isPending}
+            loading={finishJourney.isPending}
           >
             Finish Journey
           </LoadingButton>

@@ -156,6 +156,7 @@ function StepFormDialogContent({ step, onOpenChange }: ContentProps) {
         <LoadingButton
           type="submit"
           disabled={mutation.isPending || !name.trim()}
+          loading={mutation.isPending}
         >
           {isEdit ? "Save" : "Add Step"}
         </LoadingButton>

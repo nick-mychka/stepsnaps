@@ -17,6 +17,7 @@ export function StartJourneyCard() {
           startJourney.mutate({ startDate: today() });
         }}
         disabled={startJourney.isPending}
+        loading={startJourney.isPending}
       >
         Start Journey
       </LoadingButton>

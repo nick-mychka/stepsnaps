@@ -230,7 +230,11 @@ function EditApplicationForm(props: {
         >
           Cancel
         </Button>
-        <LoadingButton type="submit" disabled={updateApplication.isPending}>
+        <LoadingButton
+          type="submit"
+          disabled={updateApplication.isPending}
+          loading={updateApplication.isPending}
+        >
           Save Changes
         </LoadingButton>
       </DialogFooter>

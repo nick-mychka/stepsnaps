@@ -198,7 +198,11 @@ export function EditSnapDialog({
             >
               Cancel
             </Button>
-            <LoadingButton type="submit" disabled={upsertSnap.isPending}>
+            <LoadingButton
+              type="submit"
+              disabled={upsertSnap.isPending}
+              loading={upsertSnap.isPending}
+            >
               Save Changes
             </LoadingButton>
           </DialogFooter>

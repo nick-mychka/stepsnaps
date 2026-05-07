@@ -119,6 +119,7 @@ function InvitePage() {
           className="w-full"
           onClick={() => acceptInvite.mutate({ token })}
           disabled={acceptInvite.isPending}
+          loading={acceptInvite.isPending}
         >
           Join Team
         </LoadingButton>
@@ -134,6 +135,7 @@ function InvitePage() {
           className="w-full"
           onClick={() => declineInvite.mutate({ token })}
           disabled={declineInvite.isPending}
+          loading={declineInvite.isPending}
         >
           Decline
         </LoadingButton>

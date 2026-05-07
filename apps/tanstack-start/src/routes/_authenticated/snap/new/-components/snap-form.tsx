@@ -125,7 +125,11 @@ export function SnapForm({
                 />
               );
             })}
-            <LoadingButton type="submit" disabled={upsertSnap.isPending}>
+            <LoadingButton
+              type="submit"
+              disabled={upsertSnap.isPending}
+              loading={upsertSnap.isPending}
+            >
               {existingSnap ? "Update Snap" : "Save Snap"}
             </LoadingButton>
           </form>

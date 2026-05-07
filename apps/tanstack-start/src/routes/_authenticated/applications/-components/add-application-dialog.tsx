@@ -152,7 +152,11 @@ export function AddApplicationDialog(props: AddApplicationDialogProps) {
             >
               Cancel
             </Button>
-            <LoadingButton type="submit" disabled={createApplication.isPending}>
+            <LoadingButton
+              type="submit"
+              disabled={createApplication.isPending}
+              loading={createApplication.isPending}
+            >
               Add Application
             </LoadingButton>
           </DialogFooter>

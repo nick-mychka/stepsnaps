@@ -121,6 +121,7 @@ export function CloseApplicationDialog(props: CloseApplicationDialogProps) {
               type="submit"
               variant="destructive"
               disabled={closeApplication.isPending}
+              loading={closeApplication.isPending}
             >
               Close Application
             </LoadingButton>
