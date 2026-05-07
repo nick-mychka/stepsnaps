@@ -12,10 +12,10 @@ import {
 } from "@stepsnaps/ui/dialog";
 import { Field, FieldLabel } from "@stepsnaps/ui/field";
 import { Input } from "@stepsnaps/ui/input";
-import { Spinner } from "@stepsnaps/ui/spinner";
 import { Textarea } from "@stepsnaps/ui/textarea";
 
 import type { SnapByDate } from "~/features/snap";
+import { LoadingButton } from "~/components/loading-button";
 import { dayjs } from "~/lib/date";
 import { useTRPC } from "~/lib/trpc";
 import { useUpsertSnap } from "../-hooks/use-upsert-snap";
@@ -198,10 +198,13 @@ export function EditSnapDialog({
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={upsertSnap.isPending}>
-              {upsertSnap.isPending && <Spinner />}
+            <LoadingButton
+              type="submit"
+              disabled={upsertSnap.isPending}
+              loading={upsertSnap.isPending}
+            >
               Save Changes
-            </Button>
+            </LoadingButton>
           </DialogFooter>
         </form>
       </DialogContent>

@@ -1,6 +1,6 @@
 import { Button } from "@stepsnaps/ui/button";
 
-import type { ViewMode } from "~/features/snap/types";
+import type { ViewMode } from "../types";
 
 interface ViewToggleProps {
   view: ViewMode;

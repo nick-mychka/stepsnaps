@@ -11,9 +11,9 @@ import {
 } from "@stepsnaps/ui/dialog";
 import { Field, FieldGroup, FieldLabel } from "@stepsnaps/ui/field";
 import { Input } from "@stepsnaps/ui/input";
-import { Spinner } from "@stepsnaps/ui/spinner";
 import { Textarea } from "@stepsnaps/ui/textarea";
 
+import { LoadingButton } from "~/components/loading-button";
 import { useFinishJourney } from "../-hooks/use-finish-journey";
 
 export function FinishJourneyDialog(props: {
@@ -67,10 +67,13 @@ export function FinishJourneyDialog(props: {
           <Button variant="outline" onClick={() => props.onOpenChange(false)}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit} disabled={finishJourney.isPending}>
-            {finishJourney.isPending && <Spinner />}
+          <LoadingButton
+            onClick={handleSubmit}
+            disabled={finishJourney.isPending}
+            loading={finishJourney.isPending}
+          >
             Finish Journey
-          </Button>
+          </LoadingButton>
         </DialogFooter>
       </DialogContent>
     </Dialog>

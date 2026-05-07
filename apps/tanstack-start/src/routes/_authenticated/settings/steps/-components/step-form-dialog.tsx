@@ -13,8 +13,8 @@ import {
 import { Field, FieldGroup, FieldLabel } from "@stepsnaps/ui/field";
 import { Input } from "@stepsnaps/ui/input";
 import { RadioGroup, RadioGroupItem } from "@stepsnaps/ui/radio-group";
-import { Spinner } from "@stepsnaps/ui/spinner";
 
+import { LoadingButton } from "~/components/loading-button";
 import { useCreateStep } from "../-hooks/use-create-step";
 import { useUpdateStep } from "../-hooks/use-update-step";
 
@@ -153,10 +153,13 @@ function StepFormDialogContent({ step, onOpenChange }: ContentProps) {
             Cancel
           </Button>
         </DialogClose>
-        <Button type="submit" disabled={mutation.isPending || !name.trim()}>
-          {mutation.isPending && <Spinner />}
+        <LoadingButton
+          type="submit"
+          disabled={mutation.isPending || !name.trim()}
+          loading={mutation.isPending}
+        >
           {isEdit ? "Save" : "Add Step"}
-        </Button>
+        </LoadingButton>
       </DialogFooter>
     </form>
   );

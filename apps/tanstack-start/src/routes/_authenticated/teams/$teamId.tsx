@@ -15,9 +15,9 @@ import {
 import { Badge } from "@stepsnaps/ui/badge";
 import { Button } from "@stepsnaps/ui/button";
 import { Input } from "@stepsnaps/ui/input";
-import { Spinner } from "@stepsnaps/ui/spinner";
 import { toast } from "@stepsnaps/ui/toast";
 
+import { LoadingButton } from "~/components/loading-button";
 import { SimpleCard } from "~/components/simple-card";
 import { useTRPC } from "~/lib/trpc";
 
@@ -176,14 +176,14 @@ function InviteSection({ teamId }: { teamId: string }) {
   return (
     <SimpleCard
       actionSlot={
-        <Button
+        <LoadingButton
           size="sm"
           onClick={() => createInvite.mutate({ teamId })}
           disabled={createInvite.isPending}
+          loading={createInvite.isPending}
         >
-          {createInvite.isPending && <Spinner />}
           Generate Link
-        </Button>
+        </LoadingButton>
       }
       title="Invite Links"
       description="Generate links to invite people to your team."

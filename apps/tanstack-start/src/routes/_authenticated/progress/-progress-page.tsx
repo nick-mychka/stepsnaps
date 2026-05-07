@@ -3,10 +3,10 @@ import { Link } from "@tanstack/react-router";
 
 import { Button } from "@stepsnaps/ui/button";
 
-import type { ViewMode } from "~/features/snap/types";
+import type { ViewMode } from "~/features/snap";
 import { BackgroundV3 } from "~/components/journey-background";
 import { SimpleCard } from "~/components/simple-card";
-import { ViewToggle } from "~/features/snap/components/view-toggle";
+import { ViewToggle } from "~/features/snap";
 import { ProgressView } from "./-components/progress-view";
 import { useActiveJourney } from "./-hooks/use-active-journey";
 
