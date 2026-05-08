@@ -27,7 +27,8 @@
     "./command": "./src/command.tsx",
     "./spinner": "./src/spinner.tsx",
     "./progress": "./src/progress.tsx",
-    "./empty": "./src/empty.tsx"
+    "./empty": "./src/empty.tsx",
+    "./switch": "./src/switch.tsx"
   },
   "license": "MIT",
   "scripts": {
