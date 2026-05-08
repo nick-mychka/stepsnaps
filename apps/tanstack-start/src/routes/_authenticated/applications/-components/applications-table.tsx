@@ -6,6 +6,7 @@ import {
 } from "@tanstack/react-table";
 
 import type { RouterOutputs } from "@stepsnaps/api";
+import { Badge } from "@stepsnaps/ui/badge";
 import { Button } from "@stepsnaps/ui/button";
 import {
   Table,
@@ -16,7 +17,28 @@ import {
   TableRow,
 } from "@stepsnaps/ui/table";
 
+import { SimpleTooltip } from "~/components/simple-tooltip";
+import { dayjs, ISO_DATE_FORMAT } from "~/lib/date";
 import { StatusBadge } from "./status-badge";
+
+function AppliedBadge({ appliedAt }: { appliedAt: string }) {
+  const normalizedAppliedDate = dayjs(appliedAt, ISO_DATE_FORMAT).startOf(
+    "day",
+  );
+  const diff = dayjs().startOf("day").diff(normalizedAppliedDate, "day");
+
+  let label;
+
+  if (diff <= 0) label = "today";
+  else if (diff === 1) label = "yesterday";
+  else label = `${diff} days ago`;
+
+  return (
+    <SimpleTooltip content={normalizedAppliedDate.format("MMM D, YYYY")}>
+      <Badge variant="secondary">{label}</Badge>
+    </SimpleTooltip>
+  );
+}
 
 type ApplicationRow = RouterOutputs["jobApplication"]["list"]["items"][number];
 
@@ -64,7 +86,7 @@ function createColumns(
     }),
     columnHelper.accessor("appliedAt", {
       header: "Applied",
-      cell: (info) => info.getValue(),
+      cell: (info) => <AppliedBadge appliedAt={info.getValue()} />,
     }),
     columnHelper.accessor("status", {
       header: "Status",
