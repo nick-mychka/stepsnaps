@@ -18,6 +18,7 @@ import {
 } from "@stepsnaps/ui/table";
 
 import { SimpleTooltip } from "~/components/simple-tooltip";
+import { useIsClient } from "~/hooks";
 import { dayjs, ISO_DATE_FORMAT } from "~/lib/date";
 import { StatusBadge } from "./status-badge";
 
@@ -48,17 +49,21 @@ function getBadgeClass(diff: number) {
 }
 
 function AppliedBadge({ appliedAt }: { appliedAt: string }) {
-  const diff = getDayDiff(appliedAt);
+  const isClient = useIsClient();
+  const formattedDate = dayjs(appliedAt, ISO_DATE_FORMAT).format("MMM D, YYYY");
 
+  if (!isClient) {
+    return <Badge variant="secondary">{formattedDate}</Badge>;
+  }
+
+  const diff = getDayDiff(appliedAt);
   let label;
   if (diff <= 0) label = "Today";
   else if (diff === 1) label = "Yesterday";
   else label = `${diff} days ago`;
 
   return (
-    <SimpleTooltip
-      content={dayjs(appliedAt, ISO_DATE_FORMAT).format("MMM D, YYYY")}
-    >
+    <SimpleTooltip content={formattedDate}>
       <Badge variant="secondary" className={getBadgeClass(diff)}>
         {label}
       </Badge>
