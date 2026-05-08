@@ -6,6 +6,7 @@ import {
 } from "@tanstack/react-table";
 
 import type { RouterOutputs } from "@stepsnaps/api";
+import { Badge } from "@stepsnaps/ui/badge";
 import { Button } from "@stepsnaps/ui/button";
 import {
   Table,
@@ -16,7 +17,59 @@ import {
   TableRow,
 } from "@stepsnaps/ui/table";
 
+import { SimpleTooltip } from "~/components/simple-tooltip";
+import { useIsClient } from "~/hooks";
+import { dayjs, ISO_DATE_FORMAT } from "~/lib/date";
 import { StatusBadge } from "./status-badge";
+
+function getDayDiff(appliedAt: string) {
+  return dayjs()
+    .startOf("day")
+    .diff(dayjs(appliedAt, ISO_DATE_FORMAT).startOf("day"), "day");
+}
+
+function getHeatmapRowClass(diff: number) {
+  if (diff <= 0)
+    return "bg-emerald-500/20 hover:bg-emerald-500/30 dark:bg-emerald-300/20 dark:hover:bg-emerald-300/25";
+  if (diff === 1)
+    return "bg-emerald-500/10 hover:bg-emerald-500/20 dark:bg-emerald-300/10 dark:hover:bg-emerald-300/15";
+  if (diff <= 3)
+    return "bg-yellow-500/10 hover:bg-yellow-500/20 dark:bg-yellow-300/10 dark:hover:bg-yellow-300/15";
+  if (diff <= 7)
+    return "bg-orange-500/15 hover:bg-orange-500/25 dark:bg-orange-300/15 dark:hover:bg-orange-300/20";
+  return "bg-red-500/15 hover:bg-red-500/25 dark:bg-red-300/15 dark:hover:bg-red-300/20";
+}
+
+function getBadgeClass(diff: number) {
+  if (diff <= 0) return "bg-emerald-400/20";
+  if (diff === 1) return "bg-emerald-400/10";
+  if (diff <= 3) return "bg-yellow-400/10";
+  if (diff <= 7) return "bg-orange-400/15";
+  return "bg-red-400/15";
+}
+
+function AppliedBadge({ appliedAt }: { appliedAt: string }) {
+  const isClient = useIsClient();
+  const formattedDate = dayjs(appliedAt, ISO_DATE_FORMAT).format("MMM D, YYYY");
+
+  if (!isClient) {
+    return <Badge variant="secondary">{formattedDate}</Badge>;
+  }
+
+  const diff = getDayDiff(appliedAt);
+  let label;
+  if (diff <= 0) label = "Today";
+  else if (diff === 1) label = "Yesterday";
+  else label = `${diff} days ago`;
+
+  return (
+    <SimpleTooltip content={formattedDate}>
+      <Badge variant="secondary" className={getBadgeClass(diff)}>
+        {label}
+      </Badge>
+    </SimpleTooltip>
+  );
+}
 
 type ApplicationRow = RouterOutputs["jobApplication"]["list"]["items"][number];
 
@@ -64,7 +117,7 @@ function createColumns(
     }),
     columnHelper.accessor("appliedAt", {
       header: "Applied",
-      cell: (info) => info.getValue(),
+      cell: (info) => <AppliedBadge appliedAt={info.getValue()} />,
     }),
     columnHelper.accessor("status", {
       header: "Status",
@@ -94,6 +147,7 @@ interface ApplicationsTableProps {
   data: ApplicationRow[];
   onEdit: (id: string) => void;
   onInterviews: (id: string) => void;
+  heatmap?: boolean;
 }
 
 export function ApplicationsTable(props: ApplicationsTableProps) {
@@ -126,7 +180,14 @@ export function ApplicationsTable(props: ApplicationsTableProps) {
         <TableBody>
           {table.getRowModel().rows.length ? (
             table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id}>
+              <TableRow
+                key={row.id}
+                className={
+                  props.heatmap
+                    ? getHeatmapRowClass(getDayDiff(row.original.appliedAt))
+                    : undefined
+                }
+              >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}

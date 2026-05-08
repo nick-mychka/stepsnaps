@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 
 import { Button } from "@stepsnaps/ui/button";
+import { Field, FieldLabel } from "@stepsnaps/ui/field";
 import { Input } from "@stepsnaps/ui/input";
 import {
   Select,
@@ -9,6 +10,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@stepsnaps/ui/select";
+import { Separator } from "@stepsnaps/ui/separator";
+import { Switch } from "@stepsnaps/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@stepsnaps/ui/tabs";
 
 import { AddApplicationDialog } from "./-components/add-application-dialog";
@@ -21,6 +24,7 @@ import { InterviewsDialog } from "./-components/interviews-dialog";
 import { PaginationControls } from "./-components/pagination-controls";
 import { useActiveApplications } from "./-hooks/use-active-applications";
 import { useClosedApplications } from "./-hooks/use-closed-applications";
+import { useHeatmap } from "./-hooks/use-heatmap";
 
 export function ApplicationsPage() {
   const [activeTab, setActiveTab] = useState<"active" | "closed">("active");
@@ -32,6 +36,7 @@ export function ApplicationsPage() {
   const [editingAppId, setEditingAppId] = useState<string | null>(null);
   const [closingAppId, setClosingAppId] = useState<string | null>(null);
   const [interviewsAppId, setInterviewsAppId] = useState<string | null>(null);
+  const { heatmap, setHeatmap } = useHeatmap();
 
   const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const handleSearchChange = (value: string) => {
@@ -97,7 +102,20 @@ export function ApplicationsPage() {
             <TabsTrigger value="closed">History</TabsTrigger>
           </TabsList>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            {activeTab === "active" && (
+              <>
+                <Field orientation="horizontal" className="w-fit">
+                  <Switch
+                    id="heatmap-toggle"
+                    checked={heatmap}
+                    onCheckedChange={setHeatmap}
+                  />
+                  <FieldLabel htmlFor="heatmap-toggle">Heatmap</FieldLabel>
+                </Field>
+                <Separator orientation="vertical" className="mx-3" />
+              </>
+            )}
             <Input
               placeholder="Search by company..."
               value={search}
@@ -135,6 +153,7 @@ export function ApplicationsPage() {
                   data={activeData.items}
                   onEdit={setEditingAppId}
                   onInterviews={setInterviewsAppId}
+                  heatmap={heatmap}
                 />
                 {totalPages > 1 && (
                   <PaginationControls
