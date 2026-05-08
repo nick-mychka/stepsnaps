@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { CalendarX, Road } from "lucide-react";
 
 import { Button } from "@stepsnaps/ui/button";
 
@@ -18,6 +19,7 @@ export function SnapFormPage() {
         <SimpleEmpty
           title="No Active Journey"
           description="Start a journey from the dashboard to begin logging snaps."
+          icon={<Road />}
         >
           <Button asChild>
             <Link to="/dashboard">Go to Dashboard</Link>
@@ -44,6 +46,7 @@ export function SnapFormPage() {
               ? "You can't snap a future date."
               : "That date is before your journey started."
           }
+          icon={<CalendarX />}
         >
           <Button asChild>
             <Link to="/dashboard">Go to Dashboard</Link>
