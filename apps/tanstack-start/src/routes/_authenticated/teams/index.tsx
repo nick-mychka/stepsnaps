@@ -118,13 +118,13 @@ function CreateTeamDialog() {
         <Button>Create Team</Button>
       </DialogTrigger>
       <DialogContent>
-        <form onSubmit={handleSubmit}>
-          <DialogHeader>
-            <DialogTitle>Create Team</DialogTitle>
-            <DialogDescription>
-              Create a new team to track progress with peers.
-            </DialogDescription>
-          </DialogHeader>
+        <DialogHeader>
+          <DialogTitle>Create Team</DialogTitle>
+          <DialogDescription>
+            Create a new team to track progress with peers.
+          </DialogDescription>
+        </DialogHeader>
+        <form id="create-team-form" onSubmit={handleSubmit}>
           <Field className="py-4">
             <FieldLabel htmlFor="team-name">Team Name</FieldLabel>
             <Input
@@ -136,21 +136,22 @@ function CreateTeamDialog() {
               className="mt-1.5"
             />
           </Field>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline" type="button">
-                Cancel
-              </Button>
-            </DialogClose>
-            <LoadingButton
-              type="submit"
-              disabled={create.isPending || !name.trim()}
-              loading={create.isPending}
-            >
-              Create
-            </LoadingButton>
-          </DialogFooter>
         </form>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button variant="outline" type="button">
+              Cancel
+            </Button>
+          </DialogClose>
+          <LoadingButton
+            type="submit"
+            form="create-team-form"
+            disabled={create.isPending || !name.trim()}
+            loading={create.isPending}
+          >
+            Create
+          </LoadingButton>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
