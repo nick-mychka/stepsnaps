@@ -70,63 +70,66 @@ export function CloseApplicationDialog(props: CloseApplicationDialogProps) {
   return (
     <Dialog open={!!props.applicationId} onOpenChange={props.onOpenChange}>
       <DialogContent>
-        <form onSubmit={handleSubmit}>
-          <DialogHeader>
-            <DialogTitle>Close Application</DialogTitle>
-            <DialogDescription>
-              Choose a reason for closing this application. It will move to your
-              history.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="py-4">
-            <RadioGroup
-              value={closedReason}
-              onValueChange={(v) =>
-                setClosedReason(
-                  v as "rejected" | "withdrawn" | "no_response" | "success",
-                )
-              }
-            >
-              {CLOSED_REASONS.map((reason) => (
-                <div key={reason.value} className="flex items-center gap-3">
-                  <RadioGroupItem
-                    value={reason.value}
-                    id={`reason-${reason.value}`}
-                  />
-                  <SimpleTooltip
-                    content={reason.description}
-                    side="right"
-                    contentClassName="max-w-xs"
+        <DialogHeader>
+          <DialogTitle>Close Application</DialogTitle>
+          <DialogDescription>
+            Choose a reason for closing this application. It will move to your
+            history.
+          </DialogDescription>
+        </DialogHeader>
+        <form
+          id="close-application-form"
+          className="py-4"
+          onSubmit={handleSubmit}
+        >
+          <RadioGroup
+            value={closedReason}
+            onValueChange={(v) =>
+              setClosedReason(
+                v as "rejected" | "withdrawn" | "no_response" | "success",
+              )
+            }
+          >
+            {CLOSED_REASONS.map((reason) => (
+              <div key={reason.value} className="flex items-center gap-3">
+                <RadioGroupItem
+                  value={reason.value}
+                  id={`reason-${reason.value}`}
+                />
+                <SimpleTooltip
+                  content={reason.description}
+                  side="right"
+                  contentClassName="max-w-xs"
+                >
+                  <Label
+                    htmlFor={`reason-${reason.value}`}
+                    className="cursor-pointer"
                   >
-                    <Label
-                      htmlFor={`reason-${reason.value}`}
-                      className="cursor-pointer"
-                    >
-                      {reason.label}
-                    </Label>
-                  </SimpleTooltip>
-                </div>
-              ))}
-            </RadioGroup>
-          </div>
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => props.onOpenChange(false)}
-            >
-              Cancel
-            </Button>
-            <LoadingButton
-              type="submit"
-              variant="destructive"
-              disabled={closeApplication.isPending}
-              loading={closeApplication.isPending}
-            >
-              Close Application
-            </LoadingButton>
-          </DialogFooter>
+                    {reason.label}
+                  </Label>
+                </SimpleTooltip>
+              </div>
+            ))}
+          </RadioGroup>
         </form>
+        <DialogFooter>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => props.onOpenChange(false)}
+          >
+            Cancel
+          </Button>
+          <LoadingButton
+            type="submit"
+            form="close-application-form"
+            variant="destructive"
+            disabled={closeApplication.isPending}
+            loading={closeApplication.isPending}
+          >
+            Close Application
+          </LoadingButton>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
