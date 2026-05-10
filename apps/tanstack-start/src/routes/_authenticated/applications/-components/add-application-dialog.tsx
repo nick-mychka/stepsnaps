@@ -75,13 +75,13 @@ export function AddApplicationDialog(props: AddApplicationDialogProps) {
       }}
     >
       <DialogContent>
-        <form onSubmit={handleSubmit}>
-          <DialogHeader>
-            <DialogTitle>Add Application</DialogTitle>
-            <DialogDescription>
-              Track a new job application in your pipeline.
-            </DialogDescription>
-          </DialogHeader>
+        <DialogHeader>
+          <DialogTitle>Add Application</DialogTitle>
+          <DialogDescription>
+            Track a new job application in your pipeline.
+          </DialogDescription>
+        </DialogHeader>
+        <form id="add-application-form" onSubmit={handleSubmit}>
           <FieldGroup className="flex flex-col gap-4 py-4">
             <Field>
               <FieldLabel htmlFor="companyName">Company Name *</FieldLabel>
@@ -144,23 +144,24 @@ export function AddApplicationDialog(props: AddApplicationDialogProps) {
               />
             </Field>
           </FieldGroup>
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => props.onOpenChange(false)}
-            >
-              Cancel
-            </Button>
-            <LoadingButton
-              type="submit"
-              disabled={createApplication.isPending}
-              loading={createApplication.isPending}
-            >
-              Add Application
-            </LoadingButton>
-          </DialogFooter>
         </form>
+        <DialogFooter>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => props.onOpenChange(false)}
+          >
+            Cancel
+          </Button>
+          <LoadingButton
+            type="submit"
+            form="add-application-form"
+            disabled={createApplication.isPending}
+            loading={createApplication.isPending}
+          >
+            Add Application
+          </LoadingButton>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

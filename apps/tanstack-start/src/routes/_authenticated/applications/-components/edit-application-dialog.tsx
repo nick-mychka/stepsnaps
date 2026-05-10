@@ -115,113 +115,115 @@ function EditApplicationForm(props: {
   const canClose = status === "interviewing" || status === "on_hold";
 
   return (
-    <form onSubmit={handleSubmit}>
+    <>
       <DialogHeader>
         <DialogTitle>Edit Application</DialogTitle>
         <DialogDescription>
           Update the details of this application.
         </DialogDescription>
       </DialogHeader>
-      <FieldGroup className="flex flex-col gap-4 py-4">
-        <Field>
-          <FieldLabel htmlFor="edit-companyName">Company Name *</FieldLabel>
-          <Input
-            id="edit-companyName"
-            value={companyName}
-            onChange={(e) => setCompanyName(e.target.value)}
-            required
-          />
-        </Field>
-        <Field>
-          <FieldLabel htmlFor="edit-jobTitle">Job Title</FieldLabel>
-          <Input
-            id="edit-jobTitle"
-            value={jobTitle}
-            onChange={(e) => setJobTitle(e.target.value)}
-          />
-        </Field>
-        <Field>
-          <FieldLabel htmlFor="edit-salary">Salary</FieldLabel>
-          <Input
-            id="edit-salary"
-            value={salary}
-            onChange={(e) => setSalary(e.target.value)}
-          />
-        </Field>
-        <Field>
-          <FieldLabel htmlFor="edit-workMode">Work Mode</FieldLabel>
-          <Select
-            value={workMode}
-            onValueChange={(v) =>
-              setWorkMode(v as "remote" | "onsite" | "hybrid")
-            }
-          >
-            <SelectTrigger id="edit-workMode">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="remote">Remote</SelectItem>
-              <SelectItem value="onsite">Onsite</SelectItem>
-              <SelectItem value="hybrid">Hybrid</SelectItem>
-            </SelectContent>
-          </Select>
-        </Field>
-        <Field>
-          <FieldLabel htmlFor="edit-sourceName">Source</FieldLabel>
-          <SourceTypeahead value={sourceName} onChange={setSourceName} />
-        </Field>
-        <Field>
-          <FieldLabel htmlFor="edit-jobUrl">Job URL</FieldLabel>
-          <Input
-            id="edit-jobUrl"
-            type="url"
-            placeholder="https://..."
-            value={jobUrl}
-            onChange={(e) => setJobUrl(e.target.value)}
-          />
-        </Field>
+      <form id="edit-application-form" onSubmit={handleSubmit}>
+        <FieldGroup className="flex flex-col gap-4 py-4">
+          <Field>
+            <FieldLabel htmlFor="edit-companyName">Company Name *</FieldLabel>
+            <Input
+              id="edit-companyName"
+              value={companyName}
+              onChange={(e) => setCompanyName(e.target.value)}
+              required
+            />
+          </Field>
+          <Field>
+            <FieldLabel htmlFor="edit-jobTitle">Job Title</FieldLabel>
+            <Input
+              id="edit-jobTitle"
+              value={jobTitle}
+              onChange={(e) => setJobTitle(e.target.value)}
+            />
+          </Field>
+          <Field>
+            <FieldLabel htmlFor="edit-salary">Salary</FieldLabel>
+            <Input
+              id="edit-salary"
+              value={salary}
+              onChange={(e) => setSalary(e.target.value)}
+            />
+          </Field>
+          <Field>
+            <FieldLabel htmlFor="edit-workMode">Work Mode</FieldLabel>
+            <Select
+              value={workMode}
+              onValueChange={(v) =>
+                setWorkMode(v as "remote" | "onsite" | "hybrid")
+              }
+            >
+              <SelectTrigger id="edit-workMode">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="remote">Remote</SelectItem>
+                <SelectItem value="onsite">Onsite</SelectItem>
+                <SelectItem value="hybrid">Hybrid</SelectItem>
+              </SelectContent>
+            </Select>
+          </Field>
+          <Field>
+            <FieldLabel htmlFor="edit-sourceName">Source</FieldLabel>
+            <SourceTypeahead value={sourceName} onChange={setSourceName} />
+          </Field>
+          <Field>
+            <FieldLabel htmlFor="edit-jobUrl">Job URL</FieldLabel>
+            <Input
+              id="edit-jobUrl"
+              type="url"
+              placeholder="https://..."
+              value={jobUrl}
+              onChange={(e) => setJobUrl(e.target.value)}
+            />
+          </Field>
 
-        {/* Status actions */}
-        <Field>
-          <FieldLabel className="text-muted-foreground mb-2 block text-sm">
-            Status: <StatusBadge status={status} />
-          </FieldLabel>
-          <div className="flex gap-2">
-            {canPutOnHold && (
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={handleOnHold}
-                disabled={updateApplication.isPending}
-              >
-                Put On Hold
-              </Button>
-            )}
-            {canResumeInterviewing && (
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={handleResumeInterviewing}
-                disabled={updateApplication.isPending}
-              >
-                Resume Interviewing
-              </Button>
-            )}
-            {canClose && (
-              <Button
-                type="button"
-                variant="destructive"
-                size="sm"
-                onClick={() => props.onClose(props.applicationId)}
-              >
-                Close Application
-              </Button>
-            )}
-          </div>
-        </Field>
-      </FieldGroup>
+          {/* Status actions */}
+          <Field>
+            <FieldLabel className="text-muted-foreground mb-2 block text-sm">
+              Status: <StatusBadge status={status} />
+            </FieldLabel>
+            <div className="flex gap-2">
+              {canPutOnHold && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={handleOnHold}
+                  disabled={updateApplication.isPending}
+                >
+                  Put On Hold
+                </Button>
+              )}
+              {canResumeInterviewing && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={handleResumeInterviewing}
+                  disabled={updateApplication.isPending}
+                >
+                  Resume Interviewing
+                </Button>
+              )}
+              {canClose && (
+                <Button
+                  type="button"
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => props.onClose(props.applicationId)}
+                >
+                  Close Application
+                </Button>
+              )}
+            </div>
+          </Field>
+        </FieldGroup>
+      </form>
       <DialogFooter>
         <Button
           type="button"
@@ -232,12 +234,13 @@ function EditApplicationForm(props: {
         </Button>
         <LoadingButton
           type="submit"
+          form="edit-application-form"
           disabled={updateApplication.isPending}
           loading={updateApplication.isPending}
         >
           Save Changes
         </LoadingButton>
       </DialogFooter>
-    </form>
+    </>
   );
 }
