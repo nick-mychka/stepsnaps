@@ -289,6 +289,7 @@ export const JobApplication = pgTable("job_application", (t) => ({
   salary: t.varchar({ length: 256 }),
   workMode: workModeEnum().notNull().default("remote"),
   jobUrl: t.text(),
+  vacancyText: t.text(),
   sourceId: t.uuid().references(() => Source.id, { onDelete: "set null" }),
   appliedAt: t.date({ mode: "string" }).notNull(),
   respondedAt: t.date({ mode: "string" }),

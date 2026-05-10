@@ -91,7 +91,7 @@ function StepFormDialogContent({ step, onOpenChange }: ContentProps) {
   const nameInputId = isEdit ? "edit-step-name" : "step-name";
 
   return (
-    <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
+    <>
       <DialogHeader>
         <DialogTitle>{isEdit ? "Edit Step" : "Add Custom Step"}</DialogTitle>
         <DialogDescription>
@@ -102,51 +102,57 @@ function StepFormDialogContent({ step, onOpenChange }: ContentProps) {
             : "Create a new step to track in your daily snaps."}
         </DialogDescription>
       </DialogHeader>
-      <FieldGroup>
-        <Field>
-          <FieldLabel htmlFor={nameInputId}>Name</FieldLabel>
-          <Input
-            id={nameInputId}
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder={isEdit ? undefined : "e.g., Leetcode Problems"}
-            maxLength={256}
-            disabled={isEdit && step.isPredefined}
-          />
-        </Field>
-        <Field>
-          <FieldLabel>Type</FieldLabel>
-          <RadioGroup
-            value={type}
-            onValueChange={(v: StepType) => setType(v)}
-            className="flex gap-4"
-            disabled={isEdit && step.isPredefined}
-          >
-            <Field orientation="horizontal">
-              <RadioGroupItem value="numeric" id="numeric" />
-              <FieldLabel htmlFor="numeric">Numeric</FieldLabel>
-            </Field>
-            <Field orientation="horizontal">
-              <RadioGroupItem value="text" id="text" />
-              <FieldLabel htmlFor="text">Text</FieldLabel>
-            </Field>
-          </RadioGroup>
-        </Field>
-        {type === "numeric" && (
+      <form
+        id="edit-step-form"
+        className="flex flex-col gap-6"
+        onSubmit={handleSubmit}
+      >
+        <FieldGroup>
           <Field>
-            <FieldLabel htmlFor="step-goal">Daily goal</FieldLabel>
+            <FieldLabel htmlFor={nameInputId}>Name</FieldLabel>
             <Input
-              id="step-goal"
-              type="number"
-              min={0}
-              step="any"
-              value={goalValue}
-              onChange={(e) => setGoalValue(e.target.value)}
-              placeholder="Optional"
+              id={nameInputId}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder={isEdit ? undefined : "e.g., Leetcode Problems"}
+              maxLength={256}
+              disabled={isEdit && step.isPredefined}
             />
           </Field>
-        )}
-      </FieldGroup>
+          <Field>
+            <FieldLabel>Type</FieldLabel>
+            <RadioGroup
+              value={type}
+              onValueChange={(v: StepType) => setType(v)}
+              className="flex gap-4"
+              disabled={isEdit && step.isPredefined}
+            >
+              <Field orientation="horizontal">
+                <RadioGroupItem value="numeric" id="numeric" />
+                <FieldLabel htmlFor="numeric">Numeric</FieldLabel>
+              </Field>
+              <Field orientation="horizontal">
+                <RadioGroupItem value="text" id="text" />
+                <FieldLabel htmlFor="text">Text</FieldLabel>
+              </Field>
+            </RadioGroup>
+          </Field>
+          {type === "numeric" && (
+            <Field>
+              <FieldLabel htmlFor="step-goal">Daily goal</FieldLabel>
+              <Input
+                id="step-goal"
+                type="number"
+                min={0}
+                step="any"
+                value={goalValue}
+                onChange={(e) => setGoalValue(e.target.value)}
+                placeholder="Optional"
+              />
+            </Field>
+          )}
+        </FieldGroup>
+      </form>
       <DialogFooter>
         <DialogClose asChild>
           <Button variant="outline" type="button">
@@ -155,12 +161,13 @@ function StepFormDialogContent({ step, onOpenChange }: ContentProps) {
         </DialogClose>
         <LoadingButton
           type="submit"
+          form="edit-step-form"
           disabled={mutation.isPending || !name.trim()}
           loading={mutation.isPending}
         >
           {isEdit ? "Save" : "Add Step"}
         </LoadingButton>
       </DialogFooter>
-    </form>
+    </>
   );
 }
