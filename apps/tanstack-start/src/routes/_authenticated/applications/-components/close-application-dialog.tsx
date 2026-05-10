@@ -44,6 +44,7 @@ const CLOSED_REASONS = [
 interface CloseApplicationDialogProps {
   applicationId: string | null;
   onOpenChange: (open: boolean) => void;
+  onSuccess?: () => void;
 }
 
 export function CloseApplicationDialog(props: CloseApplicationDialogProps) {
@@ -55,6 +56,7 @@ export function CloseApplicationDialog(props: CloseApplicationDialogProps) {
     onSuccess: () => {
       props.onOpenChange(false);
       setClosedReason("no_response");
+      props.onSuccess?.();
     },
   });
 

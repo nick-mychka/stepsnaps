@@ -18,6 +18,7 @@ export const env = createEnv({
    */
   server: {
     DATABASE_URL: z.url(),
+    ANTHROPIC_API_KEY: z.string().min(1),
   },
 
   /**

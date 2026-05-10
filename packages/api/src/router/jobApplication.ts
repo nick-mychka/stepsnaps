@@ -6,7 +6,14 @@ import type { db as _dbTypeHelper } from "@stepsnaps/db/client";
 import { and, count, desc, eq, ilike, ne, sql } from "@stepsnaps/db";
 import { JobApplication, Journey, Source } from "@stepsnaps/db/schema";
 
+import { checkRateLimit, formatRetryAfter } from "../services/rate-limiter";
+import { extractVacancyFields } from "../services/vacancy-extraction";
 import { protectedProcedure } from "../trpc";
+
+const EXTRACT_RATE_LIMIT = {
+  max: 20,
+  windowMs: 60 * 60 * 1000,
+};
 
 type Db = typeof _dbTypeHelper;
 
@@ -122,6 +129,7 @@ export const jobApplicationRouter = {
         workMode: z.enum(["remote", "onsite", "hybrid"]).default("remote"),
         jobUrl: z.string().url().optional().or(z.literal("")),
         sourceName: z.string().max(256).optional(),
+        vacancyText: z.string().max(50_000).optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -161,6 +169,7 @@ export const jobApplicationRouter = {
           salary: input.salary ?? null,
           workMode: input.workMode,
           jobUrl: input.jobUrl ?? null,
+          vacancyText: input.vacancyText ?? null,
           sourceId,
           appliedAt: today,
           status: "pending",
@@ -204,6 +213,7 @@ export const jobApplicationRouter = {
         workMode: z.enum(["remote", "onsite", "hybrid"]).optional(),
         jobUrl: z.string().url().optional().nullable().or(z.literal("")),
         sourceName: z.string().max(256).optional().nullable(),
+        vacancyText: z.string().max(50_000).optional().nullable(),
         status: z.enum(["on_hold", "interviewing"]).optional(),
       }),
     )
@@ -310,5 +320,30 @@ export const jobApplicationRouter = {
         .returning();
 
       return closed ?? null;
+    }),
+
+  /** Extract structured fields from a vacancy posting using Claude. */
+  extractFromVacancy: protectedProcedure
+    .input(z.object({ vacancyText: z.string().min(1).max(50_000) }))
+    .mutation(async ({ ctx, input }) => {
+      const limit = checkRateLimit(
+        `extract:${ctx.session.user.id}`,
+        EXTRACT_RATE_LIMIT,
+      );
+      if (!limit.allowed) {
+        throw new TRPCError({
+          code: "TOO_MANY_REQUESTS",
+          message: `AI extraction limit reached. Try again in ${formatRetryAfter(limit.retryAfterSeconds)}.`,
+        });
+      }
+
+      const apiKey = process.env.ANTHROPIC_API_KEY;
+      if (!apiKey) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "AI extraction is not configured",
+        });
+      }
+      return extractVacancyFields(input.vacancyText, { apiKey });
     }),
 } satisfies TRPCRouterRecord;

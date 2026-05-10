@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
 
 import { Button } from "@stepsnaps/ui/button";
 import { Field, FieldLabel } from "@stepsnaps/ui/field";
@@ -14,10 +15,7 @@ import { Separator } from "@stepsnaps/ui/separator";
 import { Switch } from "@stepsnaps/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@stepsnaps/ui/tabs";
 
-import { AddApplicationDialog } from "./-components/add-application-dialog";
 import { ApplicationsTable } from "./-components/applications-table";
-import { CloseApplicationDialog } from "./-components/close-application-dialog";
-import { EditApplicationDialog } from "./-components/edit-application-dialog";
 import { EmptyState } from "./-components/empty-state";
 import { HistoryTable } from "./-components/history-table";
 import { InterviewsDialog } from "./-components/interviews-dialog";
@@ -27,16 +25,21 @@ import { useClosedApplications } from "./-hooks/use-closed-applications";
 import { useHeatmap } from "./-hooks/use-heatmap";
 
 export function ApplicationsPage() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<"active" | "closed">("active");
   const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [showAddDialog, setShowAddDialog] = useState(false);
-  const [editingAppId, setEditingAppId] = useState<string | null>(null);
-  const [closingAppId, setClosingAppId] = useState<string | null>(null);
   const [interviewsAppId, setInterviewsAppId] = useState<string | null>(null);
   const { heatmap, setHeatmap } = useHeatmap();
+
+  const goToNew = () => void navigate({ to: "/applications/new" });
+  const goToEdit = (id: string) =>
+    void navigate({
+      to: "/applications/$applicationId/edit",
+      params: { applicationId: id },
+    });
 
   const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const handleSearchChange = (value: string) => {
@@ -92,7 +95,7 @@ export function ApplicationsPage() {
     <main className="container mx-auto py-8">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-3xl font-bold">Applications</h1>
-        <Button onClick={() => setShowAddDialog(true)}>Add Application</Button>
+        <Button onClick={goToNew}>Add Application</Button>
       </div>
 
       <Tabs value={activeTab} onValueChange={handleTabChange}>
@@ -146,12 +149,12 @@ export function ApplicationsPage() {
             activeData.total === 0 &&
             !debouncedSearch &&
             statusFilter === "all" ? (
-              <EmptyState onAdd={() => setShowAddDialog(true)} />
+              <EmptyState onAdd={goToNew} />
             ) : (
               <>
                 <ApplicationsTable
                   data={activeData.items}
-                  onEdit={setEditingAppId}
+                  onEdit={goToEdit}
                   onInterviews={setInterviewsAppId}
                   heatmap={heatmap}
                 />
@@ -190,29 +193,6 @@ export function ApplicationsPage() {
           )}
         </TabsContent>
       </Tabs>
-
-      <AddApplicationDialog
-        open={showAddDialog}
-        onOpenChange={setShowAddDialog}
-      />
-
-      <EditApplicationDialog
-        applicationId={editingAppId}
-        onOpenChange={(open) => {
-          if (!open) setEditingAppId(null);
-        }}
-        onClose={(id) => {
-          setEditingAppId(null);
-          setClosingAppId(id);
-        }}
-      />
-
-      <CloseApplicationDialog
-        applicationId={closingAppId}
-        onOpenChange={(open) => {
-          if (!open) setClosingAppId(null);
-        }}
-      />
 
       <InterviewsDialog
         applicationId={interviewsAppId}
