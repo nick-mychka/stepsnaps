@@ -156,8 +156,12 @@ export function EditSnapDialog({
             {dayjs(snap.date).format("ddd, MMM D, YYYY")}
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          {displaySteps.map((sd) => (
+        {displaySteps.map((sd) => (
+          <form
+            id="edit-snap-form"
+            className="flex flex-col gap-4"
+            onSubmit={handleSubmit}
+          >
             <Field key={sd.id} className="flex flex-col gap-1.5">
               <FieldLabel htmlFor={`edit-${sd.id}`}>{sd.name}</FieldLabel>
               {sd.type === "numeric" ? (
@@ -189,24 +193,25 @@ export function EditSnapDialog({
                 />
               )}
             </Field>
-          ))}
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-            >
-              Cancel
-            </Button>
-            <LoadingButton
-              type="submit"
-              disabled={upsertSnap.isPending}
-              loading={upsertSnap.isPending}
-            >
-              Save Changes
-            </LoadingButton>
-          </DialogFooter>
-        </form>
+          </form>
+        ))}
+        <DialogFooter>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => onOpenChange(false)}
+          >
+            Cancel
+          </Button>
+          <LoadingButton
+            type="submit"
+            form="edit-snap-form"
+            disabled={upsertSnap.isPending}
+            loading={upsertSnap.isPending}
+          >
+            Save Changes
+          </LoadingButton>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
