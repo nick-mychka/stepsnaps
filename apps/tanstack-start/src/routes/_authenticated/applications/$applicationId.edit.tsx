@@ -60,7 +60,6 @@ function EditApplicationPage() {
             sourceName: application.source?.name ?? "",
             vacancyText: application.vacancyText ?? "",
           }}
-          onCancel={goBack}
           onSubmit={(values) =>
             updateApplication.mutate({
               id: applicationId,
