@@ -35,9 +35,9 @@ export function ApplicationsPage() {
   const { heatmap, setHeatmap } = useHeatmap();
 
   const goToNew = () => void navigate({ to: "/applications/new" });
-  const goToEdit = (id: string) =>
+  const goToView = (id: string) =>
     void navigate({
-      to: "/applications/$applicationId/edit",
+      to: "/applications/$applicationId",
       params: { applicationId: id },
     });
 
@@ -154,7 +154,7 @@ export function ApplicationsPage() {
               <>
                 <ApplicationsTable
                   data={activeData.items}
-                  onEdit={goToEdit}
+                  onView={goToView}
                   onInterviews={setInterviewsAppId}
                   heatmap={heatmap}
                 />
@@ -177,7 +177,7 @@ export function ApplicationsPage() {
         <TabsContent value="closed">
           {historyData ? (
             <>
-              <HistoryTable data={historyData.items} />
+              <HistoryTable data={historyData.items} onView={goToView} />
               {totalPages > 1 && (
                 <PaginationControls
                   page={page}

@@ -21,10 +21,10 @@ export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
   trpc: TRPCOptionsProxy<AppRouter>;
 }>()({
+  component: RootComponent,
   head: () => ({
     links: [{ rel: "stylesheet", href: appCss }],
   }),
-  component: RootComponent,
 });
 
 function RootComponent() {

@@ -76,7 +76,7 @@ type ApplicationRow = RouterOutputs["jobApplication"]["list"]["items"][number];
 const columnHelper = createColumnHelper<ApplicationRow>();
 
 function createColumns(
-  onEdit: (id: string) => void,
+  onView: (id: string) => void,
   onInterviews: (id: string) => void,
 ) {
   return [
@@ -86,7 +86,7 @@ function createColumns(
         <button
           type="button"
           className="text-left font-medium underline-offset-4 hover:underline"
-          onClick={() => onEdit(info.row.original.id)}
+          onClick={() => onView(info.row.original.id)}
         >
           {info.getValue()}
         </button>
@@ -145,13 +145,13 @@ function createColumns(
 
 interface ApplicationsTableProps {
   data: ApplicationRow[];
-  onEdit: (id: string) => void;
+  onView: (id: string) => void;
   onInterviews: (id: string) => void;
   heatmap?: boolean;
 }
 
 export function ApplicationsTable(props: ApplicationsTableProps) {
-  const columns = createColumns(props.onEdit, props.onInterviews);
+  const columns = createColumns(props.onView, props.onInterviews);
   const table = useReactTable({
     data: props.data,
     columns,

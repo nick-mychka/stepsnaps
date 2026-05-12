@@ -201,7 +201,7 @@ export function ApplicationForm(props: ApplicationFormProps) {
             onChange={(e) => setVacancyText(e.target.value)}
             rows={10}
             maxLength={50_000}
-            className="min-h-64"
+            className="field-sizing-fixed min-h-64"
           />
           {vacancyText.trim().length > 0 && (
             <div className="mt-2 flex justify-between gap-8">
