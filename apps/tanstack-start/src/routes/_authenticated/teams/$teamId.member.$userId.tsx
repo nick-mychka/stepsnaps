@@ -87,11 +87,14 @@ function MemberProgressPage() {
   );
 }
 
-function ReadOnlyTimeline(props: {
+function ReadOnlyTimeline({
+  snaps,
+  granularity,
+}: {
   snaps: SnapByDate[];
   granularity: Granularity;
 }) {
-  const items = useGroupedSnaps(props.snaps, props.granularity);
+  const items = useGroupedSnaps(snaps, granularity);
 
   if (items.length === 0) {
     return (

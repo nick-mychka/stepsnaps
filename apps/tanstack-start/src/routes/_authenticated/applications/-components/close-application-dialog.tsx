@@ -47,30 +47,34 @@ interface CloseApplicationDialogProps {
   onSuccess?: () => void;
 }
 
-export function CloseApplicationDialog(props: CloseApplicationDialogProps) {
+export function CloseApplicationDialog({
+  applicationId,
+  onOpenChange,
+  onSuccess,
+}: CloseApplicationDialogProps) {
   const [closedReason, setClosedReason] = useState<
     "rejected" | "withdrawn" | "no_response" | "success"
   >("no_response");
 
   const closeApplication = useCloseApplication({
     onSuccess: () => {
-      props.onOpenChange(false);
+      onOpenChange(false);
       setClosedReason("no_response");
-      props.onSuccess?.();
+      onSuccess?.();
     },
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!props.applicationId) return;
+    if (!applicationId) return;
     closeApplication.mutate({
-      id: props.applicationId,
+      id: applicationId,
       closedReason,
     });
   };
 
   return (
-    <Dialog open={!!props.applicationId} onOpenChange={props.onOpenChange}>
+    <Dialog open={!!applicationId} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Close Application</DialogTitle>
@@ -118,7 +122,7 @@ export function CloseApplicationDialog(props: CloseApplicationDialogProps) {
           <Button
             type="button"
             variant="outline"
-            onClick={() => props.onOpenChange(false)}
+            onClick={() => onOpenChange(false)}
           >
             Cancel
           </Button>

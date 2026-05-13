@@ -70,10 +70,10 @@ interface HistoryTableProps {
   onView: (id: string) => void;
 }
 
-export function HistoryTable(props: HistoryTableProps) {
-  const columns = createHistoryColumns(props.onView);
+export function HistoryTable({ data, onView }: HistoryTableProps) {
+  const columns = createHistoryColumns(onView);
   const table = useReactTable({
-    data: props.data,
+    data: data,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });

@@ -9,7 +9,7 @@ import type { RouterOutputs } from "~/utils/api";
 import { trpc } from "~/utils/api";
 import { authClient } from "~/utils/auth";
 
-function PostCard(props: {
+function PostCard({ post, onDelete }: {
   post: RouterOutputs["post"]["all"][number];
   onDelete: () => void;
 }) {
@@ -20,18 +20,18 @@ function PostCard(props: {
           asChild
           href={{
             pathname: "/post/[id]",
-            params: { id: props.post.id },
+            params: { id: post.id },
           }}
         >
           <Pressable className="">
             <Text className="text-primary text-xl font-semibold">
-              {props.post.title}
+              {post.title}
             </Text>
-            <Text className="text-foreground mt-2">{props.post.content}</Text>
+            <Text className="text-foreground mt-2">{post.content}</Text>
           </Pressable>
         </Link>
       </View>
-      <Pressable onPress={props.onDelete}>
+      <Pressable onPress={onDelete}>
         <Text className="text-primary font-bold uppercase">Delete</Text>
       </Pressable>
     </View>
