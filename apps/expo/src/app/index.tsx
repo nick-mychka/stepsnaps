@@ -9,7 +9,10 @@ import type { RouterOutputs } from "~/utils/api";
 import { trpc } from "~/utils/api";
 import { authClient } from "~/utils/auth";
 
-function PostCard({ post, onDelete }: {
+function PostCard({
+  post,
+  onDelete,
+}: {
   post: RouterOutputs["post"]["all"][number];
   onDelete: () => void;
 }) {
