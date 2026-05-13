@@ -150,10 +150,15 @@ interface ApplicationsTableProps {
   heatmap?: boolean;
 }
 
-export function ApplicationsTable(props: ApplicationsTableProps) {
-  const columns = createColumns(props.onView, props.onInterviews);
+export function ApplicationsTable({
+  data,
+  onView,
+  onInterviews,
+  heatmap,
+}: ApplicationsTableProps) {
+  const columns = createColumns(onView, onInterviews);
   const table = useReactTable({
-    data: props.data,
+    data,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
@@ -183,7 +188,7 @@ export function ApplicationsTable(props: ApplicationsTableProps) {
               <TableRow
                 key={row.id}
                 className={
-                  props.heatmap
+                  heatmap
                     ? getHeatmapRowClass(getDayDiff(row.original.appliedAt))
                     : undefined
                 }
