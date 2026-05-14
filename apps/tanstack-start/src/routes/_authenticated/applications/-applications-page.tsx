@@ -15,8 +15,8 @@ import { Separator } from "@stepsnaps/ui/separator";
 import { Switch } from "@stepsnaps/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@stepsnaps/ui/tabs";
 
+import { SimpleEmpty } from "~/components/simple-empty";
 import { ApplicationsTable } from "./-components/applications-table";
-import { EmptyState } from "./-components/empty-state";
 import { HistoryTable } from "./-components/history-table";
 import { InterviewsDialog } from "./-components/interviews-dialog";
 import { PaginationControls } from "./-components/pagination-controls";
@@ -149,7 +149,12 @@ export function ApplicationsPage() {
             activeData.total === 0 &&
             !debouncedSearch &&
             statusFilter === "all" ? (
-              <EmptyState onAdd={goToNew} />
+              <SimpleEmpty
+                title="No applications yet"
+                description="Start tracking your job applications to stay organized."
+              >
+                <Button onClick={goToNew}>Add Your First Application</Button>
+              </SimpleEmpty>
             ) : (
               <>
                 <ApplicationsTable
