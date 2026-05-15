@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 
 import { Button } from "@stepsnaps/ui/button";
 import { Field, FieldLabel } from "@stepsnaps/ui/field";
@@ -34,7 +34,6 @@ export function ApplicationsPage() {
   const [interviewsAppId, setInterviewsAppId] = useState<string | null>(null);
   const { heatmap, setHeatmap } = useHeatmap();
 
-  const goToNew = () => void navigate({ to: "/applications/new" });
   const goToView = (id: string) =>
     void navigate({
       to: "/applications/$applicationId",
@@ -95,7 +94,9 @@ export function ApplicationsPage() {
     <main className="container mx-auto py-8">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-3xl font-bold">Applications</h1>
-        <Button onClick={goToNew}>Add Application</Button>
+        <Button asChild>
+          <Link to="/applications/new">Add Application</Link>
+        </Button>
       </div>
 
       <Tabs value={activeTab} onValueChange={handleTabChange}>
@@ -153,7 +154,9 @@ export function ApplicationsPage() {
                 title="No applications yet"
                 description="Start tracking your job applications to stay organized."
               >
-                <Button onClick={goToNew}>Add Your First Application</Button>
+                <Button asChild>
+                  <Link to="/applications/new">Add Your First Application</Link>
+                </Button>
               </SimpleEmpty>
             ) : (
               <>
