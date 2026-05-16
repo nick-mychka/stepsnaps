@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { Button } from "@stepsnaps/ui/button";
 import { Separator } from "@stepsnaps/ui/separator";
@@ -42,7 +42,7 @@ function Detail({ label, value }: { label: string; value: React.ReactNode }) {
 
 function ViewApplicationPage() {
   const { applicationId } = Route.useParams();
-  const navigate = useNavigate();
+
   const [interviewsOpen, setInterviewsOpen] = useState(false);
 
   const { data: application } = useApplication(applicationId);
@@ -54,12 +54,6 @@ function ViewApplicationPage() {
       </main>
     );
   }
-
-  const goToEdit = () =>
-    void navigate({
-      to: "/applications/$applicationId/edit",
-      params: { applicationId },
-    });
 
   const formattedAppliedAt = dayjs(
     application.appliedAt,
@@ -78,7 +72,14 @@ function ViewApplicationPage() {
                 ? `${application.interviews.length} interview${application.interviews.length > 1 ? "s" : ""}`
                 : "Set Interview"}
             </Button>
-            <Button onClick={goToEdit}>Edit</Button>
+            <Button asChild>
+              <Link
+                to="/applications/$applicationId/edit"
+                params={{ applicationId }}
+              >
+                Edit
+              </Link>
+            </Button>
           </div>
         }
       >
