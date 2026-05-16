@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 
 import { Button } from "@stepsnaps/ui/button";
 import { toast } from "@stepsnaps/ui/toast";
@@ -66,7 +66,9 @@ function InvitePage() {
           className="max-w-md"
           title="Invalid Invite"
         >
-          <Button onClick={() => navigate({ to: "/" })}>Go Home</Button>
+          <Button asChild>
+            <Link to="/">Go Home</Link>
+          </Button>
         </SimpleCard>
       </main>
     );
@@ -123,12 +125,8 @@ function InvitePage() {
         >
           Join Team
         </LoadingButton>
-        <Button
-          variant="outline"
-          className="w-full"
-          onClick={() => navigate({ to: "/dashboard" })}
-        >
-          Private Tracking (No Team)
+        <Button variant="outline" className="w-full" asChild>
+          <Link to="/dashboard">Private Tracking (No Team)</Link>
         </Button>
         <LoadingButton
           variant="ghost"
