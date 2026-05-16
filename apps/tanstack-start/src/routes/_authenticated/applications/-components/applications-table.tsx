@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import {
   createColumnHelper,
   flexRender,
@@ -75,10 +76,7 @@ type ApplicationRow = RouterOutputs["jobApplication"]["list"]["items"][number];
 
 const columnHelper = createColumnHelper<ApplicationRow>();
 
-function createColumns(
-  onView: (id: string) => void,
-  onInterviews: (id: string) => void,
-) {
+function createColumns(onInterviews: (id: string) => void) {
   return [
     columnHelper.accessor("companyName", {
       header: "Company",
@@ -86,9 +84,13 @@ function createColumns(
         <button
           type="button"
           className="text-left font-medium underline-offset-4 hover:underline"
-          onClick={() => onView(info.row.original.id)}
         >
-          {info.getValue()}
+          <Link
+            to="/applications/$applicationId"
+            params={{ applicationId: info.row.original.id }}
+          >
+            {info.getValue()}
+          </Link>
         </button>
       ),
     }),
@@ -145,18 +147,16 @@ function createColumns(
 
 interface ApplicationsTableProps {
   data: ApplicationRow[];
-  onView: (id: string) => void;
   onInterviews: (id: string) => void;
   heatmap?: boolean;
 }
 
 export function ApplicationsTable({
   data,
-  onView,
   onInterviews,
   heatmap,
 }: ApplicationsTableProps) {
-  const columns = createColumns(onView, onInterviews);
+  const columns = createColumns(onInterviews);
   const table = useReactTable({
     data,
     columns,

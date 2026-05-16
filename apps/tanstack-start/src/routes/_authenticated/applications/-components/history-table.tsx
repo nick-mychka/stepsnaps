@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import {
   createColumnHelper,
   flexRender,
@@ -21,7 +22,7 @@ type HistoryRow = RouterOutputs["jobApplication"]["list"]["items"][number];
 
 const historyColumnHelper = createColumnHelper<HistoryRow>();
 
-function createHistoryColumns(onView: (id: string) => void) {
+function createHistoryColumns() {
   return [
     historyColumnHelper.accessor("companyName", {
       header: "Company",
@@ -29,9 +30,13 @@ function createHistoryColumns(onView: (id: string) => void) {
         <button
           type="button"
           className="text-left font-medium underline-offset-4 hover:underline"
-          onClick={() => onView(info.row.original.id)}
         >
-          {info.getValue()}
+          <Link
+            to="/applications/$applicationId"
+            params={{ applicationId: info.row.original.id }}
+          >
+            {info.getValue()}
+          </Link>
         </button>
       ),
     }),
@@ -67,11 +72,10 @@ function createHistoryColumns(onView: (id: string) => void) {
 
 interface HistoryTableProps {
   data: HistoryRow[];
-  onView: (id: string) => void;
 }
 
-export function HistoryTable({ data, onView }: HistoryTableProps) {
-  const columns = createHistoryColumns(onView);
+export function HistoryTable({ data }: HistoryTableProps) {
+  const columns = createHistoryColumns();
   const table = useReactTable({
     data: data,
     columns,
