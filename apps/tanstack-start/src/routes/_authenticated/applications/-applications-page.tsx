@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 
 import { Button } from "@stepsnaps/ui/button";
 import { Field, FieldLabel } from "@stepsnaps/ui/field";
@@ -25,7 +25,6 @@ import { useClosedApplications } from "./-hooks/use-closed-applications";
 import { useHeatmap } from "./-hooks/use-heatmap";
 
 export function ApplicationsPage() {
-  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<"active" | "closed">("active");
   const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -33,12 +32,6 @@ export function ApplicationsPage() {
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [interviewsAppId, setInterviewsAppId] = useState<string | null>(null);
   const { heatmap, setHeatmap } = useHeatmap();
-
-  const goToView = (id: string) =>
-    void navigate({
-      to: "/applications/$applicationId",
-      params: { applicationId: id },
-    });
 
   const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const handleSearchChange = (value: string) => {
@@ -162,7 +155,6 @@ export function ApplicationsPage() {
               <>
                 <ApplicationsTable
                   data={activeData.items}
-                  onView={goToView}
                   onInterviews={setInterviewsAppId}
                   heatmap={heatmap}
                 />
@@ -185,7 +177,7 @@ export function ApplicationsPage() {
         <TabsContent value="closed">
           {historyData ? (
             <>
-              <HistoryTable data={historyData.items} onView={goToView} />
+              <HistoryTable data={historyData.items} />
               {totalPages > 1 && (
                 <PaginationControls
                   page={page}
