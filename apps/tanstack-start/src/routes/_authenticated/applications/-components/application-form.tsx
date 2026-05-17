@@ -190,197 +190,200 @@ export function ApplicationForm(props: ApplicationFormProps) {
     isEdit && (props.status === "interviewing" || props.status === "on_hold");
 
   return (
-    <form onSubmit={handleSubmit}>
-      <FieldGroup className="flex flex-col gap-4">
-        <Field>
-          <FieldLabel htmlFor="vacancyText">Vacancy details</FieldLabel>
-          <Textarea
-            id="vacancyText"
-            placeholder="Paste the full vacancy posting here..."
-            value={vacancyText}
-            onChange={(e) => setVacancyText(e.target.value)}
-            rows={10}
-            maxLength={50_000}
-            className="field-sizing-fixed min-h-64"
-          />
-          {vacancyText.trim().length > 0 && (
-            <div className="mt-2 flex justify-between gap-8">
-              <div className="flex flex-col gap-2">
-                <LoadingButton
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  className="self-start"
-                  onClick={handleGenerate}
-                  loading={extract.isPending}
-                  disabled={extract.isPending}
-                >
-                  Generate fields with AI
-                </LoadingButton>
-                {aiNotice && (
-                  <p className="text-muted-foreground text-sm">{aiNotice}</p>
+    <form className="flex gap-8" onSubmit={handleSubmit}>
+      <div className="min-w-0 flex-1">
+        <FieldGroup className="h-full">
+          <Field className="h-full">
+            <FieldLabel htmlFor="vacancyText">Vacancy details</FieldLabel>
+            <Textarea
+              id="vacancyText"
+              placeholder="Paste the full vacancy posting here..."
+              value={vacancyText}
+              onChange={(e) => setVacancyText(e.target.value)}
+              rows={10}
+              maxLength={50_000}
+              className="field-sizing-fixed grow resize-none"
+            />
+            {vacancyText.trim().length > 0 && (
+              <div className="mt-2 flex justify-between gap-8">
+                <div className="flex flex-col gap-2">
+                  <LoadingButton
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="self-start"
+                    onClick={handleGenerate}
+                    loading={extract.isPending}
+                    disabled={extract.isPending}
+                  >
+                    Generate fields with AI
+                  </LoadingButton>
+                  {aiNotice && (
+                    <p className="text-muted-foreground text-sm">{aiNotice}</p>
+                  )}
+                </div>
+                <p>{vacancyText.trim().length}/50 000</p>
+              </div>
+            )}
+          </Field>
+        </FieldGroup>
+      </div>
+      <Separator orientation="vertical" />
+      <div className="w-[25%] shrink-0">
+        <FieldGroup className="flex flex-col gap-4">
+          <Field>
+            <div className="flex items-center gap-2">
+              <FieldLabel htmlFor="companyName">Company Name *</FieldLabel>
+              {aiBadge("companyName")}
+            </div>
+            <Input
+              id="companyName"
+              placeholder="e.g. Acme Corp"
+              value={companyName}
+              onChange={(e) => {
+                setCompanyName(e.target.value);
+                clearAiFilled("companyName");
+              }}
+              required
+            />
+          </Field>
+          <Field>
+            <div className="flex items-center gap-2">
+              <FieldLabel htmlFor="jobTitle">Job Title</FieldLabel>
+              {aiBadge("jobTitle")}
+            </div>
+            <Input
+              id="jobTitle"
+              placeholder="e.g. Senior Engineer"
+              value={jobTitle}
+              onChange={(e) => {
+                setJobTitle(e.target.value);
+                clearAiFilled("jobTitle");
+              }}
+            />
+          </Field>
+          <Field>
+            <div className="flex items-center gap-2">
+              <FieldLabel htmlFor="salary">Salary</FieldLabel>
+              {aiBadge("salary")}
+            </div>
+            <Input
+              id="salary"
+              placeholder="e.g. $150k"
+              value={salary}
+              onChange={(e) => {
+                setSalary(e.target.value);
+                clearAiFilled("salary");
+              }}
+            />
+          </Field>
+          <Field>
+            <div className="flex items-center gap-2">
+              <FieldLabel htmlFor="workMode">Work Mode</FieldLabel>
+              {aiBadge("workMode")}
+            </div>
+            <Select
+              value={workMode}
+              onValueChange={(v) => {
+                setWorkMode(v as WorkMode);
+                setWorkModeTouched(true);
+                clearAiFilled("workMode");
+              }}
+            >
+              <SelectTrigger id="workMode">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="remote">Remote</SelectItem>
+                <SelectItem value="onsite">Onsite</SelectItem>
+                <SelectItem value="hybrid">Hybrid</SelectItem>
+              </SelectContent>
+            </Select>
+          </Field>
+          <Field>
+            <div className="flex items-center gap-2">
+              <FieldLabel htmlFor="sourceName">Source</FieldLabel>
+              {aiBadge("sourceName")}
+            </div>
+            <SourceTypeahead
+              value={sourceName}
+              onChange={(v) => {
+                setSourceName(v);
+                clearAiFilled("sourceName");
+              }}
+            />
+          </Field>
+          <Field>
+            <div className="flex items-center gap-2">
+              <FieldLabel htmlFor="jobUrl">Job URL</FieldLabel>
+              {aiBadge("jobUrl")}
+            </div>
+            <Input
+              id="jobUrl"
+              type="url"
+              placeholder="https://..."
+              value={jobUrl}
+              onChange={(e) => {
+                setJobUrl(e.target.value);
+                clearAiFilled("jobUrl");
+              }}
+            />
+          </Field>
+
+          {isEdit && (
+            <Field>
+              <FieldLabel className="text-muted-foreground mb-2 block text-sm">
+                Status: <StatusBadge status={props.status} />
+              </FieldLabel>
+              <div className="flex flex-wrap gap-2">
+                {canPutOnHold && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={props.onPutOnHold}
+                    disabled={props.statusActionPending}
+                  >
+                    Put On Hold
+                  </Button>
+                )}
+                {canResumeInterviewing && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={props.onResumeInterviewing}
+                    disabled={props.statusActionPending}
+                  >
+                    Resume Interviewing
+                  </Button>
+                )}
+                {canClose && (
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="sm"
+                    onClick={props.onClose}
+                  >
+                    Close Application
+                  </Button>
                 )}
               </div>
-              <p>{vacancyText.trim().length}/50 000</p>
-            </div>
+            </Field>
           )}
-        </Field>
-      </FieldGroup>
-      <Separator className="my-4" />
-      <FieldGroup className="flex max-w-lg flex-col gap-4">
-        <Field>
-          <div className="flex items-center gap-2">
-            <FieldLabel htmlFor="companyName">Company Name *</FieldLabel>
-            {aiBadge("companyName")}
-          </div>
-          <Input
-            id="companyName"
-            placeholder="e.g. Acme Corp"
-            value={companyName}
-            onChange={(e) => {
-              setCompanyName(e.target.value);
-              clearAiFilled("companyName");
-            }}
-            required
-          />
-        </Field>
-        <Field>
-          <div className="flex items-center gap-2">
-            <FieldLabel htmlFor="jobTitle">Job Title</FieldLabel>
-            {aiBadge("jobTitle")}
-          </div>
-          <Input
-            id="jobTitle"
-            placeholder="e.g. Senior Engineer"
-            value={jobTitle}
-            onChange={(e) => {
-              setJobTitle(e.target.value);
-              clearAiFilled("jobTitle");
-            }}
-          />
-        </Field>
-        <Field>
-          <div className="flex items-center gap-2">
-            <FieldLabel htmlFor="salary">Salary</FieldLabel>
-            {aiBadge("salary")}
-          </div>
-          <Input
-            id="salary"
-            placeholder="e.g. $150k"
-            value={salary}
-            onChange={(e) => {
-              setSalary(e.target.value);
-              clearAiFilled("salary");
-            }}
-          />
-        </Field>
-        <Field>
-          <div className="flex items-center gap-2">
-            <FieldLabel htmlFor="workMode">Work Mode</FieldLabel>
-            {aiBadge("workMode")}
-          </div>
-          <Select
-            value={workMode}
-            onValueChange={(v) => {
-              setWorkMode(v as WorkMode);
-              setWorkModeTouched(true);
-              clearAiFilled("workMode");
-            }}
+        </FieldGroup>
+        <div className="mt-6 flex justify-end gap-2">
+          <Button type="button" variant="outline" asChild>
+            <Link to="/applications">Cancel</Link>
+          </Button>
+          <LoadingButton
+            type="submit"
+            disabled={props.isSubmitting}
+            loading={props.isSubmitting}
           >
-            <SelectTrigger id="workMode">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="remote">Remote</SelectItem>
-              <SelectItem value="onsite">Onsite</SelectItem>
-              <SelectItem value="hybrid">Hybrid</SelectItem>
-            </SelectContent>
-          </Select>
-        </Field>
-        <Field>
-          <div className="flex items-center gap-2">
-            <FieldLabel htmlFor="sourceName">Source</FieldLabel>
-            {aiBadge("sourceName")}
-          </div>
-          <SourceTypeahead
-            value={sourceName}
-            onChange={(v) => {
-              setSourceName(v);
-              clearAiFilled("sourceName");
-            }}
-          />
-        </Field>
-        <Field>
-          <div className="flex items-center gap-2">
-            <FieldLabel htmlFor="jobUrl">Job URL</FieldLabel>
-            {aiBadge("jobUrl")}
-          </div>
-          <Input
-            id="jobUrl"
-            type="url"
-            placeholder="https://..."
-            value={jobUrl}
-            onChange={(e) => {
-              setJobUrl(e.target.value);
-              clearAiFilled("jobUrl");
-            }}
-          />
-        </Field>
-
-        {isEdit && (
-          <Field>
-            <FieldLabel className="text-muted-foreground mb-2 block text-sm">
-              Status: <StatusBadge status={props.status} />
-            </FieldLabel>
-            <div className="flex flex-wrap gap-2">
-              {canPutOnHold && (
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={props.onPutOnHold}
-                  disabled={props.statusActionPending}
-                >
-                  Put On Hold
-                </Button>
-              )}
-              {canResumeInterviewing && (
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={props.onResumeInterviewing}
-                  disabled={props.statusActionPending}
-                >
-                  Resume Interviewing
-                </Button>
-              )}
-              {canClose && (
-                <Button
-                  type="button"
-                  variant="destructive"
-                  size="sm"
-                  onClick={props.onClose}
-                >
-                  Close Application
-                </Button>
-              )}
-            </div>
-          </Field>
-        )}
-      </FieldGroup>
-
-      <div className="mt-6 flex justify-end gap-2">
-        <Button type="button" variant="outline" asChild>
-          <Link to="/applications">Cancel</Link>
-        </Button>
-        <LoadingButton
-          type="submit"
-          disabled={props.isSubmitting}
-          loading={props.isSubmitting}
-        >
-          {isEdit ? "Save Changes" : "Add Application"}
-        </LoadingButton>
+            {isEdit ? "Save Changes" : "Add Application"}
+          </LoadingButton>
+        </div>
       </div>
     </form>
   );
