@@ -18,7 +18,7 @@ interface SourceTypeaheadProps {
   onChange: (value: string) => void;
 }
 
-export function SourceTypeahead(props: SourceTypeaheadProps) {
+export function SourceTypeahead({ value, onChange }: SourceTypeaheadProps) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
 
@@ -38,7 +38,7 @@ export function SourceTypeahead(props: SourceTypeaheadProps) {
           className="w-full justify-between font-normal"
           type="button"
         >
-          {props.value || "Select source..."}
+          {value || "Select source..."}
           <span className="text-muted-foreground ml-2 text-xs">
             {open ? "▲" : "▼"}
           </span>
@@ -64,7 +64,7 @@ export function SourceTypeahead(props: SourceTypeaheadProps) {
                   key={source.id}
                   value={source.name}
                   onSelect={() => {
-                    props.onChange(source.name);
+                    onChange(source.name);
                     setOpen(false);
                     setSearch("");
                   }}
@@ -76,7 +76,7 @@ export function SourceTypeahead(props: SourceTypeaheadProps) {
                 <CommandItem
                   value={`create-${search}`}
                   onSelect={() => {
-                    props.onChange(search.trim());
+                    onChange(search.trim());
                     setOpen(false);
                     setSearch("");
                   }}
@@ -84,11 +84,11 @@ export function SourceTypeahead(props: SourceTypeaheadProps) {
                   Create "{search.trim()}"
                 </CommandItem>
               )}
-              {props.value && (
+              {value && (
                 <CommandItem
                   value="__clear__"
                   onSelect={() => {
-                    props.onChange("");
+                    onChange("");
                     setOpen(false);
                     setSearch("");
                   }}

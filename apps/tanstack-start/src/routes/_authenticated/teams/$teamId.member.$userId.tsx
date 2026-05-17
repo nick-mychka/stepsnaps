@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { Camera, Road } from "lucide-react";
 
 import { Button } from "@stepsnaps/ui/button";
 import { Separator } from "@stepsnaps/ui/separator";
@@ -70,6 +71,7 @@ function MemberProgressPage() {
       {!data.journey ? (
         <SimpleEmpty
           title="No Active Journey"
+          icon={<Road />}
           description={
             <>{data.memberName} doesn't have an active journey right now.</>
           }
@@ -87,16 +89,20 @@ function MemberProgressPage() {
   );
 }
 
-function ReadOnlyTimeline(props: {
+function ReadOnlyTimeline({
+  snaps,
+  granularity,
+}: {
   snaps: SnapByDate[];
   granularity: Granularity;
 }) {
-  const items = useGroupedSnaps(props.snaps, props.granularity);
+  const items = useGroupedSnaps(snaps, granularity);
 
   if (items.length === 0) {
     return (
       <SimpleEmpty
         title="No snaps yet"
+        icon={<Camera />}
         description="No daily snaps have been logged yet."
       />
     );

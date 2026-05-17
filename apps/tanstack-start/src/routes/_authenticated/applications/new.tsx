@@ -23,7 +23,6 @@ function NewApplicationPage() {
         <ApplicationForm
           mode="create"
           isSubmitting={createApplication.isPending}
-          onCancel={goBack}
           onSubmit={(values) =>
             createApplication.mutate({
               companyName: values.companyName,

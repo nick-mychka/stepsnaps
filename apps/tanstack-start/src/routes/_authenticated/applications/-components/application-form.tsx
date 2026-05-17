@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { Sparkles } from "lucide-react";
 
 import { Badge } from "@stepsnaps/ui/badge";
@@ -49,7 +50,6 @@ interface BaseProps {
   initialValues?: Partial<ApplicationFormValues>;
   onSubmit: (values: ApplicationFormValues) => void;
   isSubmitting: boolean;
-  onCancel: () => void;
 }
 
 interface CreateProps extends BaseProps {
@@ -201,7 +201,7 @@ export function ApplicationForm(props: ApplicationFormProps) {
             onChange={(e) => setVacancyText(e.target.value)}
             rows={10}
             maxLength={50_000}
-            className="min-h-64"
+            className="field-sizing-fixed min-h-64"
           />
           {vacancyText.trim().length > 0 && (
             <div className="mt-2 flex justify-between gap-8">
@@ -371,8 +371,8 @@ export function ApplicationForm(props: ApplicationFormProps) {
       </FieldGroup>
 
       <div className="mt-6 flex justify-end gap-2">
-        <Button type="button" variant="outline" onClick={props.onCancel}>
-          Cancel
+        <Button type="button" variant="outline" asChild>
+          <Link to="/applications">Cancel</Link>
         </Button>
         <LoadingButton
           type="submit"

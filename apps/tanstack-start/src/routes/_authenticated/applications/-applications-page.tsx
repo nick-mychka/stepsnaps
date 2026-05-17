@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 
 import { Button } from "@stepsnaps/ui/button";
 import { Field, FieldLabel } from "@stepsnaps/ui/field";
@@ -15,8 +15,8 @@ import { Separator } from "@stepsnaps/ui/separator";
 import { Switch } from "@stepsnaps/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@stepsnaps/ui/tabs";
 
+import { SimpleEmpty } from "~/components/simple-empty";
 import { ApplicationsTable } from "./-components/applications-table";
-import { EmptyState } from "./-components/empty-state";
 import { HistoryTable } from "./-components/history-table";
 import { InterviewsDialog } from "./-components/interviews-dialog";
 import { PaginationControls } from "./-components/pagination-controls";
@@ -25,7 +25,6 @@ import { useClosedApplications } from "./-hooks/use-closed-applications";
 import { useHeatmap } from "./-hooks/use-heatmap";
 
 export function ApplicationsPage() {
-  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<"active" | "closed">("active");
   const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -33,13 +32,6 @@ export function ApplicationsPage() {
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [interviewsAppId, setInterviewsAppId] = useState<string | null>(null);
   const { heatmap, setHeatmap } = useHeatmap();
-
-  const goToNew = () => void navigate({ to: "/applications/new" });
-  const goToEdit = (id: string) =>
-    void navigate({
-      to: "/applications/$applicationId/edit",
-      params: { applicationId: id },
-    });
 
   const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const handleSearchChange = (value: string) => {
@@ -95,7 +87,9 @@ export function ApplicationsPage() {
     <main className="container mx-auto py-8">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-3xl font-bold">Applications</h1>
-        <Button onClick={goToNew}>Add Application</Button>
+        <Button asChild>
+          <Link to="/applications/new">Add Application</Link>
+        </Button>
       </div>
 
       <Tabs value={activeTab} onValueChange={handleTabChange}>
@@ -149,12 +143,18 @@ export function ApplicationsPage() {
             activeData.total === 0 &&
             !debouncedSearch &&
             statusFilter === "all" ? (
-              <EmptyState onAdd={goToNew} />
+              <SimpleEmpty
+                title="No applications yet"
+                description="Start tracking your job applications to stay organized."
+              >
+                <Button asChild>
+                  <Link to="/applications/new">Add Your First Application</Link>
+                </Button>
+              </SimpleEmpty>
             ) : (
               <>
                 <ApplicationsTable
                   data={activeData.items}
-                  onEdit={goToEdit}
                   onInterviews={setInterviewsAppId}
                   heatmap={heatmap}
                 />

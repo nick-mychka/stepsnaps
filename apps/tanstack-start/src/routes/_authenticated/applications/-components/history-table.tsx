@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import {
   createColumnHelper,
   flexRender,
@@ -21,48 +22,63 @@ type HistoryRow = RouterOutputs["jobApplication"]["list"]["items"][number];
 
 const historyColumnHelper = createColumnHelper<HistoryRow>();
 
-const historyColumns = [
-  historyColumnHelper.accessor("companyName", {
-    header: "Company",
-    cell: (info) => <span className="font-medium">{info.getValue()}</span>,
-  }),
-  historyColumnHelper.accessor("jobTitle", {
-    header: "Job Title",
-    cell: (info) => info.getValue() ?? "—",
-  }),
-  historyColumnHelper.accessor("salary", {
-    header: "Salary",
-    cell: (info) => info.getValue() ?? "—",
-  }),
-  historyColumnHelper.accessor("source", {
-    header: "Source",
-    cell: (info) => info.getValue()?.name ?? "—",
-  }),
-  historyColumnHelper.accessor("appliedAt", {
-    header: "Applied",
-    cell: (info) => info.getValue(),
-  }),
-  historyColumnHelper.accessor("closedReason", {
-    header: "Outcome",
-    cell: (info) => <ClosedReasonBadge reason={info.getValue()} />,
-  }),
-  historyColumnHelper.accessor("interviews", {
-    header: "Interviews",
-    cell: (info) => {
-      const count = info.getValue().length;
-      return count > 0 ? `${count}` : "—";
-    },
-  }),
-];
+function createHistoryColumns() {
+  return [
+    historyColumnHelper.accessor("companyName", {
+      header: "Company",
+      cell: (info) => (
+        <button
+          type="button"
+          className="text-left font-medium underline-offset-4 hover:underline"
+        >
+          <Link
+            to="/applications/$applicationId"
+            params={{ applicationId: info.row.original.id }}
+          >
+            {info.getValue()}
+          </Link>
+        </button>
+      ),
+    }),
+    historyColumnHelper.accessor("jobTitle", {
+      header: "Job Title",
+      cell: (info) => info.getValue() ?? "—",
+    }),
+    historyColumnHelper.accessor("salary", {
+      header: "Salary",
+      cell: (info) => info.getValue() ?? "—",
+    }),
+    historyColumnHelper.accessor("source", {
+      header: "Source",
+      cell: (info) => info.getValue()?.name ?? "—",
+    }),
+    historyColumnHelper.accessor("appliedAt", {
+      header: "Applied",
+      cell: (info) => info.getValue(),
+    }),
+    historyColumnHelper.accessor("closedReason", {
+      header: "Outcome",
+      cell: (info) => <ClosedReasonBadge reason={info.getValue()} />,
+    }),
+    historyColumnHelper.accessor("interviews", {
+      header: "Interviews",
+      cell: (info) => {
+        const count = info.getValue().length;
+        return count > 0 ? `${count}` : "—";
+      },
+    }),
+  ];
+}
 
 interface HistoryTableProps {
   data: HistoryRow[];
 }
 
-export function HistoryTable(props: HistoryTableProps) {
+export function HistoryTable({ data }: HistoryTableProps) {
+  const columns = createHistoryColumns();
   const table = useReactTable({
-    data: props.data,
-    columns: historyColumns,
+    data: data,
+    columns,
     getCoreRowModel: getCoreRowModel(),
   });
 
@@ -98,10 +114,7 @@ export function HistoryTable(props: HistoryTableProps) {
             ))
           ) : (
             <TableRow>
-              <TableCell
-                colSpan={historyColumns.length}
-                className="h-24 text-center"
-              >
+              <TableCell colSpan={columns.length} className="h-24 text-center">
                 No closed applications yet.
               </TableCell>
             </TableRow>

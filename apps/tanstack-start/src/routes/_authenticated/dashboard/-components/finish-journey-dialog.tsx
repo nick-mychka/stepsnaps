@@ -16,7 +16,10 @@ import { Textarea } from "@stepsnaps/ui/textarea";
 import { LoadingButton } from "~/components/loading-button";
 import { useFinishJourney } from "../-hooks/use-finish-journey";
 
-export function FinishJourneyDialog(props: {
+export function FinishJourneyDialog({
+  open,
+  onOpenChange,
+}: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
@@ -24,7 +27,7 @@ export function FinishJourneyDialog(props: {
   const [offerDetails, setOfferDetails] = useState("");
 
   const finishJourney = useFinishJourney({
-    onSuccess: () => props.onOpenChange(false),
+    onSuccess: () => onOpenChange(false),
   });
 
   const handleSubmit = () => {
@@ -35,7 +38,7 @@ export function FinishJourneyDialog(props: {
   };
 
   return (
-    <Dialog open={props.open} onOpenChange={props.onOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Finish Journey</DialogTitle>
@@ -64,7 +67,7 @@ export function FinishJourneyDialog(props: {
           </Field>
         </FieldGroup>
         <DialogFooter>
-          <Button variant="outline" onClick={() => props.onOpenChange(false)}>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
           <LoadingButton

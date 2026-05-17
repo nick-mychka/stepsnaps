@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import {
   createColumnHelper,
   flexRender,
@@ -75,10 +76,7 @@ type ApplicationRow = RouterOutputs["jobApplication"]["list"]["items"][number];
 
 const columnHelper = createColumnHelper<ApplicationRow>();
 
-function createColumns(
-  onEdit: (id: string) => void,
-  onInterviews: (id: string) => void,
-) {
+function createColumns(onInterviews: (id: string) => void) {
   return [
     columnHelper.accessor("companyName", {
       header: "Company",
@@ -86,9 +84,13 @@ function createColumns(
         <button
           type="button"
           className="text-left font-medium underline-offset-4 hover:underline"
-          onClick={() => onEdit(info.row.original.id)}
         >
-          {info.getValue()}
+          <Link
+            to="/applications/$applicationId"
+            params={{ applicationId: info.row.original.id }}
+          >
+            {info.getValue()}
+          </Link>
         </button>
       ),
     }),
@@ -145,15 +147,18 @@ function createColumns(
 
 interface ApplicationsTableProps {
   data: ApplicationRow[];
-  onEdit: (id: string) => void;
   onInterviews: (id: string) => void;
   heatmap?: boolean;
 }
 
-export function ApplicationsTable(props: ApplicationsTableProps) {
-  const columns = createColumns(props.onEdit, props.onInterviews);
+export function ApplicationsTable({
+  data,
+  onInterviews,
+  heatmap,
+}: ApplicationsTableProps) {
+  const columns = createColumns(onInterviews);
   const table = useReactTable({
-    data: props.data,
+    data,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
@@ -183,7 +188,7 @@ export function ApplicationsTable(props: ApplicationsTableProps) {
               <TableRow
                 key={row.id}
                 className={
-                  props.heatmap
+                  heatmap
                     ? getHeatmapRowClass(getDayDiff(row.original.appliedAt))
                     : undefined
                 }

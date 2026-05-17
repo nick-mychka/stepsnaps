@@ -48,9 +48,12 @@ interface InterviewsDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export function InterviewsDialog(props: InterviewsDialogProps) {
-  const { data: interviews } = useInterviews(props.applicationId, {
-    enabled: !!props.applicationId,
+export function InterviewsDialog({
+  applicationId,
+  onOpenChange,
+}: InterviewsDialogProps) {
+  const { data: interviews } = useInterviews(applicationId, {
+    enabled: !!applicationId,
   });
 
   const [date, setDate] = useState("");
@@ -78,9 +81,9 @@ export function InterviewsDialog(props: InterviewsDialogProps) {
 
   const handleAdd = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!props.applicationId) return;
+    if (!applicationId) return;
     createInterview.mutate({
-      jobApplicationId: props.applicationId,
+      jobApplicationId: applicationId,
       date,
       type,
       note: note.trim() || undefined,
@@ -112,7 +115,7 @@ export function InterviewsDialog(props: InterviewsDialogProps) {
 
   return (
     <Dialog
-      open={!!props.applicationId}
+      open={!!applicationId}
       onOpenChange={(open) => {
         if (!open) {
           setEditingId(null);
@@ -120,7 +123,7 @@ export function InterviewsDialog(props: InterviewsDialogProps) {
           setType("phone_screen");
           setNote("");
         }
-        props.onOpenChange(open);
+        onOpenChange(open);
       }}
     >
       <DialogContent className="max-w-lg">
