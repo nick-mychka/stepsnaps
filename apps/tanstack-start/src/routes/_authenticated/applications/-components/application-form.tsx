@@ -190,7 +190,7 @@ export function ApplicationForm(props: ApplicationFormProps) {
     isEdit && (props.status === "interviewing" || props.status === "on_hold");
 
   return (
-    <form className="flex gap-8" onSubmit={handleSubmit}>
+    <form className="flex h-full gap-8" onSubmit={handleSubmit}>
       <div className="min-w-0 flex-1">
         <FieldGroup className="h-full">
           <Field className="h-full">
