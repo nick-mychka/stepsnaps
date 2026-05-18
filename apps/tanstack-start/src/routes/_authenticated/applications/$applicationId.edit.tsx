@@ -41,10 +41,12 @@ function EditApplicationPage() {
   };
 
   return (
-    <main className="container mx-auto py-8">
+    <main className="container mx-auto h-full py-8">
       <SimpleCard
         title="Edit Application"
         description="Update the details of this application."
+        className="h-full overflow-y-auto"
+        contentClassName="grow"
       >
         <ApplicationForm
           mode="edit"
