@@ -15,10 +15,12 @@ function NewApplicationPage() {
   const createApplication = useCreateApplication({ onSuccess: goBack });
 
   return (
-    <main className="container mx-auto py-8">
+    <main className="container mx-auto h-full py-8">
       <SimpleCard
         title="Add Application"
         description="Track a new job application in your pipeline."
+        className="h-full overflow-y-auto"
+        contentClassName="grow"
       >
         <ApplicationForm
           mode="create"
