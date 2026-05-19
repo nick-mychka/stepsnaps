@@ -30,12 +30,14 @@ export const Route = createFileRoute(
   component: ViewApplicationPage,
 });
 
-function Detail({ label, value }: { label: string; value: React.ReactNode }) {
+function Detail({ label, value }: { label?: string; value: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-1">
-      <span className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-        {label}
-      </span>
+      {label && (
+        <span className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+          {label}
+        </span>
+      )}
       <span className="text-sm">{value}</span>
     </div>
   );
@@ -82,7 +84,15 @@ function ViewApplicationPage() {
         }
         description={application.jobTitle ?? undefined}
         actionSlot={
-          <div className="flex gap-2">
+          <div className="flex items-center gap-2">
+            <Detail
+              value={
+                <StatusBadge
+                  status={application.status}
+                  closedReason={application.closedReason}
+                />
+              }
+            />
             <Button variant="outline" onClick={() => setInterviewsOpen(true)}>
               {application.interviews.length > 0
                 ? `${application.interviews.length} interview${application.interviews.length > 1 ? "s" : ""}`
@@ -99,9 +109,8 @@ function ViewApplicationPage() {
           </div>
         }
       >
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <Detail label="Job Title" value={application.jobTitle ?? "—"} />
-          <Detail label="Salary" value={application.salary ?? "—"} />
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-4">
+          <Detail label="Applied" value={formattedAppliedAt} />
           <Detail
             label="Work Mode"
             value={
@@ -109,22 +118,13 @@ function ViewApplicationPage() {
             }
           />
           <Detail label="Source" value={application.source?.name ?? "—"} />
-          <Detail label="Applied" value={formattedAppliedAt} />
-          <Detail
-            label="Status"
-            value={
-              <StatusBadge
-                status={application.status}
-                closedReason={application.closedReason}
-              />
-            }
-          />
           {application.status === "closed" && (
             <Detail
               label="Outcome"
               value={<ClosedReasonBadge reason={application.closedReason} />}
             />
           )}
+          <Detail label="Salary" value={application.salary ?? "—"} />
         </div>
 
         {application.vacancyText && (
