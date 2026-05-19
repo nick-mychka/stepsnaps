@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { ExternalLink } from "lucide-react";
 
 import { Button } from "@stepsnaps/ui/button";
 import { Separator } from "@stepsnaps/ui/separator";
@@ -63,7 +64,22 @@ function ViewApplicationPage() {
   return (
     <main className="container mx-auto py-8">
       <SimpleCard
-        title={application.companyName}
+        title={
+          <div className="flex items-center gap-2">
+            {application.companyName}
+            {application.jobUrl && (
+              <a
+                href={application.jobUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {
+                  <ExternalLink className="size-5 text-gray-400 duration-300 hover:text-gray-200" />
+                }
+              </a>
+            )}
+          </div>
+        }
         description={application.jobTitle ?? undefined}
         actionSlot={
           <div className="flex gap-2">
@@ -93,23 +109,6 @@ function ViewApplicationPage() {
             }
           />
           <Detail label="Source" value={application.source?.name ?? "—"} />
-          <Detail
-            label="Job URL"
-            value={
-              application.jobUrl ? (
-                <a
-                  href={application.jobUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-primary underline-offset-4 hover:underline"
-                >
-                  {application.jobUrl}
-                </a>
-              ) : (
-                "—"
-              )
-            }
-          />
           <Detail label="Applied" value={formattedAppliedAt} />
           <Detail
             label="Status"
