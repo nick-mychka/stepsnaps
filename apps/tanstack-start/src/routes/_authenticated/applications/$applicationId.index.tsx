@@ -75,24 +75,19 @@ function ViewApplicationPage() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {
-                  <ExternalLink className="size-5 text-gray-400 duration-300 hover:text-gray-200" />
-                }
+                <ExternalLink className="size-5 text-gray-400 duration-300 hover:text-gray-200" />
               </a>
             )}
           </div>
         }
-        description={application.jobTitle ?? undefined}
+        description={application.jobTitle ?? "—"}
         actionSlot={
-          <div className="flex items-center gap-2">
-            <Detail
-              value={
-                <StatusBadge
-                  status={application.status}
-                  closedReason={application.closedReason}
-                />
-              }
+          <div className="flex items-center gap-3">
+            <StatusBadge
+              status={application.status}
+              closedReason={application.closedReason}
             />
+            <Separator orientation="vertical" />
             <Button variant="outline" onClick={() => setInterviewsOpen(true)}>
               {application.interviews.length > 0
                 ? `${application.interviews.length} interview${application.interviews.length > 1 ? "s" : ""}`
