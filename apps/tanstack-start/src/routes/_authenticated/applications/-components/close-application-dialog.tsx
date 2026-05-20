@@ -1,18 +1,11 @@
 import { useState } from "react";
 
 import { Button } from "@stepsnaps/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@stepsnaps/ui/dialog";
 import { Label } from "@stepsnaps/ui/label";
 import { RadioGroup, RadioGroupItem } from "@stepsnaps/ui/radio-group";
 
 import { LoadingButton } from "~/components/loading-button";
+import { SimpleDialog, SimpleDialogContent } from "~/components/simple-dialog";
 import { SimpleTooltip } from "~/components/simple-tooltip";
 import { useCloseApplication } from "../-hooks/use-close-application";
 
@@ -74,15 +67,31 @@ export function CloseApplicationDialog({
   };
 
   return (
-    <Dialog open={!!applicationId} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Close Application</DialogTitle>
-          <DialogDescription>
-            Choose a reason for closing this application. It will move to your
-            history.
-          </DialogDescription>
-        </DialogHeader>
+    <SimpleDialog open={!!applicationId} onOpenChange={onOpenChange}>
+      <SimpleDialogContent
+        title="Close Application"
+        description="Choose a reason for closing this application. It will move to your history."
+        footer={
+          <>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+            >
+              Cancel
+            </Button>
+            <LoadingButton
+              type="submit"
+              form="close-application-form"
+              variant="destructive"
+              disabled={closeApplication.isPending}
+              loading={closeApplication.isPending}
+            >
+              Close Application
+            </LoadingButton>
+          </>
+        }
+      >
         <form
           id="close-application-form"
           className="py-4"
@@ -118,25 +127,7 @@ export function CloseApplicationDialog({
             ))}
           </RadioGroup>
         </form>
-        <DialogFooter>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => onOpenChange(false)}
-          >
-            Cancel
-          </Button>
-          <LoadingButton
-            type="submit"
-            form="close-application-form"
-            variant="destructive"
-            disabled={closeApplication.isPending}
-            loading={closeApplication.isPending}
-          >
-            Close Application
-          </LoadingButton>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+      </SimpleDialogContent>
+    </SimpleDialog>
   );
 }
