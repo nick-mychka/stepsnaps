@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { ExternalLink } from "lucide-react";
 
 import { Button } from "@stepsnaps/ui/button";
 import { Separator } from "@stepsnaps/ui/separator";
@@ -29,12 +30,14 @@ export const Route = createFileRoute(
   component: ViewApplicationPage,
 });
 
-function Detail({ label, value }: { label: string; value: React.ReactNode }) {
+function Detail({ label, value }: { label?: string; value: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-1">
-      <span className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-        {label}
-      </span>
+      {label && (
+        <span className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
+          {label}
+        </span>
+      )}
       <span className="text-sm">{value}</span>
     </div>
   );
@@ -63,10 +66,28 @@ function ViewApplicationPage() {
   return (
     <main className="container mx-auto py-8">
       <SimpleCard
-        title={application.companyName}
-        description={application.jobTitle ?? undefined}
+        title={
+          <div className="flex items-center gap-2">
+            {application.companyName}
+            {application.jobUrl && (
+              <a
+                href={application.jobUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <ExternalLink className="size-5 text-gray-400 duration-300 hover:text-gray-200" />
+              </a>
+            )}
+          </div>
+        }
+        description={application.jobTitle ?? "—"}
         actionSlot={
-          <div className="flex gap-2">
+          <div className="flex items-center gap-3">
+            <StatusBadge
+              status={application.status}
+              closedReason={application.closedReason}
+            />
+            <Separator orientation="vertical" />
             <Button variant="outline" onClick={() => setInterviewsOpen(true)}>
               {application.interviews.length > 0
                 ? `${application.interviews.length} interview${application.interviews.length > 1 ? "s" : ""}`
@@ -83,9 +104,8 @@ function ViewApplicationPage() {
           </div>
         }
       >
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <Detail label="Job Title" value={application.jobTitle ?? "—"} />
-          <Detail label="Salary" value={application.salary ?? "—"} />
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-4">
+          <Detail label="Applied" value={formattedAppliedAt} />
           <Detail
             label="Work Mode"
             value={
@@ -93,39 +113,13 @@ function ViewApplicationPage() {
             }
           />
           <Detail label="Source" value={application.source?.name ?? "—"} />
-          <Detail
-            label="Job URL"
-            value={
-              application.jobUrl ? (
-                <a
-                  href={application.jobUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-primary underline-offset-4 hover:underline"
-                >
-                  {application.jobUrl}
-                </a>
-              ) : (
-                "—"
-              )
-            }
-          />
-          <Detail label="Applied" value={formattedAppliedAt} />
-          <Detail
-            label="Status"
-            value={
-              <StatusBadge
-                status={application.status}
-                closedReason={application.closedReason}
-              />
-            }
-          />
           {application.status === "closed" && (
             <Detail
               label="Outcome"
               value={<ClosedReasonBadge reason={application.closedReason} />}
             />
           )}
+          <Detail label="Salary" value={application.salary ?? "—"} />
         </div>
 
         {application.vacancyText && (
