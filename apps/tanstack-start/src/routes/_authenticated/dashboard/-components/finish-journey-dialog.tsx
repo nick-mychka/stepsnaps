@@ -1,19 +1,12 @@
 import { useState } from "react";
 
 import { Button } from "@stepsnaps/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@stepsnaps/ui/dialog";
 import { Field, FieldGroup, FieldLabel } from "@stepsnaps/ui/field";
 import { Input } from "@stepsnaps/ui/input";
 import { Textarea } from "@stepsnaps/ui/textarea";
 
 import { LoadingButton } from "~/components/loading-button";
+import { SimpleDialog, SimpleDialogContent } from "~/components/simple-dialog";
 import { useFinishJourney } from "../-hooks/use-finish-journey";
 
 export function FinishJourneyDialog({
@@ -38,14 +31,25 @@ export function FinishJourneyDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Finish Journey</DialogTitle>
-          <DialogDescription>
-            Congratulations! Optionally record the offer details.
-          </DialogDescription>
-        </DialogHeader>
+    <SimpleDialog open={open} onOpenChange={onOpenChange}>
+      <SimpleDialogContent
+        title="Finish Journey"
+        description="Congratulations! Optionally record the offer details."
+        footer={
+          <>
+            <Button variant="outline" onClick={() => onOpenChange(false)}>
+              Cancel
+            </Button>
+            <LoadingButton
+              onClick={handleSubmit}
+              disabled={finishJourney.isPending}
+              loading={finishJourney.isPending}
+            >
+              Finish Journey
+            </LoadingButton>
+          </>
+        }
+      >
         <FieldGroup>
           <Field>
             <FieldLabel htmlFor="companyName">Company Name</FieldLabel>
@@ -66,19 +70,7 @@ export function FinishJourneyDialog({
             />
           </Field>
         </FieldGroup>
-        <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
-          </Button>
-          <LoadingButton
-            onClick={handleSubmit}
-            disabled={finishJourney.isPending}
-            loading={finishJourney.isPending}
-          >
-            Finish Journey
-          </LoadingButton>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+      </SimpleDialogContent>
+    </SimpleDialog>
   );
 }
