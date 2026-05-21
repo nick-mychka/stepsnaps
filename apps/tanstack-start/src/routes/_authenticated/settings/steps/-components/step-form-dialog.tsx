@@ -1,20 +1,13 @@
 import { useState } from "react";
 
 import { Button } from "@stepsnaps/ui/button";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@stepsnaps/ui/dialog";
+import { DialogClose } from "@stepsnaps/ui/dialog";
 import { Field, FieldGroup, FieldLabel } from "@stepsnaps/ui/field";
 import { Input } from "@stepsnaps/ui/input";
 import { RadioGroup, RadioGroupItem } from "@stepsnaps/ui/radio-group";
 
 import { LoadingButton } from "~/components/loading-button";
+import { SimpleDialog, SimpleDialogContent } from "~/components/simple-dialog";
 import { useCreateStep } from "../-hooks/use-create-step";
 import { useUpdateStep } from "../-hooks/use-update-step";
 
@@ -37,11 +30,9 @@ type StepType = "numeric" | "text";
 
 export function StepFormDialog({ open, step, onOpenChange }: Props) {
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <StepFormDialogContent step={step} onOpenChange={onOpenChange} />
-      </DialogContent>
-    </Dialog>
+    <SimpleDialog open={open} onOpenChange={onOpenChange}>
+      <StepFormDialogContent step={step} onOpenChange={onOpenChange} />
+    </SimpleDialog>
   );
 }
 
@@ -91,17 +82,33 @@ function StepFormDialogContent({ step, onOpenChange }: ContentProps) {
   const nameInputId = isEdit ? "edit-step-name" : "step-name";
 
   return (
-    <>
-      <DialogHeader>
-        <DialogTitle>{isEdit ? "Edit Step" : "Add Custom Step"}</DialogTitle>
-        <DialogDescription>
-          {isEdit
-            ? step.isPredefined
-              ? "Update the daily goal for this step."
-              : "Update the name, type, or goal of this step."
-            : "Create a new step to track in your daily snaps."}
-        </DialogDescription>
-      </DialogHeader>
+    <SimpleDialogContent
+      title={isEdit ? "Edit Step" : "Add Custom Step"}
+      description={
+        isEdit
+          ? step.isPredefined
+            ? "Update the daily goal for this step."
+            : "Update the name, type, or goal of this step."
+          : "Create a new step to track in your daily snaps."
+      }
+      footer={
+        <>
+          <DialogClose asChild>
+            <Button variant="outline" type="button">
+              Cancel
+            </Button>
+          </DialogClose>
+          <LoadingButton
+            type="submit"
+            form="edit-step-form"
+            disabled={mutation.isPending || !name.trim()}
+            loading={mutation.isPending}
+          >
+            {isEdit ? "Save" : "Add Step"}
+          </LoadingButton>
+        </>
+      }
+    >
       <form
         id="edit-step-form"
         className="flex flex-col gap-6"
@@ -153,21 +160,6 @@ function StepFormDialogContent({ step, onOpenChange }: ContentProps) {
           )}
         </FieldGroup>
       </form>
-      <DialogFooter>
-        <DialogClose asChild>
-          <Button variant="outline" type="button">
-            Cancel
-          </Button>
-        </DialogClose>
-        <LoadingButton
-          type="submit"
-          form="edit-step-form"
-          disabled={mutation.isPending || !name.trim()}
-          loading={mutation.isPending}
-        >
-          {isEdit ? "Save" : "Add Step"}
-        </LoadingButton>
-      </DialogFooter>
-    </>
+    </SimpleDialogContent>
   );
 }
