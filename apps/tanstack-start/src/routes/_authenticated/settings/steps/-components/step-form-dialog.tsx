@@ -1,7 +1,6 @@
 import { useState } from "react";
 
 import { Button } from "@stepsnaps/ui/button";
-import { DialogClose } from "@stepsnaps/ui/dialog";
 import { Field, FieldGroup, FieldLabel } from "@stepsnaps/ui/field";
 import { Input } from "@stepsnaps/ui/input";
 import { RadioGroup, RadioGroupItem } from "@stepsnaps/ui/radio-group";
@@ -93,11 +92,13 @@ function StepFormDialogContent({ step, onOpenChange }: ContentProps) {
       }
       footer={
         <>
-          <DialogClose asChild>
-            <Button variant="outline" type="button">
-              Cancel
-            </Button>
-          </DialogClose>
+          <Button
+            variant="outline"
+            type="button"
+            onClick={() => onOpenChange(false)}
+          >
+            Cancel
+          </Button>
           <LoadingButton
             type="submit"
             form="edit-step-form"
