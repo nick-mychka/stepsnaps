@@ -1,20 +1,13 @@
 import { useState } from "react";
 
 import { Button } from "@stepsnaps/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@stepsnaps/ui/dialog";
 import { Field, FieldGroup, FieldLabel } from "@stepsnaps/ui/field";
 import { Input } from "@stepsnaps/ui/input";
 import { Textarea } from "@stepsnaps/ui/textarea";
 
 import type { JourneyData } from "./journey-card";
 import { LoadingButton } from "~/components/loading-button";
+import { SimpleDialog, SimpleDialogContent } from "~/components/simple-dialog";
 import { useUpdateJourneyDetails } from "../-hooks/use-update-journey-details";
 
 interface ContentProps {
@@ -28,14 +21,9 @@ interface Props extends ContentProps {
 
 export function EditDetailsDialog({ open, journey, onOpenChange }: Props) {
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <EditDetailsDialogContent
-          journey={journey}
-          onOpenChange={onOpenChange}
-        />
-      </DialogContent>
-    </Dialog>
+    <SimpleDialog open={open} onOpenChange={onOpenChange}>
+      <EditDetailsDialogContent journey={journey} onOpenChange={onOpenChange} />
+    </SimpleDialog>
   );
 }
 
@@ -56,13 +44,24 @@ function EditDetailsDialogContent({ journey, onOpenChange }: ContentProps) {
   };
 
   return (
-    <>
-      <DialogHeader>
-        <DialogTitle>Edit Journey Details</DialogTitle>
-        <DialogDescription>
-          Update the company name and offer details.
-        </DialogDescription>
-      </DialogHeader>
+    <SimpleDialogContent
+      title="Edit Journey Details"
+      description="Update the company name and offer details."
+      footer={
+        <>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>
+            Cancel
+          </Button>
+          <LoadingButton
+            onClick={handleSave}
+            disabled={updateDetails.isPending}
+            loading={updateDetails.isPending}
+          >
+            Save
+          </LoadingButton>
+        </>
+      }
+    >
       <FieldGroup>
         <Field>
           <FieldLabel htmlFor="editCompanyName">Company Name</FieldLabel>
@@ -81,18 +80,6 @@ function EditDetailsDialogContent({ journey, onOpenChange }: ContentProps) {
           />
         </Field>
       </FieldGroup>
-      <DialogFooter>
-        <Button variant="outline" onClick={() => onOpenChange(false)}>
-          Cancel
-        </Button>
-        <LoadingButton
-          onClick={handleSave}
-          disabled={updateDetails.isPending}
-          loading={updateDetails.isPending}
-        >
-          Save
-        </LoadingButton>
-      </DialogFooter>
-    </>
+    </SimpleDialogContent>
   );
 }
