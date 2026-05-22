@@ -2,13 +2,6 @@ import { useState } from "react";
 
 import { Badge } from "@stepsnaps/ui/badge";
 import { Button } from "@stepsnaps/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@stepsnaps/ui/dialog";
 import { Input } from "@stepsnaps/ui/input";
 import {
   Select,
@@ -21,6 +14,7 @@ import { Separator } from "@stepsnaps/ui/separator";
 import { Textarea } from "@stepsnaps/ui/textarea";
 
 import { LoadingButton } from "~/components/loading-button";
+import { SimpleDialog, SimpleDialogContent } from "~/components/simple-dialog";
 import { useCreateInterview } from "../-hooks/use-create-interview";
 import { useDeleteInterview } from "../-hooks/use-delete-interview";
 import { useInterviews } from "../-hooks/use-interviews";
@@ -114,7 +108,7 @@ export function InterviewsDialog({
   };
 
   return (
-    <Dialog
+    <SimpleDialog
       open={!!applicationId}
       onOpenChange={(open) => {
         if (!open) {
@@ -125,15 +119,12 @@ export function InterviewsDialog({
         }
         onOpenChange(open);
       }}
+      contentClassName="max-w-lg"
     >
-      <DialogContent className="max-w-lg">
-        <DialogHeader>
-          <DialogTitle>Interviews</DialogTitle>
-          <DialogDescription>
-            Manage interview rounds for this application.
-          </DialogDescription>
-        </DialogHeader>
-
+      <SimpleDialogContent
+        title="Interviews"
+        description="Manage interview rounds for this application."
+      >
         {/* Existing interviews */}
         <div className="flex flex-col gap-3">
           {interviews?.length === 0 && (
@@ -285,7 +276,7 @@ export function InterviewsDialog({
             Add Interview
           </LoadingButton>
         </form>
-      </DialogContent>
-    </Dialog>
+      </SimpleDialogContent>
+    </SimpleDialog>
   );
 }
