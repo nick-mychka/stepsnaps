@@ -2,20 +2,13 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import { Button } from "@stepsnaps/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@stepsnaps/ui/dialog";
 import { Field, FieldLabel } from "@stepsnaps/ui/field";
 import { Input } from "@stepsnaps/ui/input";
 import { Textarea } from "@stepsnaps/ui/textarea";
 
 import type { SnapByDate } from "~/features/snap";
 import { LoadingButton } from "~/components/loading-button";
+import { SimpleDialog, SimpleDialogContent } from "~/components/simple-dialog";
 import { dayjs } from "~/lib/date";
 import { useTRPC } from "~/lib/trpc";
 import { useUpsertSnap } from "../-hooks/use-upsert-snap";
@@ -148,14 +141,34 @@ export function EditSnapDialog({
   displaySteps.sort((a, b) => a.sortOrder - b.sortOrder);
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[80vh] overflow-y-auto sm:max-w-lg">
-        <DialogHeader>
-          <DialogTitle>Edit Snap</DialogTitle>
-          <DialogDescription>
-            {dayjs(snap.date).format("ddd, MMM D, YYYY")}
-          </DialogDescription>
-        </DialogHeader>
+    <SimpleDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      contentClassName="max-h-[80vh] overflow-y-auto sm:max-w-lg"
+    >
+      <SimpleDialogContent
+        title="Edit Snap"
+        description={dayjs(snap.date).format("ddd, MMM D, YYYY")}
+        footer={
+          <>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+            >
+              Cancel
+            </Button>
+            <LoadingButton
+              type="submit"
+              form="edit-snap-form"
+              disabled={upsertSnap.isPending}
+              loading={upsertSnap.isPending}
+            >
+              Save Changes
+            </LoadingButton>
+          </>
+        }
+      >
         {displaySteps.map((sd) => (
           <form
             id="edit-snap-form"
@@ -195,24 +208,7 @@ export function EditSnapDialog({
             </Field>
           </form>
         ))}
-        <DialogFooter>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => onOpenChange(false)}
-          >
-            Cancel
-          </Button>
-          <LoadingButton
-            type="submit"
-            form="edit-snap-form"
-            disabled={upsertSnap.isPending}
-            loading={upsertSnap.isPending}
-          >
-            Save Changes
-          </LoadingButton>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+      </SimpleDialogContent>
+    </SimpleDialog>
   );
 }
