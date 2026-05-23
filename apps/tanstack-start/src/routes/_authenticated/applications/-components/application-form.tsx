@@ -222,7 +222,12 @@ export function ApplicationForm(props: ApplicationFormProps) {
                     <p className="text-muted-foreground text-sm">{aiNotice}</p>
                   )}
                 </div>
-                <p>{vacancyText.trim().length}/50 000</p>
+                <p>
+                  {new Intl.NumberFormat("en-US").format(
+                    vacancyText.trim().length,
+                  )}
+                  /{new Intl.NumberFormat("en-US").format(50000)}
+                </p>
               </div>
             )}
           </Field>
