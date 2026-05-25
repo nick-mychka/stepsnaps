@@ -2,9 +2,9 @@ import { ChartSpline } from "lucide-react";
 
 import type { RouterOutputs } from "@stepsnaps/api";
 
-import type { ViewMode } from "~/features/snap";
+import type { ViewMode } from "~/features/progress";
 import { SimpleEmpty } from "~/components/simple-empty";
-import { SnapCharts } from "~/features/snap";
+import { ProgressCharts } from "~/features/progress";
 import { useSnaps } from "../-hooks/use-snaps";
 import { TimelineView } from "./timeline-view";
 
@@ -31,7 +31,7 @@ export function ProgressView({ activeJourney, view }: ProgressViewProps) {
   }
 
   return (
-    <SnapCharts
+    <ProgressCharts
       snaps={snaps}
       startDate={activeJourney.startDate}
       endDate={activeJourney.endDate}

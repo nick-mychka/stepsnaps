@@ -1,7 +1,11 @@
 import { useState } from "react";
 
-import type { Granularity, SnapByDate } from "~/features/snap";
-import { GranularityToggle, SnapCard, useGroupedSnaps } from "~/features/snap";
+import type { Granularity, SnapByDate } from "~/features/progress";
+import {
+  GranularityToggle,
+  ProgressCard,
+  useGroupedSnaps,
+} from "~/features/progress";
 import { DeleteSnapDialog } from "./delete-snap-dialog";
 import { EditSnapDialog } from "./edit-snap-dialog";
 
@@ -30,7 +34,7 @@ export function TimelineView({
 
       <div className="flex max-w-2xl flex-col gap-4">
         {items.map(({ snap, label }) => (
-          <SnapCard
+          <ProgressCard
             key={snap.id}
             snap={snap}
             label={label}
