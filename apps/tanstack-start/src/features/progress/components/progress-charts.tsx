@@ -12,7 +12,7 @@ import type { SnapByDate } from "../types";
 import { SimpleCard } from "~/components/simple-card";
 import { dayjs, ISO_DATE_FORMAT } from "~/lib/date";
 
-export function SnapCharts({
+export function ProgressCharts({
   snaps,
   startDate,
   endDate,

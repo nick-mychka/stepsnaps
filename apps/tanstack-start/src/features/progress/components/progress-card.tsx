@@ -15,7 +15,7 @@ interface Props {
   onDelete?: () => void;
 }
 
-export function SnapCard({ snap, label, onEdit, onDelete }: Props) {
+export function ProgressCard({ snap, label, onEdit, onDelete }: Props) {
   const hasActions = !!onEdit && !!onDelete;
 
   // Sort values by step definition sort order
