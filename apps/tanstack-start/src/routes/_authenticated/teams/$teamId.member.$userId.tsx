@@ -4,7 +4,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Camera, Road } from "lucide-react";
 
 import { Button } from "@stepsnaps/ui/button";
-import { Separator } from "@stepsnaps/ui/separator";
 
 import type { Granularity, SnapByDate, ViewMode } from "~/features/progress";
 import { SimpleEmpty } from "~/components/simple-empty";
@@ -35,12 +34,12 @@ export const Route = createFileRoute(
 function MemberProgressPage() {
   const { teamId, userId } = Route.useParams();
   const trpc = useTRPC();
-  const [view, setView] = useState<ViewMode>("timeline");
-  const [granularity, setGranularity] = useState<Granularity>("daily");
 
   const { data } = useSuspenseQuery(
     trpc.team.memberProgress.queryOptions({ teamId, userId }),
   );
+
+  const [view, setView] = useState<ViewMode>("timeline");
 
   return (
     <main className="container mx-auto px-3 py-8">
@@ -52,20 +51,7 @@ function MemberProgressPage() {
 
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold">{data.memberName}'s Progress</h1>
-        {data.journey && (
-          <div className="flex items-center gap-4">
-            {view === "timeline" && (
-              <>
-                <GranularityToggle
-                  granularity={granularity}
-                  onChange={setGranularity}
-                />
-                <Separator orientation="vertical" />
-              </>
-            )}
-            <ViewToggle view={view} onChange={setView} />
-          </div>
-        )}
+        <ViewToggle view={view} onChange={setView} />
       </div>
 
       {!data.journey ? (
@@ -77,7 +63,7 @@ function MemberProgressPage() {
           }
         />
       ) : view === "timeline" ? (
-        <ReadOnlyTimeline snaps={data.snaps} granularity={granularity} />
+        <ReadOnlyTimeline snaps={data.snaps} />
       ) : (
         <ProgressCharts
           snaps={data.snaps}
@@ -89,13 +75,9 @@ function MemberProgressPage() {
   );
 }
 
-function ReadOnlyTimeline({
-  snaps,
-  granularity,
-}: {
-  snaps: SnapByDate[];
-  granularity: Granularity;
-}) {
+function ReadOnlyTimeline({ snaps }: { snaps: SnapByDate[] }) {
+  const [granularity, setGranularity] = useState<Granularity>("daily");
+
   const items = useGroupedSnaps(snaps, granularity);
 
   if (items.length === 0) {
@@ -109,10 +91,18 @@ function ReadOnlyTimeline({
   }
 
   return (
-    <div className="flex max-w-2xl flex-col gap-4">
-      {items.map(({ snap, label }) => (
-        <ProgressCard key={snap.id} snap={snap} label={label} />
-      ))}
-    </div>
+    <>
+      <div className="mb-4 w-fit">
+        <GranularityToggle
+          granularity={granularity}
+          onChange={setGranularity}
+        />
+      </div>
+      <div className="flex max-w-2xl flex-col gap-4">
+        {items.map(({ snap, label }) => (
+          <ProgressCard key={snap.id} snap={snap} label={label} />
+        ))}
+      </div>
+    </>
   );
 }
