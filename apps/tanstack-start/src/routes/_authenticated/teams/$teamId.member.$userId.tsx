@@ -6,15 +6,15 @@ import { Camera, Road } from "lucide-react";
 import { Button } from "@stepsnaps/ui/button";
 import { Separator } from "@stepsnaps/ui/separator";
 
-import type { Granularity, SnapByDate, ViewMode } from "~/features/snap";
+import type { Granularity, SnapByDate, ViewMode } from "~/features/progress";
 import { SimpleEmpty } from "~/components/simple-empty";
 import {
   GranularityToggle,
-  SnapCard,
-  SnapCharts,
+  ProgressCard,
+  ProgressCharts,
   useGroupedSnaps,
   ViewToggle,
-} from "~/features/snap";
+} from "~/features/progress";
 import { useTRPC } from "~/lib/trpc";
 
 export const Route = createFileRoute(
@@ -79,7 +79,7 @@ function MemberProgressPage() {
       ) : view === "timeline" ? (
         <ReadOnlyTimeline snaps={data.snaps} granularity={granularity} />
       ) : (
-        <SnapCharts
+        <ProgressCharts
           snaps={data.snaps}
           startDate={data.journey.startDate}
           endDate={data.journey.endDate}
@@ -111,7 +111,7 @@ function ReadOnlyTimeline({
   return (
     <div className="flex max-w-2xl flex-col gap-4">
       {items.map(({ snap, label }) => (
-        <SnapCard key={snap.id} snap={snap} label={label} />
+        <ProgressCard key={snap.id} snap={snap} label={label} />
       ))}
     </div>
   );

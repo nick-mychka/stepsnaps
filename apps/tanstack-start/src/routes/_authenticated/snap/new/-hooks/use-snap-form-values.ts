@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import type { SnapByDate } from "~/features/snap";
+import type { SnapByDate } from "~/features/progress";
 
 export function useSnapFormValues(
   existingSnap: SnapByDate | null | undefined,

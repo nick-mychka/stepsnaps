@@ -6,7 +6,7 @@ import { Field, FieldLabel } from "@stepsnaps/ui/field";
 import { Input } from "@stepsnaps/ui/input";
 import { Textarea } from "@stepsnaps/ui/textarea";
 
-import type { SnapByDate } from "~/features/snap";
+import type { SnapByDate } from "~/features/progress";
 import { LoadingButton } from "~/components/loading-button";
 import { SimpleDialog, SimpleDialogContent } from "~/components/simple-dialog";
 import { dayjs } from "~/lib/date";

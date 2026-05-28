@@ -11,8 +11,9 @@ import {
 import type { SnapByDate } from "../types";
 import { SimpleCard } from "~/components/simple-card";
 import { dayjs, ISO_DATE_FORMAT } from "~/lib/date";
+import { ProgressSummary } from "./progress-summary";
 
-export function SnapCharts({
+export function ProgressCharts({
   snaps,
   startDate,
   endDate,
@@ -104,12 +105,7 @@ export function SnapCharts({
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <h2 className="text-lg font-semibold">Daily Activity</h2>
-        <p className="text-muted-foreground text-sm">
-          {startDate} to {endDate ?? "today"}
-        </p>
-      </div>
+      <ProgressSummary startDate={startDate} endDate={endDate} />
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
         {stepKeys.map(({ key }) => (
