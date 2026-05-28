@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
+import { Road } from "lucide-react";
 
 import { Button } from "@stepsnaps/ui/button";
 
 import type { ViewMode } from "~/features/progress";
 import { BackgroundV3 } from "~/components/journey-background";
-import { SimpleCard } from "~/components/simple-card";
+import { SimpleEmpty } from "~/components/simple-empty";
 import { ViewToggle } from "~/features/progress";
 import { ProgressView } from "./-components/progress-view";
 import { useActiveJourney } from "./-hooks/use-active-journey";
@@ -25,15 +26,15 @@ export function ProgressPage() {
         </div>
 
         {!activeJourney ? (
-          <SimpleCard
-            className="max-w-lg"
+          <SimpleEmpty
+            icon={<Road />}
             title="No Active Journey"
             description="Start a journey from the dashboard to view your progress."
           >
             <Button asChild>
               <Link to="/dashboard">Go to Dashboard</Link>
             </Button>
-          </SimpleCard>
+          </SimpleEmpty>
         ) : (
           <ProgressView activeJourney={activeJourney} view={view} />
         )}
