@@ -62,16 +62,34 @@ function MemberProgressPage() {
             <>{data.memberName} doesn't have an active journey right now.</>
           }
         />
-      ) : view === "timeline" ? (
-        <ReadOnlyTimeline snaps={data.snaps} />
       ) : (
-        <ProgressCharts
+        <MemberProgressView
+          view={view}
           snaps={data.snaps}
           startDate={data.journey.startDate}
           endDate={data.journey.endDate}
         />
       )}
     </main>
+  );
+}
+
+function MemberProgressView({
+  view,
+  snaps,
+  startDate,
+  endDate,
+}: {
+  view: ViewMode;
+  snaps: SnapByDate[];
+  startDate: string;
+  endDate: string | null;
+}) {
+  if (view === "timeline") {
+    return <ReadOnlyTimeline snaps={snaps} />;
+  }
+  return (
+    <ProgressCharts snaps={snaps} startDate={startDate} endDate={endDate} />
   );
 }
 
