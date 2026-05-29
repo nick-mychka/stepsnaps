@@ -85,9 +85,20 @@ function MemberProgressView({
   startDate: string;
   endDate: string | null;
 }) {
+  if (snaps.length === 0) {
+    return (
+      <SimpleEmpty
+        title="No snaps yet"
+        icon={<Camera />}
+        description="No daily snaps have been logged yet."
+      />
+    );
+  }
+
   if (view === "timeline") {
     return <ReadOnlyTimeline snaps={snaps} />;
   }
+
   return (
     <ProgressCharts snaps={snaps} startDate={startDate} endDate={endDate} />
   );
@@ -97,16 +108,6 @@ function ReadOnlyTimeline({ snaps }: { snaps: SnapByDate[] }) {
   const [granularity, setGranularity] = useState<Granularity>("daily");
 
   const items = useGroupedSnaps(snaps, granularity);
-
-  if (items.length === 0) {
-    return (
-      <SimpleEmpty
-        title="No snaps yet"
-        icon={<Camera />}
-        description="No daily snaps have been logged yet."
-      />
-    );
-  }
 
   return (
     <>
