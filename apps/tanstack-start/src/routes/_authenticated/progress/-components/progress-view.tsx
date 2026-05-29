@@ -1,4 +1,4 @@
-import { ChartSpline } from "lucide-react";
+import { Camera } from "lucide-react";
 
 import type { RouterOutputs } from "@stepsnaps/api";
 
@@ -19,7 +19,7 @@ export function ProgressView({ activeJourney, view }: ProgressViewProps) {
   if (snaps.length === 0) {
     return (
       <SimpleEmpty
-        icon={<ChartSpline />}
+        icon={<Camera />}
         title="No snaps yet"
         description="Start logging daily snaps to see your progress here."
       />
