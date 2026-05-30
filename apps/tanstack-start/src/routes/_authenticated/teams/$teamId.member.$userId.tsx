@@ -11,6 +11,7 @@ import {
   GranularityToggle,
   ProgressCard,
   ProgressCharts,
+  ProgressSummary,
   useGroupedSnaps,
   ViewToggle,
 } from "~/features/progress";
@@ -95,12 +96,16 @@ function MemberProgressView({
     );
   }
 
-  if (view === "timeline") {
-    return <ReadOnlyTimeline snaps={snaps} />;
-  }
-
   return (
-    <ProgressCharts snaps={snaps} startDate={startDate} endDate={endDate} />
+    <div className="flex flex-col gap-3">
+      <ProgressSummary startDate={startDate} endDate={endDate} />
+
+      {view === "timeline" ? (
+        <ReadOnlyTimeline snaps={snaps} />
+      ) : (
+        <ProgressCharts snaps={snaps} startDate={startDate} endDate={endDate} />
+      )}
+    </div>
   );
 }
 

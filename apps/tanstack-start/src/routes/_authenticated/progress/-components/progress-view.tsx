@@ -4,7 +4,7 @@ import type { RouterOutputs } from "@stepsnaps/api";
 
 import type { ViewMode } from "~/features/progress";
 import { SimpleEmpty } from "~/components/simple-empty";
-import { ProgressCharts } from "~/features/progress";
+import { ProgressCharts, ProgressSummary } from "~/features/progress";
 import { useSnaps } from "../-hooks/use-snaps";
 import { TimelineView } from "./timeline-view";
 
@@ -26,15 +26,22 @@ export function ProgressView({ activeJourney, view }: ProgressViewProps) {
     );
   }
 
-  if (view === "timeline") {
-    return <TimelineView snaps={snaps} journeyId={activeJourney.id} />;
-  }
-
   return (
-    <ProgressCharts
-      snaps={snaps}
-      startDate={activeJourney.startDate}
-      endDate={activeJourney.endDate}
-    />
+    <div className="flex flex-col gap-3">
+      <ProgressSummary
+        startDate={activeJourney.startDate}
+        endDate={activeJourney.endDate}
+      />
+
+      {view === "timeline" ? (
+        <TimelineView snaps={snaps} journeyId={activeJourney.id} />
+      ) : (
+        <ProgressCharts
+          snaps={snaps}
+          startDate={activeJourney.startDate}
+          endDate={activeJourney.endDate}
+        />
+      )}
+    </div>
   );
 }
