@@ -11,7 +11,6 @@ import {
 import type { SnapByDate } from "../types";
 import { SimpleCard } from "~/components/simple-card";
 import { dayjs, ISO_DATE_FORMAT } from "~/lib/date";
-import { ProgressSummary } from "./progress-summary";
 
 export function ProgressCharts({
   snaps,
@@ -105,8 +104,6 @@ export function ProgressCharts({
 
   return (
     <div className="flex flex-col gap-6">
-      <ProgressSummary startDate={startDate} endDate={endDate} />
-
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
         {stepKeys.map(({ key }) => (
           <SimpleCard key={key} title={chartConfig[key]?.label}>
