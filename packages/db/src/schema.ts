@@ -350,4 +350,39 @@ export const interviewRelations = relations(Interview, ({ one }) => ({
   }),
 }));
 
+// --- Todo ---
+
+export const Todo = pgTable("todo", (t) => ({
+  id: t.uuid().notNull().primaryKey().defaultRandom(),
+  userId: t
+    .text()
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  date: t.date({ mode: "string" }).notNull(),
+  title: t.varchar({ length: 256 }).notNull(),
+  completed: t.boolean().notNull().default(false),
+  createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
+  updatedAt: t
+    .timestamp({ mode: "date", withTimezone: true })
+    .$onUpdateFn(() => sql`now()`),
+}));
+
+export const todoRelations = relations(Todo, ({ one }) => ({
+  user: one(user, {
+    fields: [Todo.userId],
+    references: [user.id],
+  }),
+}));
+
+export const CreateTodoSchema = createInsertSchema(Todo, {
+  title: z.string().min(1).max(256),
+  date: z.string().date(),
+}).omit({
+  id: true,
+  userId: true,
+  completed: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 export * from "./auth-schema";
