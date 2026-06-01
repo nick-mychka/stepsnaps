@@ -68,16 +68,17 @@ export function ActiveJourneyCard({
             )}
           </div>
         }
-        className="max-w-lg"
-        titleClassName="flex items-center gap-2 text-2xl font-bold"
-        contentClassName="flex flex-col items-center gap-2 pt-10 pb-6"
-        footerClassName="pt-4 pb-6"
+        className="w-full max-w-md"
+        headerClassName="gap-1"
+        titleClassName="flex items-center gap-2 text-xl font-bold"
+        actionSlotClassName="-mr-4"
+        contentClassName="flex flex-col items-center gap-2 py-2"
       >
-        <CalendarDays className="text-muted-foreground size-7" />
+        <CalendarDays className="text-muted-foreground" />
         <p className="text-muted-foreground text-xs font-semibold tracking-[0.2em] uppercase">
           Day
         </p>
-        <p className="text-[7rem] leading-none font-black tracking-tight">
+        <p className="text-7xl leading-none font-black tracking-tight">
           {dayjs().diff(journey.startDate, "day") + 1}
         </p>
         <p className="text-muted-foreground text-sm">of your journey</p>

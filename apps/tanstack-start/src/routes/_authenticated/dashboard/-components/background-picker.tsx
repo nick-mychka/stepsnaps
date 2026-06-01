@@ -38,7 +38,7 @@ export function BackgroundPicker({
   onChange: (id: BgVariantId) => void;
 }) {
   return (
-    <div className="mt-10 max-w-xl">
+    <div className="mt-8 max-w-md">
       <p className="text-muted-foreground mb-3 text-xs font-semibold tracking-widest uppercase">
         Choose background
       </p>

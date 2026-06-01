@@ -10,6 +10,7 @@ import { dayjs, today } from "~/lib/date";
 import { useCreateTodo } from "../-hooks/use-create-todo";
 import { useTodos } from "../-hooks/use-todos";
 import { TodoItem } from "./todo-item";
+import { YesterdayCarryoverBanner } from "./yesterday-carryover-banner";
 
 export function TodayFocusCard() {
   const date = today();
@@ -42,6 +43,8 @@ export function TodayFocusCard() {
       titleClassName="flex items-center gap-2 text-2xl font-bold"
       contentClassName="flex flex-col gap-4"
     >
+      <YesterdayCarryoverBanner />
+
       <form onSubmit={handleAdd} className="flex gap-2">
         <Input
           value={title}

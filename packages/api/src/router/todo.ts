@@ -2,7 +2,7 @@ import type { TRPCRouterRecord } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
-import { and, asc, eq } from "@stepsnaps/db";
+import { and, asc, desc, eq, inArray, lt, ne } from "@stepsnaps/db";
 import { Todo } from "@stepsnaps/db/schema";
 
 import { protectedProcedure } from "../trpc";
@@ -18,6 +18,22 @@ export const todoRouter = {
           eq(Todo.date, input.date),
         ),
         orderBy: asc(Todo.createdAt),
+      });
+    }),
+
+  /**
+   * List the current user's past to-dos (date strictly before `before`),
+   * ordered most-recent-date-first then creation order. Backs the history page.
+   */
+  listPast: protectedProcedure
+    .input(z.object({ before: z.string().date() }))
+    .query(({ ctx, input }) => {
+      return ctx.db.query.Todo.findMany({
+        where: and(
+          eq(Todo.userId, ctx.session.user.id),
+          lt(Todo.date, input.before),
+        ),
+        orderBy: [desc(Todo.date), asc(Todo.createdAt)],
       });
     }),
 
@@ -102,5 +118,38 @@ export const todoRouter = {
       }
 
       return { success: true };
+    }),
+
+  /**
+   * Reassign the date of the given to-dos to `today` (current user's rows
+   * only). Items already dated today are skipped (no-op); ids not owned by the
+   * user are ignored. Returns the number of items actually moved. Backs both
+   * the dashboard carry-over and the history page move.
+   */
+  moveToToday: protectedProcedure
+    .input(
+      z.object({
+        ids: z.array(z.string().uuid()),
+        today: z.string().date(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (input.ids.length === 0) {
+        return { moved: 0 };
+      }
+
+      const moved = await ctx.db
+        .update(Todo)
+        .set({ date: input.today })
+        .where(
+          and(
+            eq(Todo.userId, ctx.session.user.id),
+            inArray(Todo.id, input.ids),
+            ne(Todo.date, input.today),
+          ),
+        )
+        .returning();
+
+      return { moved: moved.length };
     }),
 } satisfies TRPCRouterRecord;

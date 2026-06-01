@@ -80,13 +80,13 @@ Add the carry-over experience. Implement `todo.moveToToday({ ids, today })` as t
 
 ### Acceptance criteria
 
-- [ ] `moveToToday` reassigns `date` to today for owned ids; same record (no copy), `updatedAt` bumps.
-- [ ] Items already dated today are no-ops (not duplicated, not errored); ids owned by another user are ignored.
-- [ ] The banner appears only when yesterday has at least one unfinished item, and displays the correct count.
-- [ ] Only unfinished yesterday items are offered for carry-over (completed ones are not moved/offered).
-- [ ] "Carry all over" moves all unfinished yesterday items in a single round-trip; they appear in today's list immediately.
-- [ ] "Review" expands the unfinished yesterday items inline and each can be moved individually.
-- [ ] After carrying everything over, the banner disappears with no manual dismissal.
+- [x] `moveToToday` reassigns `date` to today for owned ids; same record (no copy), `updatedAt` bumps.
+- [x] Items already dated today are no-ops (not duplicated, not errored); ids owned by another user are ignored.
+- [x] The banner appears only when yesterday has at least one unfinished item, and displays the correct count.
+- [x] Only unfinished yesterday items are offered for carry-over (completed ones are not moved/offered).
+- [x] "Carry all over" moves all unfinished yesterday items in a single round-trip; they appear in today's list immediately.
+- [x] "Review" expands the unfinished yesterday items inline and each can be moved individually.
+- [x] After carrying everything over, the banner disappears with no manual dismissal.
 
 ---
 
@@ -100,10 +100,10 @@ A dedicated To-Do History page at `_authenticated/todos/`. Add `todo.listPast({ 
 
 ### Acceptance criteria
 
-- [ ] `listPast` returns only the session user's to-dos strictly before the given date, ordered most-recent-date-first then creation order.
-- [ ] The `_authenticated/todos/` route renders past to-dos grouped by date, newest day first.
-- [ ] Both completed and unfinished items are shown; completed items do not show a move-to-today action.
-- [ ] Deleting any item removes it immediately.
-- [ ] Moving an unfinished item sends it to today (reassigned date); it disappears from history and appears in the dashboard widget.
-- [ ] A friendly empty state appears when there are no past to-dos.
-- [ ] A navigation entry reaches the History page.
+- [x] `listPast` returns only the session user's to-dos strictly before the given date, ordered most-recent-date-first then creation order.
+- [x] The `_authenticated/todos/` route renders past to-dos grouped by date, newest day first.
+- [x] Both completed and unfinished items are shown; completed items do not show a move-to-today action.
+- [x] Deleting any item removes it immediately.
+- [x] Moving an unfinished item sends it to today (reassigned date); it disappears from history and appears in the dashboard widget.
+- [x] A friendly empty state appears when there are no past to-dos.
+- [x] A navigation entry reaches the History page.
