@@ -20,6 +20,7 @@ interface SimpleCardProps {
   headerClassName?: string;
   titleClassName?: string;
   descriptionClassName?: string;
+  actionSlotClassName?: string;
   contentClassName?: string;
   footerClassName?: string;
   onClick?: React.ComponentPropsWithoutRef<"div">["onClick"];
@@ -35,6 +36,7 @@ export function SimpleCard({
   headerClassName,
   titleClassName,
   descriptionClassName,
+  actionSlotClassName,
   contentClassName,
   footerClassName,
   onClick,
@@ -52,7 +54,11 @@ export function SimpleCard({
               {description}
             </CardDescription>
           )}
-          {actionSlot && <CardAction>{actionSlot}</CardAction>}
+          {actionSlot && (
+            <CardAction className={actionSlotClassName}>
+              {actionSlot}
+            </CardAction>
+          )}
         </CardHeader>
       )}
 

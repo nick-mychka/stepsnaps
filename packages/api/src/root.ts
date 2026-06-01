@@ -7,6 +7,7 @@ import { snapRouter } from "./router/snap";
 import { sourceRouter } from "./router/source";
 import { stepDefinitionRouter } from "./router/stepDefinition";
 import { teamRouter } from "./router/team";
+import { todoRouter } from "./router/todo";
 import { createTRPCRouter } from "./trpc";
 
 export const appRouter = createTRPCRouter({
@@ -19,6 +20,7 @@ export const appRouter = createTRPCRouter({
   source: sourceRouter,
   stepDefinition: stepDefinitionRouter,
   team: teamRouter,
+  todo: todoRouter,
 });
 
 // export type definition of API

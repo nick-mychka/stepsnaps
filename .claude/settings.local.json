@@ -5,6 +5,7 @@
       "Bash(pnpm --filter tanstack-start typecheck)",
       "Bash(pnpm lint:*)",
       "Bash(pnpm format:*)",
+      "Bash(pnpm turbo *)",
       "Bash(pnpm ui-add:*)",
       "Bash(npm view:*)",
       "Bash(npx tsc:*)"

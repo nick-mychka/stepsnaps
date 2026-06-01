@@ -8,7 +8,7 @@ export function StartJourneyCard() {
 
   return (
     <SimpleCard
-      className="max-w-md"
+      className="w-full max-w-sm"
       title="No active journey"
       description="Start a new journey to begin tracking your daily hiring progress."
     >
