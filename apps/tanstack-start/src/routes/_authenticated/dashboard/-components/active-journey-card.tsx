@@ -72,7 +72,7 @@ export function ActiveJourneyCard({
         headerClassName="gap-1"
         titleClassName="flex items-center gap-2 text-xl font-bold"
         actionSlotClassName="-mr-4"
-        contentClassName="flex flex-col items-center gap-2 py-2"
+        contentClassName="flex flex-col items-center gap-2 py-4"
       >
         <CalendarDays className="text-muted-foreground" />
         <p className="text-muted-foreground text-xs font-semibold tracking-[0.2em] uppercase">

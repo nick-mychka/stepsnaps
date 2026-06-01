@@ -29,7 +29,7 @@ export function DashboardPage() {
           <h1 className="text-3xl font-bold">{greeting}</h1>
         </div>
         <div className="flex grow justify-between gap-8">
-          <div className="flex flex-col gap-6">
+          <div className="flex grow flex-col gap-6">
             {activeJourney && <StatsRow journeyId={activeJourney.id} />}
             {activeJourney ? (
               <ActiveJourneyCard journey={activeJourney} />
