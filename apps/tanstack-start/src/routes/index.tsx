@@ -3,7 +3,7 @@ import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { Button } from "@stepsnaps/ui/button";
 
 import { authClient } from "~/auth/client";
-import { BackgroundV9 } from "~/components/journey-background";
+import { BackgroundV1 } from "~/components/journey-background";
 import { Logo } from "~/components/logo";
 import { PageLoader } from "~/components/page-loader";
 
@@ -35,7 +35,7 @@ function RouteComponent() {
 
   return (
     <>
-      <BackgroundV9 />
+      <BackgroundV1 />
       <main className="flex min-h-screen flex-col items-center justify-center">
         <div className="flex flex-col items-center gap-10 rounded-2xl border border-white/15 bg-white/8 px-20 py-16 shadow-2xl backdrop-blur-xl dark:bg-black/25">
           <div className="flex flex-col items-center gap-4">

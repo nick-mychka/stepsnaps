@@ -60,9 +60,9 @@ export function TodoItem({ todo }: TodoItemProps) {
         {toggleTodo.isPending || updateTodo.isPending ? (
           <Spinner />
         ) : todo.completed ? (
-          <CheckCircle2 className="text-primary size-5" />
+          <CheckCircle2 className="text-primary size-4" />
         ) : (
-          <Circle className="size-5" />
+          <Circle className="size-4" />
         )}
       </button>
 
