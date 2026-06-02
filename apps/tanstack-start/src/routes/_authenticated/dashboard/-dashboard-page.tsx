@@ -13,7 +13,7 @@ export function DashboardPage() {
   const { data: activeJourney } = useActiveJourney();
   const { data: session } = authClient.useSession();
   const [activeBg, setActiveBg] =
-    useState<(typeof BG_VARIANTS)[number]["id"]>(10);
+    useState<(typeof BG_VARIANTS)[number]["id"]>(5);
 
   const greeting = getGreeting(session?.user.name ?? "", session?.user.id);
 

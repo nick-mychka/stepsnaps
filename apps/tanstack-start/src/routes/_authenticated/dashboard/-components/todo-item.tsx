@@ -5,6 +5,7 @@ import { CheckCircle2, Circle, Trash2 } from "lucide-react";
 import { cn } from "@stepsnaps/ui";
 import { Button } from "@stepsnaps/ui/button";
 import { Input } from "@stepsnaps/ui/input";
+import { Spinner } from "@stepsnaps/ui/spinner";
 
 import { useDeleteTodo } from "../-hooks/use-delete-todo";
 import { useToggleTodo } from "../-hooks/use-toggle-todo";
@@ -56,10 +57,12 @@ export function TodoItem({ todo }: TodoItemProps) {
         aria-pressed={todo.completed}
         className="text-muted-foreground hover:text-foreground shrink-0"
       >
-        {todo.completed ? (
-          <CheckCircle2 className="text-primary size-5" />
+        {toggleTodo.isPending || updateTodo.isPending ? (
+          <Spinner />
+        ) : todo.completed ? (
+          <CheckCircle2 className="text-primary size-4" />
         ) : (
-          <Circle className="size-5" />
+          <Circle className="size-4" />
         )}
       </button>
 
@@ -99,7 +102,7 @@ export function TodoItem({ todo }: TodoItemProps) {
         aria-label="Delete to-do"
         className="text-muted-foreground hover:text-destructive shrink-0"
       >
-        <Trash2 />
+        {deleteTodo.isPending ? <Spinner /> : <Trash2 />}
       </Button>
     </li>
   );

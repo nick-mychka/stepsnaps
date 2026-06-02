@@ -4,6 +4,7 @@ import { ListTodo, Plus } from "lucide-react";
 
 import { Button } from "@stepsnaps/ui/button";
 import { Input } from "@stepsnaps/ui/input";
+import { Spinner } from "@stepsnaps/ui/spinner";
 
 import { SimpleCard } from "~/components/simple-card";
 import { dayjs, today } from "~/lib/date";
@@ -59,7 +60,7 @@ export function TodayFocusCard() {
           disabled={!title.trim() || createTodo.isPending}
           aria-label="Add to-do"
         >
-          <Plus />
+          {createTodo.isPending ? <Spinner /> : <Plus />}
         </Button>
       </form>
 

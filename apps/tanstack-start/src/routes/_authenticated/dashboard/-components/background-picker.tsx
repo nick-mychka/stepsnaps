@@ -5,27 +5,15 @@ import {
   BackgroundV4,
   BackgroundV5,
   BackgroundV6,
-  BackgroundV8,
-  BackgroundV10,
-  BackgroundV11,
-  BackgroundV12,
-  BackgroundV13,
 } from "~/components/journey-background";
 
 export const BG_VARIANTS = [
-  { id: 1, label: "Thorny Path", Component: BackgroundV1 },
-  { id: 2, label: "Network", Component: BackgroundV2 },
-  { id: 3, label: "Ribbons", Component: BackgroundV3 },
-  { id: 4, label: "Hex Grid", Component: BackgroundV4 },
-  { id: 5, label: "Symbiosis", Component: BackgroundV5 },
-  { id: 6, label: "Circuit Board", Component: BackgroundV6 },
-  // { id: 7, label: "Flow Field", Component: BackgroundV7 },
-  { id: 8, label: "Word Scatter", Component: BackgroundV8 },
-  { id: 10, label: "Orbital Rings", Component: BackgroundV10 },
-  { id: 11, label: "Topographic", Component: BackgroundV11 },
-  { id: 12, label: "Deep Thorny Path", Component: BackgroundV12 },
-  { id: 13, label: "Deep Ribbons", Component: BackgroundV13 },
-  // { id: 9, label: "Deep Network", Component: BackgroundV9 },
+  { id: 2, label: "Orbital Rings", Component: BackgroundV2 },
+  { id: 3, label: "Deep Ribbons", Component: BackgroundV3 },
+  { id: 1, label: "Deep Network", Component: BackgroundV1 },
+  { id: 4, label: "Stepping Stones", Component: BackgroundV4 },
+  { id: 5, label: "Momentum Grid", Component: BackgroundV5 },
+  { id: 6, label: "Growing Vine", Component: BackgroundV6 },
 ] as const;
 
 export type BgVariantId = (typeof BG_VARIANTS)[number]["id"];
