@@ -2,7 +2,9 @@ import { useState } from "react";
 import { ArrowUp, TriangleAlert } from "lucide-react";
 
 import { Button } from "@stepsnaps/ui/button";
+import { Spinner } from "@stepsnaps/ui/spinner";
 
+import { LoadingButton } from "~/components/loading-button";
 import { today, yesterday } from "~/lib/date";
 import { useMoveTodosToToday } from "../-hooks/use-move-todos-to-today";
 import { useTodos } from "../-hooks/use-todos";
@@ -27,9 +29,14 @@ export function YesterdayCarryoverBanner() {
           {unfinished.length === 1 ? "item" : "items"} from yesterday
         </p>
         <div className="flex shrink-0 gap-2">
-          <Button size="sm" onClick={carryAll} disabled={moveTodos.isPending}>
+          <LoadingButton
+            size="sm"
+            onClick={carryAll}
+            disabled={moveTodos.isPending}
+            loading={moveTodos.isPending}
+          >
             Carry all over
-          </Button>
+          </LoadingButton>
           <Button
             size="sm"
             variant="ghost"
@@ -57,7 +64,7 @@ export function YesterdayCarryoverBanner() {
                 disabled={moveTodos.isPending}
                 aria-label={`Move "${todo.title}" to today`}
               >
-                <ArrowUp />
+                {moveTodos.isPending ? <Spinner /> : <ArrowUp />}
               </Button>
             </li>
           ))}
