@@ -4,8 +4,8 @@ import { cn } from "@stepsnaps/ui";
 import { Button } from "@stepsnaps/ui/button";
 
 import { today } from "~/lib/date";
-import { useDeleteTodo } from "../../dashboard/-hooks/use-delete-todo";
-import { useMoveTodosToToday } from "../../dashboard/-hooks/use-move-todos-to-today";
+import { useDeleteTodo } from "../../../dashboard/-hooks/use-delete-todo";
+import { useMoveTodosToToday } from "../../../dashboard/-hooks/use-move-todos-to-today";
 
 interface HistoryTodoItemProps {
   todo: { id: string; title: string; completed: boolean };
