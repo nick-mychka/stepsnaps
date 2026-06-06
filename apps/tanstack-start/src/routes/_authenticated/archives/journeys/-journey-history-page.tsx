@@ -17,8 +17,8 @@ export function JourneyHistoryPage() {
 
   return (
     <>
-      <main className="container mx-auto py-12">
-        <h1 className="mb-6 text-3xl font-bold">Journey History</h1>
+      <div className="px-8 py-8">
+        <h1 className="mb-6 text-xl font-bold">Journey History</h1>
         {journeys.length === 0 ? (
           <p className="text-muted-foreground">
             No journeys yet. Start one from the dashboard!
@@ -36,7 +36,7 @@ export function JourneyHistoryPage() {
             ))}
           </div>
         )}
-      </main>
+      </div>
       {selectedJourney && (
         <EditDetailsDialog
           open={!!selectedJourney}
