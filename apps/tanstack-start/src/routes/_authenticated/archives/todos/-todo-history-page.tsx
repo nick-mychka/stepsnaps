@@ -18,9 +18,8 @@ export function TodoHistoryPage() {
   }
 
   return (
-    <main className="container mx-auto py-12">
-      <h1 className="mb-6 text-3xl font-bold">To-Do History</h1>
-
+    <div className="px-8 py-8">
+      <h1 className="mb-6 text-xl font-bold">To-Do History</h1>
       {isPending ? null : items.length === 0 ? (
         <p className="text-muted-foreground">
           No past to-dos yet. Items you add on the dashboard show up here once
@@ -42,6 +41,6 @@ export function TodoHistoryPage() {
           ))}
         </div>
       )}
-    </main>
+    </div>
   );
 }

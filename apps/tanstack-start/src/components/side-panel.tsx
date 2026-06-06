@@ -5,7 +5,6 @@ import {
   ChartSpline,
   Footprints,
   LayoutDashboard,
-  ListTodo,
   LogOut,
   NotebookText,
   Users,
@@ -100,15 +99,9 @@ export function SidePanel({
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link to="/todos">
-                    <ListTodo />
-                    To-Dos
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/journey/history">
+                  <Link to="/archives">
                     <Archive />
-                    History
+                    Archives
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>

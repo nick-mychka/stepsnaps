@@ -12,10 +12,11 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as InviteTokenRouteImport } from './routes/invite/$token'
-import { Route as AuthenticatedTodosIndexRouteImport } from './routes/_authenticated/todos/index'
+import { Route as AuthenticatedArchivesRouteRouteImport } from './routes/_authenticated/archives/route'
 import { Route as AuthenticatedTeamsIndexRouteImport } from './routes/_authenticated/teams/index'
 import { Route as AuthenticatedProgressIndexRouteImport } from './routes/_authenticated/progress/index'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard/index'
+import { Route as AuthenticatedArchivesIndexRouteImport } from './routes/_authenticated/archives/index'
 import { Route as AuthenticatedApplicationsIndexRouteImport } from './routes/_authenticated/applications/index'
 import { Route as ApiTrpcSplatRouteImport } from './routes/api/trpc.$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth.$'
@@ -23,7 +24,8 @@ import { Route as AuthenticatedTeamsTeamIdRouteImport } from './routes/_authenti
 import { Route as AuthenticatedApplicationsNewRouteImport } from './routes/_authenticated/applications/new'
 import { Route as AuthenticatedSnapNewIndexRouteImport } from './routes/_authenticated/snap/new/index'
 import { Route as AuthenticatedSettingsStepsIndexRouteImport } from './routes/_authenticated/settings/steps/index'
-import { Route as AuthenticatedJourneyHistoryIndexRouteImport } from './routes/_authenticated/journey/history/index'
+import { Route as AuthenticatedArchivesTodosIndexRouteImport } from './routes/_authenticated/archives/todos/index'
+import { Route as AuthenticatedArchivesJourneysIndexRouteImport } from './routes/_authenticated/archives/journeys/index'
 import { Route as AuthenticatedApplicationsApplicationIdIndexRouteImport } from './routes/_authenticated/applications/$applicationId.index'
 import { Route as AuthenticatedApplicationsApplicationIdEditRouteImport } from './routes/_authenticated/applications/$applicationId.edit'
 import { Route as AuthenticatedTeamsTeamIdMemberUserIdRouteImport } from './routes/_authenticated/teams/$teamId.member.$userId'
@@ -42,11 +44,12 @@ const InviteTokenRoute = InviteTokenRouteImport.update({
   path: '/invite/$token',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedTodosIndexRoute = AuthenticatedTodosIndexRouteImport.update({
-  id: '/todos/',
-  path: '/todos/',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
+const AuthenticatedArchivesRouteRoute =
+  AuthenticatedArchivesRouteRouteImport.update({
+    id: '/archives',
+    path: '/archives',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedTeamsIndexRoute = AuthenticatedTeamsIndexRouteImport.update({
   id: '/teams/',
   path: '/teams/',
@@ -63,6 +66,12 @@ const AuthenticatedDashboardIndexRoute =
     id: '/dashboard/',
     path: '/dashboard/',
     getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedArchivesIndexRoute =
+  AuthenticatedArchivesIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedArchivesRouteRoute,
   } as any)
 const AuthenticatedApplicationsIndexRoute =
   AuthenticatedApplicationsIndexRouteImport.update({
@@ -104,11 +113,17 @@ const AuthenticatedSettingsStepsIndexRoute =
     path: '/settings/steps/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedJourneyHistoryIndexRoute =
-  AuthenticatedJourneyHistoryIndexRouteImport.update({
-    id: '/journey/history/',
-    path: '/journey/history/',
-    getParentRoute: () => AuthenticatedRouteRoute,
+const AuthenticatedArchivesTodosIndexRoute =
+  AuthenticatedArchivesTodosIndexRouteImport.update({
+    id: '/todos/',
+    path: '/todos/',
+    getParentRoute: () => AuthenticatedArchivesRouteRoute,
+  } as any)
+const AuthenticatedArchivesJourneysIndexRoute =
+  AuthenticatedArchivesJourneysIndexRouteImport.update({
+    id: '/journeys/',
+    path: '/journeys/',
+    getParentRoute: () => AuthenticatedArchivesRouteRoute,
   } as any)
 const AuthenticatedApplicationsApplicationIdIndexRoute =
   AuthenticatedApplicationsApplicationIdIndexRouteImport.update({
@@ -131,19 +146,21 @@ const AuthenticatedTeamsTeamIdMemberUserIdRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/archives': typeof AuthenticatedArchivesRouteRouteWithChildren
   '/invite/$token': typeof InviteTokenRoute
   '/applications/new': typeof AuthenticatedApplicationsNewRoute
   '/teams/$teamId': typeof AuthenticatedTeamsTeamIdRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/applications/': typeof AuthenticatedApplicationsIndexRoute
+  '/archives/': typeof AuthenticatedArchivesIndexRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/progress/': typeof AuthenticatedProgressIndexRoute
   '/teams/': typeof AuthenticatedTeamsIndexRoute
-  '/todos/': typeof AuthenticatedTodosIndexRoute
   '/applications/$applicationId/edit': typeof AuthenticatedApplicationsApplicationIdEditRoute
   '/applications/$applicationId/': typeof AuthenticatedApplicationsApplicationIdIndexRoute
-  '/journey/history/': typeof AuthenticatedJourneyHistoryIndexRoute
+  '/archives/journeys/': typeof AuthenticatedArchivesJourneysIndexRoute
+  '/archives/todos/': typeof AuthenticatedArchivesTodosIndexRoute
   '/settings/steps/': typeof AuthenticatedSettingsStepsIndexRoute
   '/snap/new/': typeof AuthenticatedSnapNewIndexRoute
   '/teams/$teamId/member/$userId': typeof AuthenticatedTeamsTeamIdMemberUserIdRoute
@@ -156,13 +173,14 @@ export interface FileRoutesByTo {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/applications': typeof AuthenticatedApplicationsIndexRoute
+  '/archives': typeof AuthenticatedArchivesIndexRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/progress': typeof AuthenticatedProgressIndexRoute
   '/teams': typeof AuthenticatedTeamsIndexRoute
-  '/todos': typeof AuthenticatedTodosIndexRoute
   '/applications/$applicationId/edit': typeof AuthenticatedApplicationsApplicationIdEditRoute
   '/applications/$applicationId': typeof AuthenticatedApplicationsApplicationIdIndexRoute
-  '/journey/history': typeof AuthenticatedJourneyHistoryIndexRoute
+  '/archives/journeys': typeof AuthenticatedArchivesJourneysIndexRoute
+  '/archives/todos': typeof AuthenticatedArchivesTodosIndexRoute
   '/settings/steps': typeof AuthenticatedSettingsStepsIndexRoute
   '/snap/new': typeof AuthenticatedSnapNewIndexRoute
   '/teams/$teamId/member/$userId': typeof AuthenticatedTeamsTeamIdMemberUserIdRoute
@@ -171,19 +189,21 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/_authenticated/archives': typeof AuthenticatedArchivesRouteRouteWithChildren
   '/invite/$token': typeof InviteTokenRoute
   '/_authenticated/applications/new': typeof AuthenticatedApplicationsNewRoute
   '/_authenticated/teams/$teamId': typeof AuthenticatedTeamsTeamIdRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/_authenticated/applications/': typeof AuthenticatedApplicationsIndexRoute
+  '/_authenticated/archives/': typeof AuthenticatedArchivesIndexRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/_authenticated/progress/': typeof AuthenticatedProgressIndexRoute
   '/_authenticated/teams/': typeof AuthenticatedTeamsIndexRoute
-  '/_authenticated/todos/': typeof AuthenticatedTodosIndexRoute
   '/_authenticated/applications/$applicationId/edit': typeof AuthenticatedApplicationsApplicationIdEditRoute
   '/_authenticated/applications/$applicationId/': typeof AuthenticatedApplicationsApplicationIdIndexRoute
-  '/_authenticated/journey/history/': typeof AuthenticatedJourneyHistoryIndexRoute
+  '/_authenticated/archives/journeys/': typeof AuthenticatedArchivesJourneysIndexRoute
+  '/_authenticated/archives/todos/': typeof AuthenticatedArchivesTodosIndexRoute
   '/_authenticated/settings/steps/': typeof AuthenticatedSettingsStepsIndexRoute
   '/_authenticated/snap/new/': typeof AuthenticatedSnapNewIndexRoute
   '/_authenticated/teams/$teamId/member/$userId': typeof AuthenticatedTeamsTeamIdMemberUserIdRoute
@@ -192,19 +212,21 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/archives'
     | '/invite/$token'
     | '/applications/new'
     | '/teams/$teamId'
     | '/api/auth/$'
     | '/api/trpc/$'
     | '/applications/'
+    | '/archives/'
     | '/dashboard/'
     | '/progress/'
     | '/teams/'
-    | '/todos/'
     | '/applications/$applicationId/edit'
     | '/applications/$applicationId/'
-    | '/journey/history/'
+    | '/archives/journeys/'
+    | '/archives/todos/'
     | '/settings/steps/'
     | '/snap/new/'
     | '/teams/$teamId/member/$userId'
@@ -217,13 +239,14 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/api/trpc/$'
     | '/applications'
+    | '/archives'
     | '/dashboard'
     | '/progress'
     | '/teams'
-    | '/todos'
     | '/applications/$applicationId/edit'
     | '/applications/$applicationId'
-    | '/journey/history'
+    | '/archives/journeys'
+    | '/archives/todos'
     | '/settings/steps'
     | '/snap/new'
     | '/teams/$teamId/member/$userId'
@@ -231,19 +254,21 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/_authenticated/archives'
     | '/invite/$token'
     | '/_authenticated/applications/new'
     | '/_authenticated/teams/$teamId'
     | '/api/auth/$'
     | '/api/trpc/$'
     | '/_authenticated/applications/'
+    | '/_authenticated/archives/'
     | '/_authenticated/dashboard/'
     | '/_authenticated/progress/'
     | '/_authenticated/teams/'
-    | '/_authenticated/todos/'
     | '/_authenticated/applications/$applicationId/edit'
     | '/_authenticated/applications/$applicationId/'
-    | '/_authenticated/journey/history/'
+    | '/_authenticated/archives/journeys/'
+    | '/_authenticated/archives/todos/'
     | '/_authenticated/settings/steps/'
     | '/_authenticated/snap/new/'
     | '/_authenticated/teams/$teamId/member/$userId'
@@ -280,11 +305,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InviteTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/todos/': {
-      id: '/_authenticated/todos/'
-      path: '/todos'
-      fullPath: '/todos/'
-      preLoaderRoute: typeof AuthenticatedTodosIndexRouteImport
+    '/_authenticated/archives': {
+      id: '/_authenticated/archives'
+      path: '/archives'
+      fullPath: '/archives'
+      preLoaderRoute: typeof AuthenticatedArchivesRouteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/teams/': {
@@ -307,6 +332,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard/'
       preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/archives/': {
+      id: '/_authenticated/archives/'
+      path: '/'
+      fullPath: '/archives/'
+      preLoaderRoute: typeof AuthenticatedArchivesIndexRouteImport
+      parentRoute: typeof AuthenticatedArchivesRouteRoute
     }
     '/_authenticated/applications/': {
       id: '/_authenticated/applications/'
@@ -357,12 +389,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsStepsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/journey/history/': {
-      id: '/_authenticated/journey/history/'
-      path: '/journey/history'
-      fullPath: '/journey/history/'
-      preLoaderRoute: typeof AuthenticatedJourneyHistoryIndexRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/_authenticated/archives/todos/': {
+      id: '/_authenticated/archives/todos/'
+      path: '/todos'
+      fullPath: '/archives/todos/'
+      preLoaderRoute: typeof AuthenticatedArchivesTodosIndexRouteImport
+      parentRoute: typeof AuthenticatedArchivesRouteRoute
+    }
+    '/_authenticated/archives/journeys/': {
+      id: '/_authenticated/archives/journeys/'
+      path: '/journeys'
+      fullPath: '/archives/journeys/'
+      preLoaderRoute: typeof AuthenticatedArchivesJourneysIndexRouteImport
+      parentRoute: typeof AuthenticatedArchivesRouteRoute
     }
     '/_authenticated/applications/$applicationId/': {
       id: '/_authenticated/applications/$applicationId/'
@@ -388,6 +427,25 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedArchivesRouteRouteChildren {
+  AuthenticatedArchivesIndexRoute: typeof AuthenticatedArchivesIndexRoute
+  AuthenticatedArchivesJourneysIndexRoute: typeof AuthenticatedArchivesJourneysIndexRoute
+  AuthenticatedArchivesTodosIndexRoute: typeof AuthenticatedArchivesTodosIndexRoute
+}
+
+const AuthenticatedArchivesRouteRouteChildren: AuthenticatedArchivesRouteRouteChildren =
+  {
+    AuthenticatedArchivesIndexRoute: AuthenticatedArchivesIndexRoute,
+    AuthenticatedArchivesJourneysIndexRoute:
+      AuthenticatedArchivesJourneysIndexRoute,
+    AuthenticatedArchivesTodosIndexRoute: AuthenticatedArchivesTodosIndexRoute,
+  }
+
+const AuthenticatedArchivesRouteRouteWithChildren =
+  AuthenticatedArchivesRouteRoute._addFileChildren(
+    AuthenticatedArchivesRouteRouteChildren,
+  )
+
 interface AuthenticatedTeamsTeamIdRouteChildren {
   AuthenticatedTeamsTeamIdMemberUserIdRoute: typeof AuthenticatedTeamsTeamIdMemberUserIdRoute
 }
@@ -404,33 +462,31 @@ const AuthenticatedTeamsTeamIdRouteWithChildren =
   )
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedArchivesRouteRoute: typeof AuthenticatedArchivesRouteRouteWithChildren
   AuthenticatedApplicationsNewRoute: typeof AuthenticatedApplicationsNewRoute
   AuthenticatedTeamsTeamIdRoute: typeof AuthenticatedTeamsTeamIdRouteWithChildren
   AuthenticatedApplicationsIndexRoute: typeof AuthenticatedApplicationsIndexRoute
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
   AuthenticatedProgressIndexRoute: typeof AuthenticatedProgressIndexRoute
   AuthenticatedTeamsIndexRoute: typeof AuthenticatedTeamsIndexRoute
-  AuthenticatedTodosIndexRoute: typeof AuthenticatedTodosIndexRoute
   AuthenticatedApplicationsApplicationIdEditRoute: typeof AuthenticatedApplicationsApplicationIdEditRoute
   AuthenticatedApplicationsApplicationIdIndexRoute: typeof AuthenticatedApplicationsApplicationIdIndexRoute
-  AuthenticatedJourneyHistoryIndexRoute: typeof AuthenticatedJourneyHistoryIndexRoute
   AuthenticatedSettingsStepsIndexRoute: typeof AuthenticatedSettingsStepsIndexRoute
   AuthenticatedSnapNewIndexRoute: typeof AuthenticatedSnapNewIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedArchivesRouteRoute: AuthenticatedArchivesRouteRouteWithChildren,
   AuthenticatedApplicationsNewRoute: AuthenticatedApplicationsNewRoute,
   AuthenticatedTeamsTeamIdRoute: AuthenticatedTeamsTeamIdRouteWithChildren,
   AuthenticatedApplicationsIndexRoute: AuthenticatedApplicationsIndexRoute,
   AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
   AuthenticatedProgressIndexRoute: AuthenticatedProgressIndexRoute,
   AuthenticatedTeamsIndexRoute: AuthenticatedTeamsIndexRoute,
-  AuthenticatedTodosIndexRoute: AuthenticatedTodosIndexRoute,
   AuthenticatedApplicationsApplicationIdEditRoute:
     AuthenticatedApplicationsApplicationIdEditRoute,
   AuthenticatedApplicationsApplicationIdIndexRoute:
     AuthenticatedApplicationsApplicationIdIndexRoute,
-  AuthenticatedJourneyHistoryIndexRoute: AuthenticatedJourneyHistoryIndexRoute,
   AuthenticatedSettingsStepsIndexRoute: AuthenticatedSettingsStepsIndexRoute,
   AuthenticatedSnapNewIndexRoute: AuthenticatedSnapNewIndexRoute,
 }
