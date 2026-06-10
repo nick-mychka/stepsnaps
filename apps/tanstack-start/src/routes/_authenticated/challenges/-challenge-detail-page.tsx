@@ -1,11 +1,12 @@
 import { getRouteApi, Link } from "@tanstack/react-router";
-import { ArrowLeft, Check } from "lucide-react";
+import { ArrowLeft, Check, Flame } from "lucide-react";
 
 import { Badge } from "@stepsnaps/ui/badge";
 import { Button } from "@stepsnaps/ui/button";
 
 import { SimpleCard } from "~/components/simple-card";
 import { buildGrid } from "~/lib/challenge/grid";
+import { computeChallengeStats } from "~/lib/challenge/stats";
 import { dayjs, today, yesterday } from "~/lib/date";
 import { ChallengeGrid } from "./-components/challenge-grid";
 import { useChallenge } from "./-hooks/use-challenge";
@@ -82,13 +83,15 @@ export function ChallengeDetailPage() {
       completed,
     });
 
-  const gridMonths = buildGrid({
+  const logicInput = {
     startDate: challenge.startDate,
     endDate: challenge.endDate,
     scheduledDays: challenge.scheduledDays,
     completedDates: challenge.completions.map((c) => c.date),
     today: clientToday,
-  });
+  };
+  const gridMonths = buildGrid(logicInput);
+  const stats = computeChallengeStats(logicInput);
 
   return (
     <main className="container mx-auto py-8">
@@ -152,14 +155,28 @@ export function ChallengeDetailPage() {
         </SimpleCard>
 
         <SimpleCard title="Progress">
-          <p className="text-2xl font-bold">
-            {challenge.completions.length}
-            <span className="text-muted-foreground ml-2 text-sm font-normal">
-              {challenge.completions.length === 1
-                ? "day completed"
-                : "days completed"}
-            </span>
-          </p>
+          <div className="flex flex-col gap-2">
+            <p className="flex items-center gap-1.5 text-2xl font-bold">
+              <Flame
+                className={
+                  stats.streak > 0 ? "text-primary" : "text-muted-foreground"
+                }
+              />
+              {stats.streak}
+              <span className="text-muted-foreground text-sm font-normal">
+                day streak
+              </span>
+            </p>
+            <p className="text-muted-foreground text-sm">
+              {stats.completedCount} of {stats.elapsedScheduled} scheduled days
+              done
+            </p>
+            {stats.percentComplete !== null && (
+              <p className="text-muted-foreground text-sm">
+                {stats.percentComplete}% of the challenge complete
+              </p>
+            )}
+          </div>
         </SimpleCard>
       </div>
 

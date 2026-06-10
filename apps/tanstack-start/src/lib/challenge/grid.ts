@@ -3,6 +3,7 @@
  * no timezone assumptions: ISO date strings are treated as plain calendar
  * days via UTC arithmetic, and the effective "today" is always an input.
  */
+import { mondayIndex, shiftDate, weekdayOf } from "./date-utils";
 
 export type CellState = "completed" | "missed" | "left" | "not-scheduled";
 
@@ -32,8 +33,6 @@ export interface GridInput {
   today: string;
 }
 
-const DAY_MS = 24 * 60 * 60 * 1000;
-
 const MONTH_NAMES = [
   "January",
   "February",
@@ -48,19 +47,6 @@ const MONTH_NAMES = [
   "November",
   "December",
 ];
-
-function shiftDate(date: string, days: number): string {
-  return new Date(Date.parse(date) + days * DAY_MS).toISOString().slice(0, 10);
-}
-
-function weekdayOf(date: string): number {
-  return new Date(`${date}T00:00:00Z`).getUTCDay();
-}
-
-/** 0 = Monday … 6 = Sunday. */
-function mondayIndex(date: string): number {
-  return (weekdayOf(date) + 6) % 7;
-}
 
 function monthLabel(key: string): string {
   const month = Number(key.slice(5, 7));
@@ -86,10 +72,10 @@ export function buildGrid(input: GridInput): GridMonth[] {
   const renderEnd = endDate ?? (today > startDate ? today : startDate);
 
   const months: GridMonth[] = [];
-  let month: GridMonth | null = null;
   let week: GridWeek = [];
 
   const flushWeek = () => {
+    const month = months[months.length - 1];
     if (!month || week.length === 0) return;
     while (week.length < 7) week.push(null);
     month.weeks.push(week);
@@ -98,10 +84,9 @@ export function buildGrid(input: GridInput): GridMonth[] {
 
   for (let date = startDate; date <= renderEnd; date = shiftDate(date, 1)) {
     const key = date.slice(0, 7);
-    if (month === null || month.key !== key) {
+    if (months[months.length - 1]?.key !== key) {
       flushWeek();
-      month = { key, label: monthLabel(key), weeks: [] };
-      months.push(month);
+      months.push({ key, label: monthLabel(key), weeks: [] });
       week = new Array<null>(mondayIndex(date)).fill(null);
     }
     week.push({ date, state: cellState(date) });
