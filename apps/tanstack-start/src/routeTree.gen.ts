@@ -16,11 +16,13 @@ import { Route as AuthenticatedArchivesRouteRouteImport } from './routes/_authen
 import { Route as AuthenticatedTeamsIndexRouteImport } from './routes/_authenticated/teams/index'
 import { Route as AuthenticatedProgressIndexRouteImport } from './routes/_authenticated/progress/index'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard/index'
+import { Route as AuthenticatedChallengesIndexRouteImport } from './routes/_authenticated/challenges/index'
 import { Route as AuthenticatedArchivesIndexRouteImport } from './routes/_authenticated/archives/index'
 import { Route as AuthenticatedApplicationsIndexRouteImport } from './routes/_authenticated/applications/index'
 import { Route as ApiTrpcSplatRouteImport } from './routes/api/trpc.$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth.$'
 import { Route as AuthenticatedTeamsTeamIdRouteImport } from './routes/_authenticated/teams/$teamId'
+import { Route as AuthenticatedChallengesNewRouteImport } from './routes/_authenticated/challenges/new'
 import { Route as AuthenticatedApplicationsNewRouteImport } from './routes/_authenticated/applications/new'
 import { Route as AuthenticatedSnapNewIndexRouteImport } from './routes/_authenticated/snap/new/index'
 import { Route as AuthenticatedSettingsStepsIndexRouteImport } from './routes/_authenticated/settings/steps/index'
@@ -67,6 +69,12 @@ const AuthenticatedDashboardIndexRoute =
     path: '/dashboard/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedChallengesIndexRoute =
+  AuthenticatedChallengesIndexRouteImport.update({
+    id: '/challenges/',
+    path: '/challenges/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedArchivesIndexRoute =
   AuthenticatedArchivesIndexRouteImport.update({
     id: '/',
@@ -93,6 +101,12 @@ const AuthenticatedTeamsTeamIdRoute =
   AuthenticatedTeamsTeamIdRouteImport.update({
     id: '/teams/$teamId',
     path: '/teams/$teamId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedChallengesNewRoute =
+  AuthenticatedChallengesNewRouteImport.update({
+    id: '/challenges/new',
+    path: '/challenges/new',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedApplicationsNewRoute =
@@ -149,11 +163,13 @@ export interface FileRoutesByFullPath {
   '/archives': typeof AuthenticatedArchivesRouteRouteWithChildren
   '/invite/$token': typeof InviteTokenRoute
   '/applications/new': typeof AuthenticatedApplicationsNewRoute
+  '/challenges/new': typeof AuthenticatedChallengesNewRoute
   '/teams/$teamId': typeof AuthenticatedTeamsTeamIdRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/applications/': typeof AuthenticatedApplicationsIndexRoute
   '/archives/': typeof AuthenticatedArchivesIndexRoute
+  '/challenges/': typeof AuthenticatedChallengesIndexRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/progress/': typeof AuthenticatedProgressIndexRoute
   '/teams/': typeof AuthenticatedTeamsIndexRoute
@@ -169,11 +185,13 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/invite/$token': typeof InviteTokenRoute
   '/applications/new': typeof AuthenticatedApplicationsNewRoute
+  '/challenges/new': typeof AuthenticatedChallengesNewRoute
   '/teams/$teamId': typeof AuthenticatedTeamsTeamIdRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/applications': typeof AuthenticatedApplicationsIndexRoute
   '/archives': typeof AuthenticatedArchivesIndexRoute
+  '/challenges': typeof AuthenticatedChallengesIndexRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/progress': typeof AuthenticatedProgressIndexRoute
   '/teams': typeof AuthenticatedTeamsIndexRoute
@@ -192,11 +210,13 @@ export interface FileRoutesById {
   '/_authenticated/archives': typeof AuthenticatedArchivesRouteRouteWithChildren
   '/invite/$token': typeof InviteTokenRoute
   '/_authenticated/applications/new': typeof AuthenticatedApplicationsNewRoute
+  '/_authenticated/challenges/new': typeof AuthenticatedChallengesNewRoute
   '/_authenticated/teams/$teamId': typeof AuthenticatedTeamsTeamIdRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/_authenticated/applications/': typeof AuthenticatedApplicationsIndexRoute
   '/_authenticated/archives/': typeof AuthenticatedArchivesIndexRoute
+  '/_authenticated/challenges/': typeof AuthenticatedChallengesIndexRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/_authenticated/progress/': typeof AuthenticatedProgressIndexRoute
   '/_authenticated/teams/': typeof AuthenticatedTeamsIndexRoute
@@ -215,11 +235,13 @@ export interface FileRouteTypes {
     | '/archives'
     | '/invite/$token'
     | '/applications/new'
+    | '/challenges/new'
     | '/teams/$teamId'
     | '/api/auth/$'
     | '/api/trpc/$'
     | '/applications/'
     | '/archives/'
+    | '/challenges/'
     | '/dashboard/'
     | '/progress/'
     | '/teams/'
@@ -235,11 +257,13 @@ export interface FileRouteTypes {
     | '/'
     | '/invite/$token'
     | '/applications/new'
+    | '/challenges/new'
     | '/teams/$teamId'
     | '/api/auth/$'
     | '/api/trpc/$'
     | '/applications'
     | '/archives'
+    | '/challenges'
     | '/dashboard'
     | '/progress'
     | '/teams'
@@ -257,11 +281,13 @@ export interface FileRouteTypes {
     | '/_authenticated/archives'
     | '/invite/$token'
     | '/_authenticated/applications/new'
+    | '/_authenticated/challenges/new'
     | '/_authenticated/teams/$teamId'
     | '/api/auth/$'
     | '/api/trpc/$'
     | '/_authenticated/applications/'
     | '/_authenticated/archives/'
+    | '/_authenticated/challenges/'
     | '/_authenticated/dashboard/'
     | '/_authenticated/progress/'
     | '/_authenticated/teams/'
@@ -333,6 +359,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/challenges/': {
+      id: '/_authenticated/challenges/'
+      path: '/challenges'
+      fullPath: '/challenges/'
+      preLoaderRoute: typeof AuthenticatedChallengesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/archives/': {
       id: '/_authenticated/archives/'
       path: '/'
@@ -366,6 +399,13 @@ declare module '@tanstack/react-router' {
       path: '/teams/$teamId'
       fullPath: '/teams/$teamId'
       preLoaderRoute: typeof AuthenticatedTeamsTeamIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/challenges/new': {
+      id: '/_authenticated/challenges/new'
+      path: '/challenges/new'
+      fullPath: '/challenges/new'
+      preLoaderRoute: typeof AuthenticatedChallengesNewRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/applications/new': {
@@ -464,8 +504,10 @@ const AuthenticatedTeamsTeamIdRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedArchivesRouteRoute: typeof AuthenticatedArchivesRouteRouteWithChildren
   AuthenticatedApplicationsNewRoute: typeof AuthenticatedApplicationsNewRoute
+  AuthenticatedChallengesNewRoute: typeof AuthenticatedChallengesNewRoute
   AuthenticatedTeamsTeamIdRoute: typeof AuthenticatedTeamsTeamIdRouteWithChildren
   AuthenticatedApplicationsIndexRoute: typeof AuthenticatedApplicationsIndexRoute
+  AuthenticatedChallengesIndexRoute: typeof AuthenticatedChallengesIndexRoute
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
   AuthenticatedProgressIndexRoute: typeof AuthenticatedProgressIndexRoute
   AuthenticatedTeamsIndexRoute: typeof AuthenticatedTeamsIndexRoute
@@ -478,8 +520,10 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedArchivesRouteRoute: AuthenticatedArchivesRouteRouteWithChildren,
   AuthenticatedApplicationsNewRoute: AuthenticatedApplicationsNewRoute,
+  AuthenticatedChallengesNewRoute: AuthenticatedChallengesNewRoute,
   AuthenticatedTeamsTeamIdRoute: AuthenticatedTeamsTeamIdRouteWithChildren,
   AuthenticatedApplicationsIndexRoute: AuthenticatedApplicationsIndexRoute,
+  AuthenticatedChallengesIndexRoute: AuthenticatedChallengesIndexRoute,
   AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
   AuthenticatedProgressIndexRoute: AuthenticatedProgressIndexRoute,
   AuthenticatedTeamsIndexRoute: AuthenticatedTeamsIndexRoute,
