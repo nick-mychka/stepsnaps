@@ -1,5 +1,6 @@
 import type { FormEvent } from "react";
 import { useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { ListTodo, Plus } from "lucide-react";
 
 import { Button } from "@stepsnaps/ui/button";
@@ -39,10 +40,19 @@ export function TodayFocusCard() {
           Today's Focus
         </>
       }
+      actionSlot={
+        <Link
+          to="/archives/todos"
+          className="text-primary text-sm hover:underline"
+        >
+          View History
+        </Link>
+      }
       description={dayjs().format("dddd, MMMM D")}
       className="w-full max-w-lg"
       titleClassName="flex items-center gap-2 text-2xl font-bold"
       contentClassName="flex flex-col gap-4"
+      actionSlotClassName="py-1"
     >
       <YesterdayCarryoverBanner />
 
