@@ -2,7 +2,8 @@ import type { TRPCRouterRecord } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
-import { and, asc, eq } from "@stepsnaps/db";
+import type { db } from "@stepsnaps/db/client";
+import { and, asc, desc, eq, inArray, isNotNull, lt } from "@stepsnaps/db";
 import { Challenge, ChallengeCompletion } from "@stepsnaps/db/schema";
 
 import { protectedProcedure } from "../trpc";
@@ -37,22 +38,72 @@ function assertClientToday(clientToday: string) {
   }
 }
 
+/**
+ * Lazily persist `active → completed` for the user's challenges whose end
+ * date has passed (no cron; runs opportunistically on reads). `updatedAt`
+ * records when the transition was noticed, which orders the history list.
+ */
+async function completeEndedChallenges(
+  database: typeof db,
+  userId: string,
+  today: string,
+) {
+  await database
+    .update(Challenge)
+    .set({ status: "completed" })
+    .where(
+      and(
+        eq(Challenge.userId, userId),
+        eq(Challenge.status, "active"),
+        isNotNull(Challenge.endDate),
+        lt(Challenge.endDate, today),
+      ),
+    );
+}
+
 export const challengeRouter = {
   /** List the current user's active challenges, oldest first. */
-  list: protectedProcedure.query(({ ctx }) => {
-    return ctx.db.query.Challenge.findMany({
-      where: and(
-        eq(Challenge.userId, ctx.session.user.id),
-        eq(Challenge.status, "active"),
-      ),
-      orderBy: asc(Challenge.createdAt),
-    });
-  }),
+  list: protectedProcedure
+    .input(z.object({ today: z.string().date() }))
+    .query(async ({ ctx, input }) => {
+      assertClientToday(input.today);
+      await completeEndedChallenges(ctx.db, ctx.session.user.id, input.today);
+
+      return ctx.db.query.Challenge.findMany({
+        where: and(
+          eq(Challenge.userId, ctx.session.user.id),
+          eq(Challenge.status, "active"),
+        ),
+        orderBy: asc(Challenge.createdAt),
+      });
+    }),
+
+  /**
+   * List the current user's past (completed or stopped) challenges, most
+   * recently ended first.
+   */
+  listPast: protectedProcedure
+    .input(z.object({ today: z.string().date() }))
+    .query(async ({ ctx, input }) => {
+      assertClientToday(input.today);
+      await completeEndedChallenges(ctx.db, ctx.session.user.id, input.today);
+
+      return ctx.db.query.Challenge.findMany({
+        where: and(
+          eq(Challenge.userId, ctx.session.user.id),
+          inArray(Challenge.status, ["completed", "stopped"]),
+        ),
+        orderBy: [desc(Challenge.updatedAt), desc(Challenge.createdAt)],
+      });
+    }),
 
   /** Get one of the current user's challenges with its completions. */
   byId: protectedProcedure
-    .input(z.object({ id: z.string().uuid() }))
+    .input(z.object({ id: z.string().uuid(), today: z.string().date() }))
     .query(async ({ ctx, input }) => {
+      assertClientToday(input.today);
+      await completeEndedChallenges(ctx.db, ctx.session.user.id, input.today);
+
       const challenge = await ctx.db.query.Challenge.findFirst({
         where: and(
           eq(Challenge.id, input.id),
@@ -69,6 +120,39 @@ export const challengeRouter = {
       }
 
       return challenge;
+    }),
+
+  /**
+   * Stop an active challenge. Terminal: a stopped challenge keeps its record
+   * and completions but accepts no further check-ins. A challenge whose end
+   * date already passed is lazily completed first, so it can't be stopped.
+   */
+  stop: protectedProcedure
+    .input(z.object({ id: z.string().uuid(), today: z.string().date() }))
+    .mutation(async ({ ctx, input }) => {
+      assertClientToday(input.today);
+      await completeEndedChallenges(ctx.db, ctx.session.user.id, input.today);
+
+      const [stopped] = await ctx.db
+        .update(Challenge)
+        .set({ status: "stopped" })
+        .where(
+          and(
+            eq(Challenge.id, input.id),
+            eq(Challenge.userId, ctx.session.user.id),
+            eq(Challenge.status, "active"),
+          ),
+        )
+        .returning();
+
+      if (!stopped) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Active challenge not found",
+        });
+      }
+
+      return stopped;
     }),
 
   /**

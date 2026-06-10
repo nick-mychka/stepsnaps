@@ -29,6 +29,7 @@ import { Route as AuthenticatedSettingsStepsIndexRouteImport } from './routes/_a
 import { Route as AuthenticatedChallengesChallengeIdIndexRouteImport } from './routes/_authenticated/challenges/$challengeId.index'
 import { Route as AuthenticatedArchivesTodosIndexRouteImport } from './routes/_authenticated/archives/todos/index'
 import { Route as AuthenticatedArchivesJourneysIndexRouteImport } from './routes/_authenticated/archives/journeys/index'
+import { Route as AuthenticatedArchivesChallengesIndexRouteImport } from './routes/_authenticated/archives/challenges/index'
 import { Route as AuthenticatedApplicationsApplicationIdIndexRouteImport } from './routes/_authenticated/applications/$applicationId.index'
 import { Route as AuthenticatedApplicationsApplicationIdEditRouteImport } from './routes/_authenticated/applications/$applicationId.edit'
 import { Route as AuthenticatedTeamsTeamIdMemberUserIdRouteImport } from './routes/_authenticated/teams/$teamId.member.$userId'
@@ -146,6 +147,12 @@ const AuthenticatedArchivesJourneysIndexRoute =
     path: '/journeys/',
     getParentRoute: () => AuthenticatedArchivesRouteRoute,
   } as any)
+const AuthenticatedArchivesChallengesIndexRoute =
+  AuthenticatedArchivesChallengesIndexRouteImport.update({
+    id: '/challenges/',
+    path: '/challenges/',
+    getParentRoute: () => AuthenticatedArchivesRouteRoute,
+  } as any)
 const AuthenticatedApplicationsApplicationIdIndexRoute =
   AuthenticatedApplicationsApplicationIdIndexRouteImport.update({
     id: '/applications/$applicationId/',
@@ -182,6 +189,7 @@ export interface FileRoutesByFullPath {
   '/teams/': typeof AuthenticatedTeamsIndexRoute
   '/applications/$applicationId/edit': typeof AuthenticatedApplicationsApplicationIdEditRoute
   '/applications/$applicationId/': typeof AuthenticatedApplicationsApplicationIdIndexRoute
+  '/archives/challenges/': typeof AuthenticatedArchivesChallengesIndexRoute
   '/archives/journeys/': typeof AuthenticatedArchivesJourneysIndexRoute
   '/archives/todos/': typeof AuthenticatedArchivesTodosIndexRoute
   '/challenges/$challengeId/': typeof AuthenticatedChallengesChallengeIdIndexRoute
@@ -205,6 +213,7 @@ export interface FileRoutesByTo {
   '/teams': typeof AuthenticatedTeamsIndexRoute
   '/applications/$applicationId/edit': typeof AuthenticatedApplicationsApplicationIdEditRoute
   '/applications/$applicationId': typeof AuthenticatedApplicationsApplicationIdIndexRoute
+  '/archives/challenges': typeof AuthenticatedArchivesChallengesIndexRoute
   '/archives/journeys': typeof AuthenticatedArchivesJourneysIndexRoute
   '/archives/todos': typeof AuthenticatedArchivesTodosIndexRoute
   '/challenges/$challengeId': typeof AuthenticatedChallengesChallengeIdIndexRoute
@@ -231,6 +240,7 @@ export interface FileRoutesById {
   '/_authenticated/teams/': typeof AuthenticatedTeamsIndexRoute
   '/_authenticated/applications/$applicationId/edit': typeof AuthenticatedApplicationsApplicationIdEditRoute
   '/_authenticated/applications/$applicationId/': typeof AuthenticatedApplicationsApplicationIdIndexRoute
+  '/_authenticated/archives/challenges/': typeof AuthenticatedArchivesChallengesIndexRoute
   '/_authenticated/archives/journeys/': typeof AuthenticatedArchivesJourneysIndexRoute
   '/_authenticated/archives/todos/': typeof AuthenticatedArchivesTodosIndexRoute
   '/_authenticated/challenges/$challengeId/': typeof AuthenticatedChallengesChallengeIdIndexRoute
@@ -257,6 +267,7 @@ export interface FileRouteTypes {
     | '/teams/'
     | '/applications/$applicationId/edit'
     | '/applications/$applicationId/'
+    | '/archives/challenges/'
     | '/archives/journeys/'
     | '/archives/todos/'
     | '/challenges/$challengeId/'
@@ -280,6 +291,7 @@ export interface FileRouteTypes {
     | '/teams'
     | '/applications/$applicationId/edit'
     | '/applications/$applicationId'
+    | '/archives/challenges'
     | '/archives/journeys'
     | '/archives/todos'
     | '/challenges/$challengeId'
@@ -305,6 +317,7 @@ export interface FileRouteTypes {
     | '/_authenticated/teams/'
     | '/_authenticated/applications/$applicationId/edit'
     | '/_authenticated/applications/$applicationId/'
+    | '/_authenticated/archives/challenges/'
     | '/_authenticated/archives/journeys/'
     | '/_authenticated/archives/todos/'
     | '/_authenticated/challenges/$challengeId/'
@@ -463,6 +476,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedArchivesJourneysIndexRouteImport
       parentRoute: typeof AuthenticatedArchivesRouteRoute
     }
+    '/_authenticated/archives/challenges/': {
+      id: '/_authenticated/archives/challenges/'
+      path: '/challenges'
+      fullPath: '/archives/challenges/'
+      preLoaderRoute: typeof AuthenticatedArchivesChallengesIndexRouteImport
+      parentRoute: typeof AuthenticatedArchivesRouteRoute
+    }
     '/_authenticated/applications/$applicationId/': {
       id: '/_authenticated/applications/$applicationId/'
       path: '/applications/$applicationId'
@@ -489,6 +509,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedArchivesRouteRouteChildren {
   AuthenticatedArchivesIndexRoute: typeof AuthenticatedArchivesIndexRoute
+  AuthenticatedArchivesChallengesIndexRoute: typeof AuthenticatedArchivesChallengesIndexRoute
   AuthenticatedArchivesJourneysIndexRoute: typeof AuthenticatedArchivesJourneysIndexRoute
   AuthenticatedArchivesTodosIndexRoute: typeof AuthenticatedArchivesTodosIndexRoute
 }
@@ -496,6 +517,8 @@ interface AuthenticatedArchivesRouteRouteChildren {
 const AuthenticatedArchivesRouteRouteChildren: AuthenticatedArchivesRouteRouteChildren =
   {
     AuthenticatedArchivesIndexRoute: AuthenticatedArchivesIndexRoute,
+    AuthenticatedArchivesChallengesIndexRoute:
+      AuthenticatedArchivesChallengesIndexRoute,
     AuthenticatedArchivesJourneysIndexRoute:
       AuthenticatedArchivesJourneysIndexRoute,
     AuthenticatedArchivesTodosIndexRoute: AuthenticatedArchivesTodosIndexRoute,

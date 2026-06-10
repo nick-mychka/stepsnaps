@@ -84,10 +84,10 @@ The logic module gains the scheduled-day-aware streak (non-scheduled days are sk
 
 ### Acceptance criteria
 
-- [ ] Streak tests cover: everyday and custom schedules, gaps over non-scheduled days, a missed scheduled day resetting to zero, today not yet checked, empty completions
-- [ ] A Mon/Wed/Fri challenge checked Mon and Wed shows streak 2 on Thursday
-- [ ] Detail page shows current streak and "X of Y scheduled days done"
-- [ ] Percent complete appears only when an end date is set
+- [x] Streak tests cover: everyday and custom schedules, gaps over non-scheduled days, a missed scheduled day resetting to zero, today not yet checked, empty completions
+- [x] A Mon/Wed/Fri challenge checked Mon and Wed shows streak 2 on Thursday
+- [x] Detail page shows current streak and "X of Y scheduled days done"
+- [x] Percent complete appears only when an end date is set
 
 ---
 

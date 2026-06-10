@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
+import { today } from "~/lib/date";
 import { ChallengeDetailPage } from "./-challenge-detail-page";
 
 export const Route = createFileRoute(
@@ -8,7 +9,10 @@ export const Route = createFileRoute(
   loader: ({ context, params }) => {
     const { trpc, queryClient } = context;
     void queryClient.prefetchQuery(
-      trpc.challenge.byId.queryOptions({ id: params.challengeId }),
+      trpc.challenge.byId.queryOptions({
+        id: params.challengeId,
+        today: today(),
+      }),
     );
   },
   component: ChallengeDetailPage,
