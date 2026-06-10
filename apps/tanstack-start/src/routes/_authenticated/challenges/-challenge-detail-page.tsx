@@ -5,7 +5,9 @@ import { Badge } from "@stepsnaps/ui/badge";
 import { Button } from "@stepsnaps/ui/button";
 
 import { SimpleCard } from "~/components/simple-card";
+import { buildGrid } from "~/lib/challenge/grid";
 import { dayjs, today, yesterday } from "~/lib/date";
+import { ChallengeGrid } from "./-components/challenge-grid";
 import { useChallenge } from "./-hooks/use-challenge";
 import { useToggleCompletion } from "./-hooks/use-toggle-completion";
 import { formatSchedule } from "./-lib/weekdays";
@@ -80,6 +82,14 @@ export function ChallengeDetailPage() {
       completed,
     });
 
+  const gridMonths = buildGrid({
+    startDate: challenge.startDate,
+    endDate: challenge.endDate,
+    scheduledDays: challenge.scheduledDays,
+    completedDates: challenge.completions.map((c) => c.date),
+    today: clientToday,
+  });
+
   return (
     <main className="container mx-auto py-8">
       <Button variant="ghost" size="sm" className="mb-4" asChild>
@@ -150,6 +160,12 @@ export function ChallengeDetailPage() {
                 : "days completed"}
             </span>
           </p>
+        </SimpleCard>
+      </div>
+
+      <div className="mt-4">
+        <SimpleCard title="Activity">
+          <ChallengeGrid months={gridMonths} />
         </SimpleCard>
       </div>
     </main>
