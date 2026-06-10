@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { getRouteApi, Link, useNavigate } from "@tanstack/react-router";
-import { ArrowLeft, Check, Flame, OctagonX } from "lucide-react";
+import { ArrowLeft, Check, Flame, OctagonX, Pencil } from "lucide-react";
 
 import { Badge } from "@stepsnaps/ui/badge";
 import { Button } from "@stepsnaps/ui/button";
@@ -141,16 +141,27 @@ export function ChallengeDetailPage() {
           )}
         </div>
 
-        {isActive && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setStopDialogOpen(true)}
-          >
-            <OctagonX />
-            Stop challenge
+        <div className="flex shrink-0 gap-2">
+          <Button variant="outline" size="sm" asChild>
+            <Link
+              to="/challenges/$challengeId/edit"
+              params={{ challengeId: challenge.id }}
+            >
+              <Pencil />
+              Edit
+            </Link>
           </Button>
-        )}
+          {isActive && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setStopDialogOpen(true)}
+            >
+              <OctagonX />
+              Stop challenge
+            </Button>
+          )}
+        </div>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">

@@ -31,6 +31,7 @@ import { Route as AuthenticatedArchivesTodosIndexRouteImport } from './routes/_a
 import { Route as AuthenticatedArchivesJourneysIndexRouteImport } from './routes/_authenticated/archives/journeys/index'
 import { Route as AuthenticatedArchivesChallengesIndexRouteImport } from './routes/_authenticated/archives/challenges/index'
 import { Route as AuthenticatedApplicationsApplicationIdIndexRouteImport } from './routes/_authenticated/applications/$applicationId.index'
+import { Route as AuthenticatedChallengesChallengeIdEditRouteImport } from './routes/_authenticated/challenges/$challengeId.edit'
 import { Route as AuthenticatedApplicationsApplicationIdEditRouteImport } from './routes/_authenticated/applications/$applicationId.edit'
 import { Route as AuthenticatedTeamsTeamIdMemberUserIdRouteImport } from './routes/_authenticated/teams/$teamId.member.$userId'
 
@@ -159,6 +160,12 @@ const AuthenticatedApplicationsApplicationIdIndexRoute =
     path: '/applications/$applicationId/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedChallengesChallengeIdEditRoute =
+  AuthenticatedChallengesChallengeIdEditRouteImport.update({
+    id: '/challenges/$challengeId/edit',
+    path: '/challenges/$challengeId/edit',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedApplicationsApplicationIdEditRoute =
   AuthenticatedApplicationsApplicationIdEditRouteImport.update({
     id: '/applications/$applicationId/edit',
@@ -188,6 +195,7 @@ export interface FileRoutesByFullPath {
   '/progress/': typeof AuthenticatedProgressIndexRoute
   '/teams/': typeof AuthenticatedTeamsIndexRoute
   '/applications/$applicationId/edit': typeof AuthenticatedApplicationsApplicationIdEditRoute
+  '/challenges/$challengeId/edit': typeof AuthenticatedChallengesChallengeIdEditRoute
   '/applications/$applicationId/': typeof AuthenticatedApplicationsApplicationIdIndexRoute
   '/archives/challenges/': typeof AuthenticatedArchivesChallengesIndexRoute
   '/archives/journeys/': typeof AuthenticatedArchivesJourneysIndexRoute
@@ -212,6 +220,7 @@ export interface FileRoutesByTo {
   '/progress': typeof AuthenticatedProgressIndexRoute
   '/teams': typeof AuthenticatedTeamsIndexRoute
   '/applications/$applicationId/edit': typeof AuthenticatedApplicationsApplicationIdEditRoute
+  '/challenges/$challengeId/edit': typeof AuthenticatedChallengesChallengeIdEditRoute
   '/applications/$applicationId': typeof AuthenticatedApplicationsApplicationIdIndexRoute
   '/archives/challenges': typeof AuthenticatedArchivesChallengesIndexRoute
   '/archives/journeys': typeof AuthenticatedArchivesJourneysIndexRoute
@@ -239,6 +248,7 @@ export interface FileRoutesById {
   '/_authenticated/progress/': typeof AuthenticatedProgressIndexRoute
   '/_authenticated/teams/': typeof AuthenticatedTeamsIndexRoute
   '/_authenticated/applications/$applicationId/edit': typeof AuthenticatedApplicationsApplicationIdEditRoute
+  '/_authenticated/challenges/$challengeId/edit': typeof AuthenticatedChallengesChallengeIdEditRoute
   '/_authenticated/applications/$applicationId/': typeof AuthenticatedApplicationsApplicationIdIndexRoute
   '/_authenticated/archives/challenges/': typeof AuthenticatedArchivesChallengesIndexRoute
   '/_authenticated/archives/journeys/': typeof AuthenticatedArchivesJourneysIndexRoute
@@ -266,6 +276,7 @@ export interface FileRouteTypes {
     | '/progress/'
     | '/teams/'
     | '/applications/$applicationId/edit'
+    | '/challenges/$challengeId/edit'
     | '/applications/$applicationId/'
     | '/archives/challenges/'
     | '/archives/journeys/'
@@ -290,6 +301,7 @@ export interface FileRouteTypes {
     | '/progress'
     | '/teams'
     | '/applications/$applicationId/edit'
+    | '/challenges/$challengeId/edit'
     | '/applications/$applicationId'
     | '/archives/challenges'
     | '/archives/journeys'
@@ -316,6 +328,7 @@ export interface FileRouteTypes {
     | '/_authenticated/progress/'
     | '/_authenticated/teams/'
     | '/_authenticated/applications/$applicationId/edit'
+    | '/_authenticated/challenges/$challengeId/edit'
     | '/_authenticated/applications/$applicationId/'
     | '/_authenticated/archives/challenges/'
     | '/_authenticated/archives/journeys/'
@@ -490,6 +503,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedApplicationsApplicationIdIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/challenges/$challengeId/edit': {
+      id: '/_authenticated/challenges/$challengeId/edit'
+      path: '/challenges/$challengeId/edit'
+      fullPath: '/challenges/$challengeId/edit'
+      preLoaderRoute: typeof AuthenticatedChallengesChallengeIdEditRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/applications/$applicationId/edit': {
       id: '/_authenticated/applications/$applicationId/edit'
       path: '/applications/$applicationId/edit'
@@ -555,6 +575,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedProgressIndexRoute: typeof AuthenticatedProgressIndexRoute
   AuthenticatedTeamsIndexRoute: typeof AuthenticatedTeamsIndexRoute
   AuthenticatedApplicationsApplicationIdEditRoute: typeof AuthenticatedApplicationsApplicationIdEditRoute
+  AuthenticatedChallengesChallengeIdEditRoute: typeof AuthenticatedChallengesChallengeIdEditRoute
   AuthenticatedApplicationsApplicationIdIndexRoute: typeof AuthenticatedApplicationsApplicationIdIndexRoute
   AuthenticatedChallengesChallengeIdIndexRoute: typeof AuthenticatedChallengesChallengeIdIndexRoute
   AuthenticatedSettingsStepsIndexRoute: typeof AuthenticatedSettingsStepsIndexRoute
@@ -573,6 +594,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedTeamsIndexRoute: AuthenticatedTeamsIndexRoute,
   AuthenticatedApplicationsApplicationIdEditRoute:
     AuthenticatedApplicationsApplicationIdEditRoute,
+  AuthenticatedChallengesChallengeIdEditRoute:
+    AuthenticatedChallengesChallengeIdEditRoute,
   AuthenticatedApplicationsApplicationIdIndexRoute:
     AuthenticatedApplicationsApplicationIdIndexRoute,
   AuthenticatedChallengesChallengeIdIndexRoute:

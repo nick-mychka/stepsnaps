@@ -241,6 +241,127 @@ export const challengeRouter = {
       return { success: true };
     }),
 
+  /**
+   * Edit a challenge. Name and description are always editable; the end date
+   * only while the challenge is active (and never to before today); the start
+   * date and schedule only until the first check-in. Unchanged fields are
+   * ignored, so clients can always send the full form.
+   */
+  update: protectedProcedure
+    .input(
+      z.object({
+        id: z.string().uuid(),
+        today: z.string().date(),
+        name: z.string().min(1).max(256).optional(),
+        description: z.string().max(2000).nullable().optional(),
+        startDate: z.string().date().optional(),
+        endDate: z.string().date().nullable().optional(),
+        scheduledDays: scheduledDaysSchema.optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      assertClientToday(input.today);
+      await completeEndedChallenges(ctx.db, ctx.session.user.id, input.today);
+
+      const challenge = await ctx.db.query.Challenge.findFirst({
+        where: and(
+          eq(Challenge.id, input.id),
+          eq(Challenge.userId, ctx.session.user.id),
+        ),
+        with: { completions: { limit: 1 } },
+      });
+
+      if (!challenge) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Challenge not found",
+        });
+      }
+
+      const sortedDays = input.scheduledDays
+        ? [...input.scheduledDays].sort((a, b) => a - b)
+        : undefined;
+
+      const nameChanged =
+        input.name !== undefined && input.name !== challenge.name;
+      const descriptionChanged =
+        input.description !== undefined &&
+        input.description !== challenge.description;
+      const startDateChanged =
+        input.startDate !== undefined &&
+        input.startDate !== challenge.startDate;
+      const endDateChanged =
+        input.endDate !== undefined && input.endDate !== challenge.endDate;
+      const scheduleChanged =
+        sortedDays !== undefined &&
+        sortedDays.join() !== [...challenge.scheduledDays].sort().join();
+
+      if (
+        (startDateChanged || endDateChanged || scheduleChanged) &&
+        challenge.status !== "active"
+      ) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Only the name and description of a past challenge can be edited",
+        });
+      }
+
+      if (
+        (startDateChanged || scheduleChanged) &&
+        challenge.completions.length > 0
+      ) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Start date and schedule are locked after the first check-in",
+        });
+      }
+
+      if (endDateChanged && input.endDate && input.endDate < input.today) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "End date cannot be set before today",
+        });
+      }
+
+      const finalStart = startDateChanged
+        ? input.startDate
+        : challenge.startDate;
+      const finalEnd = endDateChanged ? input.endDate : challenge.endDate;
+      if (finalStart && finalEnd && finalEnd < finalStart) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "End date must not be before the start date",
+        });
+      }
+
+      const changes: Partial<typeof Challenge.$inferInsert> = {};
+      if (nameChanged) changes.name = input.name;
+      if (descriptionChanged) changes.description = input.description;
+      if (startDateChanged) changes.startDate = input.startDate;
+      if (endDateChanged) changes.endDate = input.endDate;
+      if (scheduleChanged) changes.scheduledDays = sortedDays;
+
+      if (Object.keys(changes).length === 0) {
+        const { completions: _completions, ...unchanged } = challenge;
+        return unchanged;
+      }
+
+      const [updated] = await ctx.db
+        .update(Challenge)
+        .set(changes)
+        .where(eq(Challenge.id, challenge.id))
+        .returning();
+
+      if (!updated) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to update challenge",
+        });
+      }
+
+      return updated;
+    }),
+
   /** Create a challenge owned by the current user. */
   create: protectedProcedure
     .input(

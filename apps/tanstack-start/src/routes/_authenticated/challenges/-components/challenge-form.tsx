@@ -1,7 +1,13 @@
 import { useState } from "react";
 
 import { Button } from "@stepsnaps/ui/button";
-import { Field, FieldError, FieldGroup, FieldLabel } from "@stepsnaps/ui/field";
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@stepsnaps/ui/field";
 import { Input } from "@stepsnaps/ui/input";
 import { RadioGroup, RadioGroupItem } from "@stepsnaps/ui/radio-group";
 import { Textarea } from "@stepsnaps/ui/textarea";
@@ -19,17 +25,39 @@ export interface ChallengeFormValues {
 }
 
 interface ChallengeFormProps {
+  mode?: "create" | "edit";
+  initialValues?: Partial<ChallengeFormValues>;
+  /** Start date and schedule lock after the first check-in. */
+  scheduleLocked?: boolean;
+  /** The end date is only editable while the challenge is active. */
+  endDateLocked?: boolean;
   onSubmit: (values: ChallengeFormValues) => void;
   isSubmitting: boolean;
 }
 
-export function ChallengeForm({ onSubmit, isSubmitting }: ChallengeFormProps) {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [startDate, setStartDate] = useState(today());
-  const [endDate, setEndDate] = useState("");
-  const [schedule, setSchedule] = useState<"everyday" | "custom">("everyday");
-  const [customDays, setCustomDays] = useState<number[]>([]);
+export function ChallengeForm({
+  mode = "create",
+  initialValues,
+  scheduleLocked = false,
+  endDateLocked = false,
+  onSubmit,
+  isSubmitting,
+}: ChallengeFormProps) {
+  const [name, setName] = useState(initialValues?.name ?? "");
+  const [description, setDescription] = useState(
+    initialValues?.description ?? "",
+  );
+  const [startDate, setStartDate] = useState(
+    initialValues?.startDate ?? today(),
+  );
+  const [endDate, setEndDate] = useState(initialValues?.endDate ?? "");
+  const initialDays = initialValues?.scheduledDays;
+  const [schedule, setSchedule] = useState<"everyday" | "custom">(
+    initialDays && initialDays.length < 7 ? "custom" : "everyday",
+  );
+  const [customDays, setCustomDays] = useState<number[]>(
+    initialDays && initialDays.length < 7 ? initialDays : [],
+  );
 
   const toggleDay = (day: number) => {
     setCustomDays((prev) =>
@@ -37,10 +65,19 @@ export function ChallengeForm({ onSubmit, isSubmitting }: ChallengeFormProps) {
     );
   };
 
+  // In edit mode an active challenge's end date may move, but never to the
+  // past; an untouched end date is the server's diff to ignore.
+  const endDateTouched = endDate !== (initialValues?.endDate ?? "");
+  const endBeforeToday =
+    mode === "edit" && endDateTouched && Boolean(endDate) && endDate < today();
   const endBeforeStart = Boolean(endDate) && endDate < startDate;
   const noCustomDays = schedule === "custom" && customDays.length === 0;
   const canSubmit =
-    name.trim().length > 0 && startDate && !endBeforeStart && !noCustomDays;
+    name.trim().length > 0 &&
+    Boolean(startDate) &&
+    !endBeforeStart &&
+    !endBeforeToday &&
+    !noCustomDays;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,7 +102,7 @@ export function ChallengeForm({ onSubmit, isSubmitting }: ChallengeFormProps) {
             onChange={(e) => setName(e.target.value)}
             placeholder="e.g. Solve one LeetCode problem"
             maxLength={256}
-            autoFocus
+            autoFocus={mode === "create"}
           />
         </Field>
 
@@ -76,8 +113,14 @@ export function ChallengeForm({ onSubmit, isSubmitting }: ChallengeFormProps) {
               id="challenge-start"
               type="date"
               value={startDate}
+              disabled={scheduleLocked}
               onChange={(e) => setStartDate(e.target.value)}
             />
+            {scheduleLocked && (
+              <FieldDescription>
+                Locked after the first check-in
+              </FieldDescription>
+            )}
           </Field>
           <Field>
             <FieldLabel htmlFor="challenge-end">
@@ -90,13 +133,17 @@ export function ChallengeForm({ onSubmit, isSubmitting }: ChallengeFormProps) {
               id="challenge-end"
               type="date"
               value={endDate}
-              min={startDate}
+              min={mode === "edit" && today() > startDate ? today() : startDate}
+              disabled={endDateLocked}
               onChange={(e) => setEndDate(e.target.value)}
             />
             {endBeforeStart && (
               <FieldError>
                 End date must not be before the start date
               </FieldError>
+            )}
+            {endBeforeToday && !endBeforeStart && (
+              <FieldError>End date cannot be set before today</FieldError>
             )}
           </Field>
         </div>
@@ -109,6 +156,7 @@ export function ChallengeForm({ onSubmit, isSubmitting }: ChallengeFormProps) {
               setSchedule(value as "everyday" | "custom")
             }
             className="flex gap-6"
+            disabled={scheduleLocked}
           >
             <Field orientation="horizontal" className="w-fit">
               <RadioGroupItem value="everyday" id="schedule-everyday" />
@@ -130,6 +178,7 @@ export function ChallengeForm({ onSubmit, isSubmitting }: ChallengeFormProps) {
                   key={day.value}
                   type="button"
                   size="sm"
+                  disabled={scheduleLocked}
                   variant={
                     customDays.includes(day.value) ? "default" : "outline"
                   }
@@ -139,6 +188,9 @@ export function ChallengeForm({ onSubmit, isSubmitting }: ChallengeFormProps) {
                 </Button>
               ))}
             </div>
+          )}
+          {scheduleLocked && (
+            <FieldDescription>Locked after the first check-in</FieldDescription>
           )}
           {noCustomDays && <FieldError>Select at least one day</FieldError>}
         </Field>
@@ -165,7 +217,7 @@ export function ChallengeForm({ onSubmit, isSubmitting }: ChallengeFormProps) {
           disabled={!canSubmit}
           className="w-fit"
         >
-          Create Challenge
+          {mode === "create" ? "Create Challenge" : "Save Changes"}
         </LoadingButton>
       </FieldGroup>
     </form>

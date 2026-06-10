@@ -101,12 +101,12 @@ Challenges end. Stopping is an explicit action with a confirmation step and is t
 
 ### Acceptance criteria
 
-- [ ] Stopping requires confirmation and moves the challenge out of `/challenges`
-- [ ] A challenge whose end date passed shows as completed without any user action
-- [ ] `/archives/challenges` lists both outcomes with distinct completed/stopped labels
-- [ ] A past challenge opens with full grid and stats but no check-in controls
-- [ ] Check-in mutations against completed/stopped challenges are rejected server-side
-- [ ] Lazy-status tests cover: end date in past ⇒ completed, today/future ⇒ active, no end date ⇒ never auto-completes
+- [x] Stopping requires confirmation and moves the challenge out of `/challenges`
+- [x] A challenge whose end date passed shows as completed without any user action
+- [x] `/archives/challenges` lists both outcomes with distinct completed/stopped labels
+- [x] A past challenge opens with full grid and stats but no check-in controls
+- [x] Check-in mutations against completed/stopped challenges are rejected server-side
+- [x] Lazy-status tests cover: end date in past ⇒ completed, today/future ⇒ active, no end date ⇒ never auto-completes
 
 ---
 
