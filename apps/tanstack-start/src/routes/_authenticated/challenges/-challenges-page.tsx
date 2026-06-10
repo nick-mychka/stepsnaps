@@ -40,29 +40,36 @@ export function ChallengesPage() {
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {challenges.map((challenge) => (
-              <SimpleCard
+              <Link
                 key={challenge.id}
-                title={challenge.name}
-                description={
-                  <>
-                    {formatDate(challenge.startDate)} —{" "}
-                    {challenge.endDate
-                      ? formatDate(challenge.endDate)
-                      : "open-ended"}
-                  </>
-                }
-                actionSlot={
-                  <Badge variant="secondary">
-                    {formatSchedule(challenge.scheduledDays)}
-                  </Badge>
-                }
+                to="/challenges/$challengeId"
+                params={{ challengeId: challenge.id }}
+                className="rounded-xl transition-opacity hover:opacity-80"
               >
-                {challenge.description && (
-                  <p className="text-muted-foreground line-clamp-3 text-sm">
-                    {challenge.description}
-                  </p>
-                )}
-              </SimpleCard>
+                <SimpleCard
+                  title={challenge.name}
+                  description={
+                    <>
+                      {formatDate(challenge.startDate)} —{" "}
+                      {challenge.endDate
+                        ? formatDate(challenge.endDate)
+                        : "open-ended"}
+                    </>
+                  }
+                  actionSlot={
+                    <Badge variant="secondary">
+                      {formatSchedule(challenge.scheduledDays)}
+                    </Badge>
+                  }
+                  className="h-full"
+                >
+                  {challenge.description && (
+                    <p className="text-muted-foreground line-clamp-3 text-sm">
+                      {challenge.description}
+                    </p>
+                  )}
+                </SimpleCard>
+              </Link>
             ))}
           </div>
         )
