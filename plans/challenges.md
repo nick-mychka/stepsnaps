@@ -156,8 +156,8 @@ Challenges join the daily loop. The dashboard shows today's pending check-ins â€
 
 ### Acceptance criteria
 
-- [ ] Dashboard lists active challenges scheduled today with their check-in state
-- [ ] Marking from the dashboard creates the same completion as the detail page (and reflects there immediately)
-- [ ] Challenges not scheduled today are absent from the widget
-- [ ] A challenge checked in from its detail page shows as done on the dashboard
-- [ ] With no active challenges scheduled today, the dashboard shows no empty artifact
+- [x] Dashboard lists active challenges scheduled today with their check-in state
+- [x] Marking from the dashboard creates the same completion as the detail page (and reflects there immediately)
+- [x] Challenges not scheduled today are absent from the widget
+- [x] A challenge checked in from its detail page shows as done on the dashboard
+- [x] With no active challenges scheduled today, the dashboard shows no empty artifact

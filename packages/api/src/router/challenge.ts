@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
 import type { db } from "@stepsnaps/db/client";
-import { and, asc, desc, eq, inArray, isNotNull, lt } from "@stepsnaps/db";
+import { and, asc, desc, eq, inArray, isNotNull, lt, lte } from "@stepsnaps/db";
 import { Challenge, ChallengeCompletion } from "@stepsnaps/db/schema";
 
 import { protectedProcedure } from "../trpc";
@@ -100,6 +100,40 @@ export const challengeRouter = {
         ),
         orderBy: [desc(Challenge.updatedAt), desc(Challenge.createdAt)],
       });
+    }),
+
+  /**
+   * The dashboard widget: active challenges scheduled on the client's today,
+   * each with its check-in state for that date. Challenges not scheduled
+   * today (or not yet started) are absent.
+   */
+  todayCheckIns: protectedProcedure
+    .input(z.object({ today: z.string().date() }))
+    .query(async ({ ctx, input }) => {
+      assertClientToday(input.today);
+      await completeEndedChallenges(ctx.db, ctx.session.user.id, input.today);
+
+      const weekday = new Date(`${input.today}T00:00:00Z`).getUTCDay();
+
+      const challenges = await ctx.db.query.Challenge.findMany({
+        where: and(
+          eq(Challenge.userId, ctx.session.user.id),
+          eq(Challenge.status, "active"),
+          lte(Challenge.startDate, input.today),
+        ),
+        with: {
+          completions: { where: eq(ChallengeCompletion.date, input.today) },
+        },
+        orderBy: asc(Challenge.createdAt),
+      });
+
+      return challenges
+        .filter((c) => c.scheduledDays.includes(weekday))
+        .map((c) => ({
+          id: c.id,
+          name: c.name,
+          completed: c.completions.length > 0,
+        }));
     }),
 
   /** Get one of the current user's challenges with its completions. */
