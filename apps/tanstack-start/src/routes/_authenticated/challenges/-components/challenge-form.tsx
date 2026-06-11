@@ -13,6 +13,7 @@ import { RadioGroup, RadioGroupItem } from "@stepsnaps/ui/radio-group";
 import { Textarea } from "@stepsnaps/ui/textarea";
 
 import { LoadingButton } from "~/components/loading-button";
+import { parseYouTubeVideoId } from "~/lib/challenge/youtube";
 import { today } from "~/lib/date";
 import { EVERYDAY, WEEKDAYS } from "../-lib/weekdays";
 
@@ -22,6 +23,7 @@ export interface ChallengeFormValues {
   startDate: string;
   endDate: string;
   scheduledDays: number[];
+  videoUrl: string;
 }
 
 interface ChallengeFormProps {
@@ -51,6 +53,7 @@ export function ChallengeForm({
     initialValues?.startDate ?? today(),
   );
   const [endDate, setEndDate] = useState(initialValues?.endDate ?? "");
+  const [videoUrl, setVideoUrl] = useState(initialValues?.videoUrl ?? "");
   const initialDays = initialValues?.scheduledDays;
   const [schedule, setSchedule] = useState<"everyday" | "custom">(
     initialDays && initialDays.length < 7 ? "custom" : "everyday",
@@ -72,12 +75,15 @@ export function ChallengeForm({
     mode === "edit" && endDateTouched && Boolean(endDate) && endDate < today();
   const endBeforeStart = Boolean(endDate) && endDate < startDate;
   const noCustomDays = schedule === "custom" && customDays.length === 0;
+  const videoInvalid =
+    videoUrl.trim().length > 0 && parseYouTubeVideoId(videoUrl) === null;
   const canSubmit =
     name.trim().length > 0 &&
     Boolean(startDate) &&
     !endBeforeStart &&
     !endBeforeToday &&
-    !noCustomDays;
+    !noCustomDays &&
+    !videoInvalid;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -88,6 +94,7 @@ export function ChallengeForm({
       startDate,
       endDate,
       scheduledDays: schedule === "everyday" ? EVERYDAY : customDays,
+      videoUrl: videoUrl.trim(),
     });
   };
 
@@ -209,6 +216,28 @@ export function ChallengeForm({
             placeholder="What does this challenge mean? How do you define done?"
             rows={3}
           />
+        </Field>
+
+        <Field>
+          <FieldLabel htmlFor="challenge-video">
+            YouTube video{" "}
+            <span className="text-muted-foreground font-normal">
+              (optional)
+            </span>
+          </FieldLabel>
+          <Input
+            id="challenge-video"
+            value={videoUrl}
+            onChange={(e) => setVideoUrl(e.target.value)}
+            placeholder="https://www.youtube.com/watch?v=…"
+          />
+          <FieldDescription>
+            Shown on the challenge page — a program to follow or a bit of
+            motivation.
+          </FieldDescription>
+          {videoInvalid && (
+            <FieldError>Enter a valid YouTube video link</FieldError>
+          )}
         </Field>
 
         <LoadingButton

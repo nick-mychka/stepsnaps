@@ -120,11 +120,11 @@ An edit affordance on the challenge. Name and description are always editable. E
 
 ### Acceptance criteria
 
-- [ ] Name and description edits succeed on active and past challenges
-- [ ] End date can be extended, shortened, and cleared on an active challenge
-- [ ] Setting the end date before today is rejected
-- [ ] Start date and schedule edits succeed on a challenge with no completions
-- [ ] After one check-in, start date and schedule changes are rejected server-side and shown locked in the form
+- [x] Name and description edits succeed on active and past challenges
+- [x] End date can be extended, shortened, and cleared on an active challenge
+- [x] Setting the end date before today is rejected
+- [x] Start date and schedule edits succeed on a challenge with no completions
+- [x] After one check-in, start date and schedule changes are rejected server-side and shown locked in the form
 
 ---
 
@@ -138,11 +138,11 @@ The pure YouTube URL parser (watch, youtu.be, shorts, and embed URL shapes → c
 
 ### Acceptance criteria
 
-- [ ] Parser tests cover the accepted URL shapes plus junk, non-YouTube URLs, and empty input
-- [ ] A valid link at create or edit stores the canonical ID, not the raw URL
-- [ ] An invalid link is rejected at form submission with a clear message
-- [ ] Detail page embeds via the no-cookie domain when a video is set
-- [ ] No player area renders when no video is set or the embed fails
+- [x] Parser tests cover the accepted URL shapes plus junk, non-YouTube URLs, and empty input
+- [x] A valid link at create or edit stores the canonical ID, not the raw URL
+- [x] An invalid link is rejected at form submission with a clear message
+- [x] Detail page embeds via the no-cookie domain when a video is set
+- [x] No player area renders when no video is set or the embed fails
 
 ---
 

@@ -11,6 +11,7 @@ import { SimpleDialog, SimpleDialogContent } from "~/components/simple-dialog";
 import { buildGrid } from "~/lib/challenge/grid";
 import { computeChallengeStats } from "~/lib/challenge/stats";
 import { effectiveStatus } from "~/lib/challenge/status";
+import { youTubeEmbedUrl } from "~/lib/challenge/youtube";
 import { dayjs, today, yesterday } from "~/lib/date";
 import { ChallengeGrid } from "./-components/challenge-grid";
 import { ChallengeStatusBadge } from "./-components/challenge-status-badge";
@@ -63,6 +64,7 @@ export function ChallengeDetailPage() {
   const toggleCompletion = useToggleCompletion();
   const navigate = useNavigate();
   const [stopDialogOpen, setStopDialogOpen] = useState(false);
+  const [videoFailed, setVideoFailed] = useState(false);
   const stopChallenge = useStopChallenge({
     onSuccess: () => void navigate({ to: "/challenges" }),
   });
@@ -227,6 +229,21 @@ export function ChallengeDetailPage() {
           <ChallengeGrid months={gridMonths} />
         </SimpleCard>
       </div>
+
+      {challenge.videoId && !videoFailed && (
+        <div className="mt-4">
+          <SimpleCard title="Video">
+            <iframe
+              src={youTubeEmbedUrl(challenge.videoId)}
+              title={`Video for ${challenge.name}`}
+              className="aspect-video w-full max-w-2xl rounded-lg"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+              onError={() => setVideoFailed(true)}
+            />
+          </SimpleCard>
+        </div>
+      )}
 
       <SimpleDialog open={stopDialogOpen} onOpenChange={setStopDialogOpen}>
         <SimpleDialogContent

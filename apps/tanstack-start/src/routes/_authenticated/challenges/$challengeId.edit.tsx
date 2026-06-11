@@ -1,26 +1,31 @@
-import { createFileRoute, getRouteApi, useNavigate } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  getRouteApi,
+  useNavigate,
+} from "@tanstack/react-router";
 
 import { SimpleCard } from "~/components/simple-card";
 import { effectiveStatus } from "~/lib/challenge/status";
+import { parseYouTubeVideoId, youTubeWatchUrl } from "~/lib/challenge/youtube";
 import { today } from "~/lib/date";
 import { ChallengeForm } from "./-components/challenge-form";
 import { useChallenge } from "./-hooks/use-challenge";
 import { useUpdateChallenge } from "./-hooks/use-update-challenge";
 
-export const Route = createFileRoute("/_authenticated/challenges/$challengeId/edit")(
-  {
-    loader: ({ context, params }) => {
-      const { trpc, queryClient } = context;
-      void queryClient.prefetchQuery(
-        trpc.challenge.byId.queryOptions({
-          id: params.challengeId,
-          today: today(),
-        }),
-      );
-    },
-    component: EditChallengePage,
+export const Route = createFileRoute(
+  "/_authenticated/challenges/$challengeId/edit",
+)({
+  loader: ({ context, params }) => {
+    const { trpc, queryClient } = context;
+    void queryClient.prefetchQuery(
+      trpc.challenge.byId.queryOptions({
+        id: params.challengeId,
+        today: today(),
+      }),
+    );
   },
-);
+  component: EditChallengePage,
+});
 
 const route = getRouteApi("/_authenticated/challenges/$challengeId/edit");
 
@@ -70,6 +75,9 @@ function EditChallengePage() {
             startDate: challenge.startDate,
             endDate: challenge.endDate ?? "",
             scheduledDays: challenge.scheduledDays,
+            videoUrl: challenge.videoId
+              ? youTubeWatchUrl(challenge.videoId)
+              : "",
           }}
           scheduleLocked={!isActive || challenge.completions.length > 0}
           endDateLocked={!isActive}
@@ -83,6 +91,9 @@ function EditChallengePage() {
               startDate: values.startDate,
               endDate: values.endDate || null,
               scheduledDays: values.scheduledDays,
+              videoId: values.videoUrl
+                ? parseYouTubeVideoId(values.videoUrl)
+                : null,
             })
           }
         />

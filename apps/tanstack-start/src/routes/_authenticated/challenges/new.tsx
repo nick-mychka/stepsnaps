@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 
 import { SimpleCard } from "~/components/simple-card";
+import { parseYouTubeVideoId } from "~/lib/challenge/youtube";
 import { ChallengeForm } from "./-components/challenge-form";
 import { useCreateChallenge } from "./-hooks/use-create-challenge";
 
@@ -30,6 +31,7 @@ function NewChallengePage() {
               startDate: values.startDate,
               endDate: values.endDate || undefined,
               scheduledDays: values.scheduledDays,
+              videoId: parseYouTubeVideoId(values.videoUrl) ?? undefined,
             })
           }
         />

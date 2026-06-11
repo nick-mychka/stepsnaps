@@ -16,6 +16,11 @@ const scheduledDaysSchema = z
     message: "Scheduled days must be unique",
   });
 
+/** Canonical YouTube video id — URLs are parsed to this client-side. */
+const videoIdSchema = z.string().regex(/^[A-Za-z0-9_-]{11}$/, {
+  message: "Invalid YouTube video id",
+});
+
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 /** Shift an ISO date string by whole days (ISO dates parse as UTC midnight). */
@@ -257,6 +262,7 @@ export const challengeRouter = {
         startDate: z.string().date().optional(),
         endDate: z.string().date().nullable().optional(),
         scheduledDays: scheduledDaysSchema.optional(),
+        videoId: videoIdSchema.nullable().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -295,6 +301,8 @@ export const challengeRouter = {
       const scheduleChanged =
         sortedDays !== undefined &&
         sortedDays.join() !== [...challenge.scheduledDays].sort().join();
+      const videoIdChanged =
+        input.videoId !== undefined && input.videoId !== challenge.videoId;
 
       if (
         (startDateChanged || endDateChanged || scheduleChanged) &&
@@ -302,7 +310,8 @@ export const challengeRouter = {
       ) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Only the name and description of a past challenge can be edited",
+          message:
+            "Only the name and description of a past challenge can be edited",
         });
       }
 
@@ -312,7 +321,8 @@ export const challengeRouter = {
       ) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Start date and schedule are locked after the first check-in",
+          message:
+            "Start date and schedule are locked after the first check-in",
         });
       }
 
@@ -340,6 +350,7 @@ export const challengeRouter = {
       if (startDateChanged) changes.startDate = input.startDate;
       if (endDateChanged) changes.endDate = input.endDate;
       if (scheduleChanged) changes.scheduledDays = sortedDays;
+      if (videoIdChanged) changes.videoId = input.videoId;
 
       if (Object.keys(changes).length === 0) {
         const { completions: _completions, ...unchanged } = challenge;
@@ -372,6 +383,7 @@ export const challengeRouter = {
           startDate: z.string().date(),
           endDate: z.string().date().optional(),
           scheduledDays: scheduledDaysSchema,
+          videoId: videoIdSchema.optional(),
         })
         .refine((input) => !input.endDate || input.endDate >= input.startDate, {
           message: "End date must not be before the start date",
@@ -387,6 +399,7 @@ export const challengeRouter = {
           startDate: input.startDate,
           endDate: input.endDate,
           scheduledDays: [...input.scheduledDays].sort((a, b) => a - b),
+          videoId: input.videoId,
         })
         .returning();
 
