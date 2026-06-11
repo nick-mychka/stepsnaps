@@ -1,5 +1,5 @@
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
-import { ListTodo, Road } from "lucide-react";
+import { ListTodo, Road, Target } from "lucide-react";
 
 import { cn } from "@stepsnaps/ui";
 
@@ -10,6 +10,7 @@ export const Route = createFileRoute("/_authenticated/archives")({
 const MENU_ITEMS = [
   { to: "/archives/todos", label: "To-Dos", icon: ListTodo },
   { to: "/archives/journeys", label: "Journeys", icon: Road },
+  { to: "/archives/challenges", label: "Challenges", icon: Target },
 ] as const;
 
 function ArchivesLayout() {

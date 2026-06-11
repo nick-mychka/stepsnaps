@@ -3,6 +3,7 @@ import { useState } from "react";
 import { authClient } from "~/auth/client";
 import { ActiveJourneyCard } from "./-components/active-journey-card";
 import { BackgroundPicker, BG_VARIANTS } from "./-components/background-picker";
+import { ChallengeCheckInsCard } from "./-components/challenge-check-ins-card";
 import { StartJourneyCard } from "./-components/start-journey-card";
 import { StatsRow } from "./-components/stats-row";
 import { TodayFocusCard } from "./-components/today-focus-card";
@@ -38,7 +39,10 @@ export function DashboardPage() {
             )}
           </div>
 
-          <TodayFocusCard />
+          <div className="flex w-full max-w-lg flex-col gap-6">
+            <TodayFocusCard />
+            <ChallengeCheckInsCard />
+          </div>
         </div>
         <BackgroundPicker activeBg={activeBg} onChange={setActiveBg} />
       </main>
