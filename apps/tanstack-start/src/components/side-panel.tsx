@@ -7,6 +7,7 @@ import {
   LayoutDashboard,
   LogOut,
   NotebookText,
+  Target,
   Users,
 } from "lucide-react";
 
@@ -70,6 +71,7 @@ export function SidePanel({
           <NavIcon to="/applications" label="Jobs" icon={NotebookText} />
         )}
         <NavIcon to="/progress" label="Stats" icon={ChartSpline} />
+        <NavIcon to="/challenges" label="Goals" icon={Target} />
       </div>
 
       {/* Bottom — theme + account */}

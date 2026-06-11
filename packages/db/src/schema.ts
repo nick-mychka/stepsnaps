@@ -350,6 +350,69 @@ export const interviewRelations = relations(Interview, ({ one }) => ({
   }),
 }));
 
+// --- Challenge ---
+
+export const challengeStatusEnum = pgEnum("challenge_status", [
+  "active",
+  "completed",
+  "stopped",
+]);
+
+export const Challenge = pgTable("challenge", (t) => ({
+  id: t.uuid().notNull().primaryKey().defaultRandom(),
+  userId: t
+    .text()
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  name: t.varchar({ length: 256 }).notNull(),
+  description: t.text(),
+  startDate: t.date({ mode: "string" }).notNull(),
+  endDate: t.date({ mode: "string" }),
+  // Weekday indices in JS Date convention: 0 = Sunday … 6 = Saturday.
+  // "Everyday" is all seven.
+  scheduledDays: t.integer().array().notNull(),
+  videoId: t.varchar({ length: 32 }),
+  status: challengeStatusEnum().notNull().default("active"),
+  createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
+  updatedAt: t
+    .timestamp({ mode: "date", withTimezone: true })
+    .$onUpdateFn(() => sql`now()`),
+}));
+
+export const challengeRelations = relations(Challenge, ({ one, many }) => ({
+  user: one(user, {
+    fields: [Challenge.userId],
+    references: [user.id],
+  }),
+  completions: many(ChallengeCompletion),
+}));
+
+// --- Challenge Completion ---
+
+export const ChallengeCompletion = pgTable(
+  "challenge_completion",
+  (t) => ({
+    id: t.uuid().notNull().primaryKey().defaultRandom(),
+    challengeId: t
+      .uuid()
+      .notNull()
+      .references(() => Challenge.id, { onDelete: "cascade" }),
+    date: t.date({ mode: "string" }).notNull(),
+    createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
+  }),
+  (table) => [unique().on(table.challengeId, table.date)],
+);
+
+export const challengeCompletionRelations = relations(
+  ChallengeCompletion,
+  ({ one }) => ({
+    challenge: one(Challenge, {
+      fields: [ChallengeCompletion.challengeId],
+      references: [Challenge.id],
+    }),
+  }),
+);
+
 // --- Todo ---
 
 export const Todo = pgTable("todo", (t) => ({
